@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Tainan Salão</title>
 
-  <!-- Firebase SDKs -->
+  <!-- Firebase SDK -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
     import {
@@ -16,6 +16,7 @@
       signOut
     } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
 
+    // Configuração Firebase do seu projeto
     const firebaseConfig = {
       apiKey: "AIzaSyAbfoZCpgltNGqzC1SKtOXBJLIiABR1Uek",
       authDomain: "tainan-salao.firebaseapp.com",
@@ -26,53 +27,78 @@
       measurementId: "G-Y3G5ZBZ5FP"
     };
 
+    // Inicializa Firebase
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
 
+    // Expondo funções para o escopo global para usar no HTML
+    window.auth = auth;
+    window.signInWithEmailAndPassword = signInWithEmailAndPassword;
+    window.createUserWithEmailAndPassword = createUserWithEmailAndPassword;
+    window.signOut = signOut;
+    window.onAuthStateChanged = onAuthStateChanged;
+
+    // Função para ir do splash para login
     window.irParaLogin = () => {
       document.getElementById('splash').style.display = 'none';
       document.getElementById('login').style.display = 'flex';
     };
 
+    // Função para mostrar a seção correta
+    window.mostrar = (secao) => {
+      document.querySelectorAll('section').forEach(s => s.style.display = 'none');
+      const sec = document.getElementById(secao);
+      if (sec) sec.style.display = 'block';
+
+      // Atualiza botão ativo no menu
+      document.querySelectorAll('nav button[data-section]').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.section === secao);
+      });
+    };
+
+    // Função para login
     window.login = async () => {
       const email = document.getElementById('email').value.trim();
       const senha = document.getElementById('senha').value.trim();
       if (!email || !senha) {
-        alert('Por favor, preencha e-mail e senha.');
+        alert('Preencha e-mail e senha.');
         return;
       }
       try {
         await signInWithEmailAndPassword(auth, email, senha);
-      } catch (err) {
-        alert('Erro ao entrar: ' + err.message);
+      } catch (error) {
+        alert('Erro ao entrar: ' + error.message);
       }
     };
 
+    // Função para criar conta
     window.criarConta = async () => {
       const email = document.getElementById('email').value.trim();
       const senha = document.getElementById('senha').value.trim();
       if (!email || !senha) {
-        alert('Por favor, preencha e-mail e senha para criar a conta.');
+        alert('Preencha e-mail e senha para criar conta.');
         return;
       }
       try {
         await createUserWithEmailAndPassword(auth, email, senha);
-        alert('Conta criada com sucesso! Agora faça login.');
-      } catch (err) {
-        alert('Erro ao criar conta: ' + err.message);
+        alert('Conta criada! Agora faça login.');
+      } catch (error) {
+        alert('Erro ao criar conta: ' + error.message);
       }
     };
 
+    // Função para logout
     window.logout = async () => {
       await signOut(auth);
     };
 
+    // Controla exibição com base no estado de autenticação
     onAuthStateChanged(auth, (user) => {
       if (user) {
         document.getElementById('login').style.display = 'none';
         document.getElementById('splash').style.display = 'none';
         document.getElementById('app').style.display = 'block';
-        mostrar('clientes'); // mostra seção clientes por padrão
+        mostrar('clientes'); // seção padrão
       } else {
         document.getElementById('login').style.display = 'flex';
         document.getElementById('splash').style.display = 'none';
@@ -80,21 +106,11 @@
       }
     });
 
+    // Ao carregar a página, mostrar splash inicialmente
     window.onload = () => {
       document.getElementById('splash').style.display = 'flex';
       document.getElementById('login').style.display = 'none';
       document.getElementById('app').style.display = 'none';
-    };
-
-    window.mostrar = (secao) => {
-      document.querySelectorAll('section').forEach(s => s.style.display = 'none');
-      const sec = document.getElementById(secao);
-      if (sec) sec.style.display = 'block';
-
-      // Atualizar classe active no menu
-      document.querySelectorAll('nav button[data-section]').forEach(btn => {
-        btn.classList.toggle('active', btn.dataset.section === secao);
-      });
     };
   </script>
 
