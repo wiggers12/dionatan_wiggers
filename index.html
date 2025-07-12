@@ -1,118 +1,293 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <meta charset="UTF-8">
-  <title>espaco tai botelho - Agendamentos</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Tainan Salão</title>
+
+  <!-- Firebase SDKs -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
+    import {
+      getAuth,
+      onAuthStateChanged,
+      createUserWithEmailAndPassword,
+      signInWithEmailAndPassword,
+      signOut
+    } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAbfoZCpgltNGqzC1SKtOXBJLIiABR1Uek",
+      authDomain: "tainan-salao.firebaseapp.com",
+      projectId: "tainan-salao",
+      storageBucket: "tainan-salao.appspot.com",
+      messagingSenderId: "965996001179",
+      appId: "1:965996001179:web:29a4b4911622c97606533e",
+      measurementId: "G-Y3G5ZBZ5FP"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    window.irParaLogin = () => {
+      document.getElementById('splash').style.display = 'none';
+      document.getElementById('login').style.display = 'flex';
+    };
+
+    window.login = async () => {
+      const email = document.getElementById('email').value.trim();
+      const senha = document.getElementById('senha').value.trim();
+      if (!email || !senha) {
+        alert('Por favor, preencha e-mail e senha.');
+        return;
+      }
+      try {
+        await signInWithEmailAndPassword(auth, email, senha);
+      } catch (err) {
+        alert('Erro ao entrar: ' + err.message);
+      }
+    };
+
+    window.criarConta = async () => {
+      const email = document.getElementById('email').value.trim();
+      const senha = document.getElementById('senha').value.trim();
+      if (!email || !senha) {
+        alert('Por favor, preencha e-mail e senha para criar a conta.');
+        return;
+      }
+      try {
+        await createUserWithEmailAndPassword(auth, email, senha);
+        alert('Conta criada com sucesso! Agora faça login.');
+      } catch (err) {
+        alert('Erro ao criar conta: ' + err.message);
+      }
+    };
+
+    window.logout = async () => {
+      await signOut(auth);
+    };
+
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        document.getElementById('login').style.display = 'none';
+        document.getElementById('splash').style.display = 'none';
+        document.getElementById('app').style.display = 'block';
+        mostrar('clientes'); // mostra seção clientes por padrão
+      } else {
+        document.getElementById('login').style.display = 'flex';
+        document.getElementById('splash').style.display = 'none';
+        document.getElementById('app').style.display = 'none';
+      }
+    });
+
+    window.onload = () => {
+      document.getElementById('splash').style.display = 'flex';
+      document.getElementById('login').style.display = 'none';
+      document.getElementById('app').style.display = 'none';
+    };
+
+    window.mostrar = (secao) => {
+      document.querySelectorAll('section').forEach(s => s.style.display = 'none');
+      const sec = document.getElementById(secao);
+      if (sec) sec.style.display = 'block';
+
+      // Atualizar classe active no menu
+      document.querySelectorAll('nav button[data-section]').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.section === secao);
+      });
+    };
+  </script>
+
   <style>
+    * {
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
     body {
-      font-family: Arial, sans-serif;
-      background-color: #fff0f5;
       margin: 0;
-      padding: 0;
+      background: #fff0f5;
+      color: #333;
     }
 
-    header {
-      background-color: #e91e63;
+    /* Splash */
+    #splash {
+      display: none;
+      height: 100vh;
+      background: #f28ab2;
       color: white;
-      padding: 20px;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
       text-align: center;
+      display: flex;
+    }
+    #splash h1 {
+      font-size: 3rem;
+      margin-bottom: 20px;
+    }
+    #splash button {
+      background: white;
+      color: #f28ab2;
+      font-size: 1.2rem;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     }
 
-    main {
+    /* Login */
+    #login {
+      display: none;
+      height: 100vh;
+      background: #fff0f5;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+    #login .form {
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 300px;
+    }
+    #login .form h2 {
+      margin-bottom: 20px;
+    }
+    #login input {
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 1rem;
+    }
+    #login button {
+      width: 100%;
+      background: #f28ab2;
+      color: white;
+      font-size: 1.1rem;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    #login p {
+      margin: 10px 0;
+      font-weight: bold;
+      color: #666;
+    }
+
+    /* App */
+    #app {
+      display: none;
       padding: 20px;
     }
 
-    form {
-      background-color: #fce4ec;
-      padding: 15px;
-      border-radius: 8px;
-      max-width: 400px;
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #f28ab2;
+      color: white;
+      padding: 10px 20px;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      border-radius: 0 0 10px 10px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    nav h2 {
+      margin: 0;
+      flex-grow: 1;
+    }
+    nav button {
+      background: transparent;
+      border: 1.5px solid white;
+      color: white;
+      font-weight: bold;
+      font-size: 1rem;
+      padding: 6px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    nav button:hover,
+    nav button.active {
+      background-color: white;
+      color: #f28ab2;
     }
 
-    input, button {
-      width: 100%;
-      padding: 8px;
-      margin-top: 5px;
-    }
-
-    ul {
-      list-style: none;
-      padding: 0;
-    }
-
-    li {
-      background-color: #f8bbd0;
-      margin: 5px 0;
-      padding: 10px;
-      border-radius: 5px;
+    section {
+      display: none;
+      margin-top: 20px;
     }
   </style>
 </head>
 <body>
 
-  <header>
-    <h1>espaco tai botelho - Agendamentos</h1>
-  </header>
+  <!-- Splash -->
+  <div id="splash">
+    <h1>Tainan Salão</h1>
+    <button onclick="irParaLogin()">Entrar</button>
+  </div>
 
-  <main>
-    <h2>Agendar Novo Atendimento</h2>
-    <form id="form-agendamento">
-      <label>Nome do Cliente:</label><br>
-      <input type="text" id="cliente" required><br><br>
+  <!-- Login -->
+  <div id="login">
+    <div class="form">
+      <h2>Login</h2>
+      <input type="email" id="email" placeholder="E-mail" />
+      <input type="password" id="senha" placeholder="Senha" />
+      <button onclick="login()">Entrar</button>
+      <p>ou</p>
+      <button onclick="criarConta()">Criar Conta</button>
+    </div>
+  </div>
 
-      <label>Serviço:</label><br>
-      <input type="text" id="servico" required><br><br>
+  <!-- App -->
+  <div id="app">
+    <nav>
+      <h2>Tainan Salão</h2>
+      <button data-section="clientes" onclick="mostrar('clientes')" class="active">Clientes</button>
+      <button data-section="profissionais" onclick="mostrar('profissionais')">Profissionais</button>
+      <button data-section="produtos" onclick="mostrar('produtos')">Produtos</button>
+      <button data-section="agendamentos" onclick="mostrar('agendamentos')">Agendamentos</button>
+      <button data-section="financeiro" onclick="mostrar('financeiro')">Financeiro</button>
+      <button onclick="logout()">Sair</button>
+    </nav>
 
-      <label>Data e Hora:</label><br>
-      <input type="datetime-local" id="datahora" required><br><br>
+    <section id="clientes">
+      <h2>Clientes</h2>
+      <p>Área para gerenciar clientes.</p>
+    </section>
 
-      <label>Profissional:</label><br>
-      <input type="text" id="profissional" required><br><br>
+    <section id="profissionais">
+      <h2>Profissionais</h2>
+      <p>Área para gerenciar profissionais.</p>
+    </section>
 
-      <button type="submit">Agendar</button>
-    </form>
+    <section id="produtos">
+      <h2>Produtos</h2>
+      <p>Área para gerenciar produtos.</p>
+    </section>
 
-    <h2>📋 Agendamentos do Dia</h2>
-    <ul id="lista-agendamentos"></ul>
-  </main>
+    <section id="agendamentos">
+      <h2>Agendamentos</h2>
+      <p>Área para gerenciar agendamentos.</p>
+    </section>
 
-  <script>
-    const form = document.getElementById('form-agendamento');
-    const lista = document.getElementById('lista-agendamentos');
-
-    // Carrega agendamentos salvos
-    window.addEventListener('load', () => {
-      const agendamentos = JSON.parse(localStorage.getItem('agendamentos')) || [];
-      agendamentos.forEach(adicionarNaLista);
-    });
-
-    form.addEventListener('submit', function (e) {
-      e.preventDefault();
-
-      const cliente = document.getElementById('cliente').value;
-      const servico = document.getElementById('servico').value;
-      const datahora = document.getElementById('datahora').value;
-      const profissional = document.getElementById('profissional').value;
-
-      const agendamento = { cliente, servico, datahora, profissional };
-      adicionarNaLista(agendamento);
-      salvarAgendamento(agendamento);
-      form.reset();
-    });
-
-    function adicionarNaLista(agendamento) {
-      const item = document.createElement('li');
-      item.textContent = `${agendamento.datahora} - ${agendamento.cliente} | ${agendamento.servico} com ${agendamento.profissional}`;
-      lista.appendChild(item);
-    }
-
-    function salvarAgendamento(agendamento) {
-      const agendamentos = JSON.parse(localStorage.getItem('agendamentos')) || [];
-      agendamentos.push(agendamento);
-      localStorage.setItem('agendamentos', JSON.stringify(agendamentos));
-    }
-  </script>
+    <section id="financeiro">
+      <h2>Financeiro</h2>
+      <p>Área para gerenciar finanças.</p>
+    </section>
+  </div>
 
 </body>
 </html>
-
