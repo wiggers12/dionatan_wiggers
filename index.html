@@ -8,7 +8,320 @@
 <style>
     * {margin:0; padding:0; box-sizing:border-box;}
     html {scroll-behavior: smooth;}
-    body {
+    body {<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>WW Análise e Desenvolvimento Web — Dionatan Wiggers</title>
+<meta name="description" content="Sites, gestão e apps que geram resultado. Planos acessíveis com integração a WhatsApp, Google Business e automações.">
+<link rel="icon" href="img/logo-ww.png" type="image/png"/>
+
+<!-- OG -->
+<meta property="og:title" content="WW Análise e Desenvolvimento Web — Dionatan Wiggers">
+<meta property="og:description" content="Sites, gestão e apps que geram resultado.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="img/dionatan.jpg">
+<meta property="og:url" content="https://seu-dominio/">
+
+<style>
+:root{
+  --bg:#0c0f13; --card:#121821; --muted:#9fb0c5; --text:#e8f1fb; --line:#1f2a38;
+  --brand:#38bdf8; /* ciano do seu logo */
+  --brand2:#7dd3fc; /* degradê */
+  --ok:#12c27a; --warn:#ffb020; --danger:#ff5c5c;
+  --radius:18px; --shadow:0 18px 40px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:radial-gradient(1200px 800px at 70% -10%,#0e131a 0%,#0c0f13 50%,#0a0d11 100%);color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+a{color:inherit;text-decoration:none}
+img{max-width:100%;display:block}
+.container{width:min(1120px,92%);margin-inline:auto}
+header{position:sticky;top:0;z-index:40;background:rgba(12,15,19,.6);backdrop-filter:blur(10px);border-bottom:1px solid rgba(255,255,255,.06)}
+.nav{display:flex;align-items:center;justify-content:space-between;padding:12px 0}
+.brand{display:flex;align-items:center;gap:12px}
+.brand .logo{inline-size:40px;block-size:40px;border-radius:12px;overflow:hidden;background:#101620;border:1px solid #1c2632;display:grid;place-items:center}
+.brand strong{font-size:1.04rem;letter-spacing:.3px}
+nav a{padding:8px 12px;border-radius:10px;color:var(--muted);font-weight:600}
+nav a:hover{background:rgba(255,255,255,.06);color:var(--text)}
+.btn{display:inline-flex;align-items:center;gap:.6rem;background:linear-gradient(135deg,var(--brand),var(--brand2));color:#0b1117;padding:12px 18px;border-radius:12px;font-weight:900;border:0;box-shadow:var(--shadow);transition:.2s}
+.btn:hover{transform:translateY(-2px)}
+.btn-outline{background:transparent;border:1.6px solid var(--brand);color:var(--text);box-shadow:none}
+.badge{display:inline-flex;align-items:center;gap:8px;background:#0e1620;color:#cfe1f7;border:1px solid #1d2936;padding:6px 10px;border-radius:999px;font-weight:700;font-size:.82rem}
+.tag{background:#0f1a26;border:1px solid #223043;color:#b7c7db;padding:6px 10px;border-radius:999px;font-weight:700;font-size:.8rem}
+
+/* hero */
+.hero{display:grid;grid-template-columns:1.05fr .95fr;gap:36px;align-items:center;padding:56px 0}
+.hero h1{font-size:clamp(28px,4.2vw,46px);line-height:1.1;margin:8px 0 10px}
+.hero p{color:var(--muted);font-size:1.08rem}
+.hero-visual{border-radius:var(--radius);overflow:hidden;border:1px solid #1f2a38;box-shadow:var(--shadow);background:linear-gradient(135deg,#0b1219,#0e1723)}
+.hero-visual img{opacity:.96}
+
+/* sections */
+section{padding:64px 0}
+.grid{display:grid;gap:16px}
+.grid-3{grid-template-columns:repeat(3,1fr)}
+.card{background:linear-gradient(180deg,#121821,#101720);border:1px solid #1f2a38;border-radius:18px;padding:20px;box-shadow:var(--shadow)}
+.card h3{margin:6px 0 4px}
+.card p{color:var(--muted)}
+
+/* pricing */
+.price{font-size:2rem;font-weight:900}
+.small{font-size:.88rem;color:var(--muted)}
+.list{margin:10px 0 0 18px;color:#cbd8e6}
+.pop{outline:2px solid var(--brand); box-shadow:0 0 0 6px rgba(56,189,248,.12)}
+
+/* faq */
+details{background:#121821;border:1px solid #1f2a38;border-radius:14px;padding:14px}
+details+details{margin-top:10px}
+summary{cursor:pointer;font-weight:800}
+
+/* footer & float */
+footer{border-top:1px solid rgba(255,255,255,.06);padding:28px 0;color:var(--muted)}
+.wpp-float{position:fixed;right:18px;bottom:18px;z-index:60;display:inline-flex;align-items:center;gap:10px;background:#25D366;color:#0b2817;border-radius:999px;padding:12px 14px;font-weight:900;box-shadow:var(--shadow)}
+.wpp-float img{width:22px;height:22px}
+
+@media (max-width:980px){
+  .hero{grid-template-columns:1fr}
+  .grid-3{grid-template-columns:1fr}
+  nav{display:none}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="container nav">
+    <div class="brand">
+      <span class="logo"><img src="img/logo-ww.png" alt="WW Desenvolvedor Web" width="40" height="40"></span>
+      <div>
+        <strong>WW Análise & Desenvolvimento Web</strong><br>
+        <span style="color:var(--muted);font-size:.85rem">por Dionatan Wiggers</span>
+      </div>
+    </div>
+    <nav>
+      <a href="#servicos">Serviços</a>
+      <a href="#planos">Planos</a>
+      <a href="#depoimentos">Depoimentos</a>
+      <a href="#faq">FAQ</a>
+      <a href="#contato">Contato</a>
+    </nav>
+  </div>
+</header>
+
+<main class="container">
+  <!-- HERO -->
+  <section class="hero">
+    <div>
+      <span class="badge">Sites • Gestão • Apps • Automação</span>
+      <h1>Sites e <span style="color:var(--brand2)">soluções digitais</span> que geram resultado.</h1>
+      <p>Criação de sites, Google Business, gestão financeira integrada e aplicativos sob medida. Tudo em planos mensais acessíveis e suporte direto comigo.</p>
+      <div style="display:flex;gap:10px;margin-top:14px;flex-wrap:wrap">
+        <a class="btn" href="#planos">Ver planos</a>
+        <a class="btn btn-outline" id="btn-instagram" href="https://instagram.com/wiggers_dionatan" target="_blank" rel="noopener">Abrir Instagram</a>
+        <a class="btn btn-outline" href="https://wa.me/5551989378751?text=Ol%C3%A1%2C%20quero%20um%20or%C3%A7amento%20com%20a%20WW%20Desenvolvimento%20Web." target="_blank" rel="noopener">WhatsApp</a>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px">
+        <span class="tag">SEO e Performance</span>
+        <span class="tag">Hospedagem incluída</span>
+        <span class="tag">Atualizações mensais</span>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <!-- foto sua (coloque em img/dionatan.jpg) -->
+      <img src="img/dionatan.jpg" alt="Dionatan Wiggers — WW Análise e Desenvolvimento Web">
+    </div>
+  </section>
+
+  <!-- SERVIÇOS -->
+  <section id="servicos">
+    <h2 style="margin:0 0 14px">O que eu entrego</h2>
+    <div class="grid grid-3">
+      <article class="card">
+        <h3>Sites Profissionais</h3>
+        <p>Landing pages e sites completos, responsivos, rápidos e indexados no Google.</p>
+      </article>
+      <article class="card">
+        <h3>Google Business</h3>
+        <p>Criação/otimização do seu perfil para aparecer no mapa e receber contatos.</p>
+      </article>
+      <article class="card">
+        <h3>Gestão Financeira</h3>
+        <p>Ferramentas simples para organizar entradas/saídas e enxergar seus números.</p>
+      </article>
+      <article class="card">
+        <h3>Apps de Catálogo</h3>
+        <p>Aplicativo leve para mostrar produtos/serviços e receber pedidos.</p>
+      </article>
+      <article class="card">
+        <h3>App Exclusivo</h3>
+        <p>Solução sob medida para o seu negócio (processos, agendamentos, etc.).</p>
+      </article>
+      <article class="card">
+        <h3>Integrações</h3>
+        <p>WhatsApp, Instagram, formulários, automações e relatórios.</p>
+      </article>
+    </div>
+  </section>
+
+  <!-- PLANOS -->
+  <section id="planos">
+    <h2 style="margin:0 0 14px">Planos WW</h2>
+    <div class="grid grid-3">
+      <article class="card">
+        <h3>Plano Básico</h3>
+        <div class="price">R$ 39,90<span class="small">/mês</span></div>
+        <ul class="list">
+          <li>Site profissional</li>
+          <li>Google Business</li>
+          <li>Hospedagem e suporte</li>
+        </ul>
+        <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
+          <a class="btn" href="https://wa.me/5551989378751?text=Quero%20o%20Plano%20B%C3%A1sico%20(R$%2039,90)%20da%20WW." target="_blank" rel="noopener">Assinar</a>
+          <a class="btn btn-outline" href="#faq">Detalhes</a>
+        </div>
+      </article>
+
+      <article class="card pop">
+        <h3>Plano Standard</h3>
+        <div class="price">R$ 49,90<span class="small">/mês</span></div>
+        <ul class="list">
+          <li>Site + Google Business</li>
+          <li>Gestão Financeira</li>
+          <li>Relatórios simples</li>
+        </ul>
+        <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
+          <a class="btn" href="https://wa.me/5551989378751?text=Quero%20o%20Plano%20Standard%20(R$%2049,90)%20da%20WW." target="_blank" rel="noopener">Assinar</a>
+          <a class="btn btn-outline" href="#faq">Detalhes</a>
+        </div>
+      </article>
+
+      <article class="card">
+        <h3>Plano Premium</h3>
+        <div class="price">Sob consulta</div>
+        <ul class="list">
+          <li>Tudo do Standard</li>
+          <li>App de Catálogo</li>
+          <li>Automação avançada</li>
+        </ul>
+        <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
+          <a class="btn" href="https://wa.me/5551989378751?text=Tenho%20interesse%20no%20Plano%20Premium%20da%20WW." target="_blank" rel="noopener">Falar no Whats</a>
+          <a class="btn btn-outline" href="#faq">Detalhes</a>
+        </div>
+      </article>
+
+      <article class="card" style="grid-column:1/-1">
+        <h3>Plano Infinit</h3>
+        <div class="price">Sob consulta</div>
+        <ul class="list">
+          <li>Tudo dos outros planos</li>
+          <li>App exclusivo da empresa (sob medida)</li>
+          <li>Roadmap e suporte prioritário</li>
+        </ul>
+        <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
+          <a class="btn" href="https://wa.me/5551989378751?text=Quero%20o%20Plano%20Infinit%20(Exclusivo)%20da%20WW." target="_blank" rel="noopener">Solicitar proposta</a>
+          <a class="btn btn-outline" href="#faq">Detalhes</a>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- DEPOIMENTOS (placeholders) -->
+  <section id="depoimentos">
+    <h2 style="margin:0 0 14px">O que falam do meu trabalho</h2>
+    <div class="card">
+      <blockquote style="margin:0;line-height:1.6;color:#dbe7f5">
+        “Entrega rápida e comunicação clara. Nosso site ficou leve e já trouxe clientes pelo Google.” — Cliente A
+      </blockquote>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq">
+    <h2 style="margin:0 0 14px">Perguntas frequentes</h2>
+    <details open><summary>Os valores são mensais?</summary><p>Sim, os planos são mensais e incluem suporte, hospedagem e atualizações básicas.</p></details>
+    <details><summary>Consigo migrar de plano depois?</summary><p>Sim, você pode evoluir de plano a qualquer momento.</p></details>
+    <details><summary>Faz contrato?</summary><p>Sim, contrato simples com escopo e prazos de cada plano.</p></details>
+  </section>
+
+  <!-- CONTATO -->
+  <section id="contato">
+    <h2 style="margin:0 0 14px">Vamos tirar sua ideia do papel</h2>
+    <div class="grid" style="grid-template-columns:1.1fr .9fr;gap:16px">
+      <div class="card">
+        <form id="lead" autocomplete="on">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+            <input id="nome" placeholder="Seu nome" required>
+            <input id="tel" placeholder="Seu WhatsApp (55DDDNÚMERO)" required>
+          </div>
+          <textarea id="mensagem" rows="5" placeholder="Conte em poucas linhas o que você precisa (site, gestão, app...)" required></textarea>
+          <div style="display:flex;gap:10px;flex-wrap:wrap">
+            <button class="btn" type="submit">Enviar no WhatsApp</button>
+            <a class="btn btn-outline" id="btn-instagram-2" href="https://instagram.com/wiggers_dionatan" target="_blank" rel="noopener">Abrir Instagram</a>
+          </div>
+          <p class="small">Atendo on-line para todo o Brasil.</p>
+        </form>
+      </div>
+      <aside class="card">
+        <h3>WW • Dionatan Wiggers</h3>
+        <p class="small">Sites, Google Business, gestão financeira e apps.</p>
+        <p class="small">Canais:</p>
+        <p class="small"><a href="https://wa.me/5551989378751" target="_blank" rel="noopener">WhatsApp</a> • <a href="https://instagram.com/wiggers_dionatan" target="_blank" rel="noopener">Instagram</a></p>
+      </aside>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="container" style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
+    <p>© <span id="year"></span> WW Análise e Desenvolvimento Web — Dionatan Wiggers</p>
+    <div style="display:flex;gap:10px">
+      <a class="badge" href="https://wa.me/5551989378751" target="_blank" rel="noopener">WhatsApp</a>
+      <a class="badge" href="https://instagram.com/wiggers_dionatan" target="_blank" rel="noopener">Instagram</a>
+    </div>
+  </div>
+</footer>
+
+<!-- botão flutuante WhatsApp -->
+<a class="wpp-float" id="wpp-float" target="_blank" rel="noopener" aria-label="WhatsApp">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt=""> Falar no Whats
+</a>
+
+<script>
+  // ano
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  // botão flutuante: abre whatsapp com tracking simples
+  const WPP = '5551989378751';
+  const page = encodeURIComponent(document.title + ' - ' + location.href);
+  const msg  = encodeURIComponent(`Olá, cheguei pela sua página (${page}) e quero um orçamento.`);
+  document.getElementById('wpp-float').href = `https://wa.me/${WPP}?text=${msg}`;
+
+  // formulário -> abrir conversa no WhatsApp
+  document.getElementById('lead').addEventListener('submit', (e)=>{
+    e.preventDefault();
+    const nome = encodeURIComponent(document.getElementById('nome').value.trim());
+    const tel  = encodeURIComponent(document.getElementById('tel').value.trim());
+    const txt  = encodeURIComponent(document.getElementById('mensagem').value.trim());
+    const text = `Olá, sou ${nome}. Meu WhatsApp: ${tel}.%0A%0A${txt}%0A%0AEnviado pela página da WW.`;
+    window.open(`https://wa.me/${WPP}?text=${text}`, '_blank');
+  });
+
+  // botões "Abrir Instagram" com deep link (tenta app; fallback web)
+  const openIG = (username) => {
+    const app = `instagram://user?username=${username}`;
+    const web = `https://instagram.com/${username}`;
+    // tenta app
+    const a = document.createElement('a'); a.href = app; document.body.appendChild(a); a.click();
+    // fallback web após 600ms
+    setTimeout(()=>{ window.open(web,'_blank'); }, 600);
+  };
+  document.getElementById('btn-instagram').addEventListener('click', (e)=>{ e.preventDefault(); openIG('wiggers_dionatan'); });
+  document.getElementById('btn-instagram-2').addEventListener('click', (e)=>{ e.preventDefault(); openIG('wiggers_dionatan'); });
+</script>
+</body>
+</html>
+
         font-family: 'Montserrat', sans-serif;
         background-color: #0d1117;
         color: #e6edf3;
