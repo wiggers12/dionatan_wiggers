@@ -4,109 +4,105 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Wiggers — Dionatan Wiggers</title>
-<meta name="description" content="Wiggers — tecnologia, criação, construção e arte marcial em um só nome.">
+<meta name="description" content="Bem-vindo ao universo Wiggers — tecnologia, criação, construção e arte marcial em um só nome.">
 <link rel="icon" href="img/logo-ww.jpg" type="image/jpg">
 
 <style>
 :root{
-  --bg:#0b0d11; --text:#e9eef5; --muted:#9ca9b8; 
+  --bg:#0b0d11; --text:#e9eef5; --muted:#9ca9b8;
   --brand:#38bdf8; --radius:18px; --shadow:0 8px 25px rgba(0,0,0,.3);
 }
-
-/* BASE */
 *{box-sizing:border-box;margin:0;padding:0}
-body{
-  font-family:"Inter",system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
-  background:var(--bg);color:var(--text);overflow-x:hidden;
-}
+body{font-family:"Inter",system-ui,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden}
 a{text-decoration:none;color:inherit}
 
 /* SPLASH */
 #splash{
-  position:fixed;top:0;left:0;width:100%;height:100vh;
-  background:url('img/dionatan.jpg') center/cover no-repeat;
-  display:flex;flex-direction:column;justify-content:center;align-items:center;
-  text-align:center;color:#fff;z-index:999;
+  position:fixed;inset:0;background:url('img/dionatan.jpg') center/cover no-repeat;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;color:#fff;z-index:999;overflow:hidden;
 }
 #splash::before{
-  content:"";position:absolute;inset:0;
-  background:linear-gradient(to bottom,rgba(0,0,0,.6),rgba(0,0,0,.85));
+  content:"";position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,.5),rgba(0,0,0,.85));
 }
-#splash-content{
-  position:relative;z-index:2;max-width:700px;padding:20px;
-  animation:fadeIn 1.5s ease forwards;
+#splash-content{position:relative;z-index:2;animation:fadeIn 1.3s ease forwards;}
+#splash h1{font-size:clamp(26px,4vw,42px);margin-bottom:28px;font-weight:800}
+.cards{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
+  gap:20px;justify-content:center;width:min(600px,90%);
 }
-#splash h1{
-  font-size:clamp(26px,4vw,42px);
-  line-height:1.2;margin-bottom:16px;
+.card{
+  position:relative;border-radius:16px;overflow:hidden;
+  border:1px solid rgba(255,255,255,.1);cursor:pointer;transition:.3s;
+  box-shadow:var(--shadow);height:120px;
 }
-#splash p{
-  color:#cfd8e3;font-size:1.05rem;margin-bottom:24px;
+.card video{
+  position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:brightness(0.8);
 }
-#splash .btn{
-  display:inline-flex;align-items:center;justify-content:center;gap:10px;
-  background:#25D366;color:#0b2817;padding:14px 24px;
-  border-radius:999px;font-weight:900;box-shadow:var(--shadow);
-  transition:.3s;font-size:1.05rem;min-width:220px;
+.card span{
+  position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  font-size:2rem;font-weight:800;text-shadow:0 0 12px rgba(0,0,0,.8);
 }
-#splash .btn:hover{transform:translateY(-2px);}
-#splash .btn-secondary{
-  background:transparent;color:#fff;border:2px solid #fff;
-  margin-top:12px;
-}
-#splash .btn-secondary:hover{
-  background:#fff;color:#000;
-}
+.card:hover{transform:scale(1.08);}
 
-/* PORTAL PRINCIPAL */
+/* MODAL */
+.modal{
+  position:fixed;inset:0;background:rgba(0,0,0,.85);display:none;
+  align-items:center;justify-content:center;z-index:1000;
+}
+.modal-content{
+  position:relative;background:rgba(18,20,26,.9);
+  border-radius:20px;padding:30px;width:min(90%,420px);text-align:center;
+  border:1px solid rgba(255,255,255,.1);
+}
+.modal-content video{
+  width:100%;border-radius:14px;margin-bottom:15px;object-fit:cover;height:200px;
+}
+.modal-content h2{margin-bottom:8px;}
+.modal-content p{color:#cfd8e3;margin-bottom:20px;}
+.btn{
+  display:block;margin:8px auto;padding:12px 20px;border-radius:10px;
+  font-weight:700;text-decoration:none;width:80%;transition:.3s;
+}
+.btn-main{background:#25D366;color:#0b2817;}
+.btn-main:hover{transform:scale(1.05);}
+.btn-alt{border:1px solid #fff;color:#fff;background:transparent;}
+.btn-alt:hover{background:#fff;color:#000;}
+.close{position:absolute;top:15px;right:20px;font-size:1.8rem;cursor:pointer;color:#fff}
+
+/* PORTAL */
 #portal{display:none;animation:fadeIn 1s ease forwards;}
 header{
   position:sticky;top:0;background:rgba(15,17,23,.75);
   backdrop-filter:blur(10px);border-bottom:1px solid rgba(255,255,255,.05);
-  z-index:50;
 }
-nav{
-  display:flex;justify-content:space-between;align-items:center;
-  max-width:1200px;margin:auto;padding:14px 20px;
-}
+nav{display:flex;justify-content:space-between;align-items:center;max-width:1200px;margin:auto;padding:14px 20px;}
 .logo{font-weight:900;font-size:1.2rem;color:var(--brand);letter-spacing:.5px}
 .hero{text-align:center;padding:80px 20px 50px;max-width:800px;margin:auto;}
 .hero h2{font-size:clamp(28px,4vw,44px);line-height:1.2;margin-bottom:14px;}
 .hero p{font-size:1.1rem;color:var(--muted);margin-bottom:20px;}
 .hero .btn{
   background:linear-gradient(135deg,#38bdf8,#7dd3fc);color:#0b1117;
-  padding:12px 20px;border-radius:12px;font-weight:800;text-decoration:none;
-  box-shadow:var(--shadow);transition:.2s;
+  padding:12px 20px;border-radius:12px;font-weight:800;box-shadow:var(--shadow);
 }
-.hero .btn:hover{transform:translateY(-2px)}
-
 .grid{
   display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
   gap:24px;width:min(1100px,92%);margin:50px auto;
 }
-.card{
+.card2{
   border-radius:var(--radius);padding:30px 20px;text-align:center;color:#fff;
   transition:.3s;text-decoration:none;
 }
-.card:hover{transform:translateY(-5px) scale(1.02);box-shadow:0 0 25px rgba(255,255,255,.1);}
-.card h3{margin-bottom:8px;font-size:1.4rem}
-.card p{font-size:.95rem;color:#e0e6ee}
+.card2:hover{transform:translateY(-5px) scale(1.02);}
+.card2 h3{margin-bottom:8px;font-size:1.4rem}
+.card2 p{font-size:.95rem;color:#e0e6ee}
 .ti{background:linear-gradient(135deg,#0d1b2a,#1b263b);border:1px solid #38bdf8}
 .obras{background:linear-gradient(135deg,#332e2e,#4f463c);border:1px solid #c0a060}
 .festas{background:linear-gradient(135deg,#3a2500,#f9a826);border:1px solid #fbc02d}
 .jj{background:linear-gradient(135deg,#1a1a1a,#3f2e00);border:1px solid #d4af37}
 
-footer{
-  text-align:center;padding:25px 10px;color:var(--muted);
-  border-top:1px solid rgba(255,255,255,.05);
-}
+footer{text-align:center;padding:25px 10px;color:var(--muted);border-top:1px solid rgba(255,255,255,.05);}
 footer a{color:var(--brand)}footer a:hover{text-decoration:underline}
-.wpp-float{
-  position:fixed;right:18px;bottom:18px;display:inline-flex;align-items:center;
-  gap:10px;background:#25D366;color:#0b2817;border-radius:999px;padding:12px 14px;
-  font-weight:900;box-shadow:var(--shadow);text-decoration:none;z-index:60;
-}
-.wpp-float img{width:22px;height:22px}
 
 /* ANIMAÇÕES */
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
@@ -117,71 +113,127 @@ footer a{color:var(--brand)}footer a:hover{text-decoration:underline}
 <!-- SPLASH -->
 <section id="splash">
   <div id="splash-content">
-    <p>Bem-vindo ao universo WIGGERS. Quatro áreas, uma só energia.</p>
-
-    <a href="https://wa.me/5551989378751?text=Ol%C3%A1%2C%20vi%20seu%20site%20e%20gostaria%20de%20falar%20sobre%20seus%20servi%C3%A7os."
-       class="btn">💬 Falar no WhatsApp</a>
-
-    <a href="#" class="btn btn-secondary" id="enterSite">🌐 Entrar no site</a>
+    <h1>Bem-vindo ao universo WIGGERS</h1>
+    <div class="cards">
+      <div class="card" data-modal="modal-ti">
+        <video autoplay muted loop playsinline src="https://videos.pexels.com/video-files/5495896/5495896-uhd_2560_1440_30fps.mp4"></video>
+        <span>💻</span>
+      </div>
+      <div class="card" data-modal="modal-obras">
+        <video autoplay muted loop playsinline src="https://videos.pexels.com/video-files/4489171/4489171-hd_1920_1080_25fps.mp4"></video>
+        <span>🧱</span>
+      </div>
+      <div class="card" data-modal="modal-festas">
+        <video autoplay muted loop playsinline src="https://videos.pexels.com/video-files/7975050/7975050-uhd_2560_1440_30fps.mp4"></video>
+        <span>🎉</span>
+      </div>
+      <div class="card" data-modal="modal-jj">
+        <video autoplay muted loop playsinline src="https://videos.pexels.com/video-files/4754289/4754289-uhd_2560_1440_25fps.mp4"></video>
+        <span>🥋</span>
+      </div>
+    </div>
   </div>
 </section>
 
-<!-- PORTAL PRINCIPAL -->
+<!-- MODAIS -->
+<div class="modal" id="modal-ti">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <video autoplay muted loop playsinline src="https://videos.pexels.com/video-files/5495896/5495896-uhd_2560_1440_30fps.mp4"></video>
+    <h2>💻 Desenvolvimento Web</h2>
+    <p>Sites, sistemas, gestão e aplicativos personalizados.</p>
+    <a href="https://wa.me/5551989378751?text=Olá,%20quero%20saber%20sobre%20os%20serviços%20de%20TI%20da%20Wiggers." class="btn btn-main">Falar no WhatsApp</a>
+    <a href="#" class="btn btn-alt enter">Entrar no site</a>
+  </div>
+</div>
+
+<div class="modal" id="modal-obras">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <video autoplay muted loop playsinline src="https://videos.pexels.com/video-files/4489171/4489171-hd_1920_1080_25fps.mp4"></video>
+    <h2>🧱 Obras & Móveis</h2>
+    <p>Instalação de pisos vinílicos, laminados e móveis sob medida.</p>
+    <a href="https://wa.me/5551989378751?text=Olá,%20quero%20um%20orçamento%20de%20obras%20e%20móveis." class="btn btn-main">Falar no WhatsApp</a>
+    <a href="#" class="btn btn-alt enter">Entrar no site</a>
+  </div>
+</div>
+
+<div class="modal" id="modal-festas">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <video autoplay muted loop playsinline src="https://videos.pexels.com/video-files/7975050/7975050-uhd_2560_1440_30fps.mp4"></video>
+    <h2>🎉 Festas & Brinquedos</h2>
+    <p>Aluguel de brinquedos e diversão para eventos e aniversários.</p>
+    <a href="https://wa.me/5551989378751?text=Olá,%20quero%20saber%20sobre%20os%20brinquedos%20para%20festas." class="btn btn-main">Falar no WhatsApp</a>
+    <a href="#" class="btn btn-alt enter">Entrar no site</a>
+  </div>
+</div>
+
+<div class="modal" id="modal-jj">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <video autoplay muted loop playsinline src="https://videos.pexels.com/video-files/4754289/4754289-uhd_2560_1440_25fps.mp4"></video>
+    <h2>🥋 Jiu-Jitsu Puro</h2>
+    <p>Treinos e disciplina faixa-preta com Dionatan Wiggers.</p>
+    <a href="https://wa.me/5551989378751?text=Olá,%20quero%20falar%20sobre%20Jiu-Jitsu%20Puro." class="btn btn-main">Falar no WhatsApp</a>
+    <a href="#" class="btn btn-alt enter">Entrar no site</a>
+  </div>
+</div>
+
+<!-- PORTAL -->
 <div id="portal">
   <header>
     <nav>
       <div class="logo">WIGGERS</div>
-      <a class="btn" href="https://wa.me/5551989378751?text=Ol%C3%A1%2C%20quero%20falar%20sobre%20os%20servi%C3%A7os%20da%20Wiggers.">Falar no WhatsApp</a>
+      <a class="btn" href="https://wa.me/5551989378751">WhatsApp</a>
     </nav>
   </header>
 
   <section class="hero">
     <h2>Dionatan Wiggers — tecnologia, criação, construção e arte marcial em um só nome.</h2>
-    <p>Atendimento em Porto Alegre e Região Metropolitana. Soluções digitais, serviços de obras, festas e jiu-jitsu.</p>
+    <p>Atendimento em Porto Alegre e Região Metropolitana.</p>
     <a class="btn" href="https://wa.me/5551989378751">Entrar em contato</a>
   </section>
 
   <section class="grid">
-    <a href="ti/index.html" class="card ti">
-      <h3>💻 Desenvolvimento Web</h3>
-      <p>Sites, sistemas, gestão e apps personalizados.</p>
-    </a>
-    <a href="obras/index.html" class="card obras">
-      <h3>🧱 Obras & Móveis</h3>
-      <p>Instalação de pisos vinílicos e móveis sob medida.</p>
-    </a>
-    <a href="festas/index.html" class="card festas">
-      <h3>🎉 Festas & Brinquedos</h3>
-      <p>Aluguel de brinquedos, camas elásticas e diversão garantida.</p>
-    </a>
-    <a href="jiujitsu/index.html" class="card jj">
-      <h3>🥋 Jiu-Jitsu Puro</h3>
-      <p>Disciplina, técnica e mentalidade faixa preta.</p>
-    </a>
+    <a href="ti/index.html" class="card2 ti"><h3>💻 Desenvolvimento Web</h3><p>Sites e sistemas sob medida.</p></a>
+    <a href="obras/index.html" class="card2 obras"><h3>🧱 Obras & Móveis</h3><p>Instalação e móveis sob medida.</p></a>
+    <a href="festas/index.html" class="card2 festas"><h3>🎉 Festas & Brinquedos</h3><p>Aluguel e diversão garantida.</p></a>
+    <a href="jiujitsu/index.html" class="card2 jj"><h3>🥋 Jiu-Jitsu Puro</h3><p>Disciplina e performance.</p></a>
   </section>
 
   <footer>
-    <p>© <span id="year"></span> Wiggers — Dionatan Wiggers | Porto Alegre e Região Metropolitana</p>
-    <p><a href="https://instagram.com/wiggers_dionatan" target="_blank" rel="noopener">Instagram</a> • 
-       <a href="https://wa.me/5551989378751" target="_blank" rel="noopener">WhatsApp</a></p>
+    <p>© <span id="year"></span> Wiggers — Dionatan Wiggers</p>
   </footer>
 </div>
-
-<!-- BOTÃO WHATSAPP FIXO -->
-<a class="wpp-float" href="https://wa.me/5551989378751?text=Ol%C3%A1%2C%20quero%20um%20or%C3%A7amento." target="_blank" rel="noopener">
-  <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt=""> Falar no Whats
-</a>
 
 <script>
 document.getElementById('year').textContent = new Date().getFullYear();
 
-// botão "Entrar no site"
-document.getElementById('enterSite').addEventListener('click', (e)=>{
-  e.preventDefault();
-  document.getElementById('splash').style.display='none';
-  document.getElementById('portal').style.display='block';
+const modals = document.querySelectorAll('.modal');
+const cards = document.querySelectorAll('.card');
+const closes = document.querySelectorAll('.close');
+const enters = document.querySelectorAll('.enter');
+
+cards.forEach(card=>{
+  card.addEventListener('click',()=>{
+    document.getElementById(card.dataset.modal).style.display='flex';
+  });
+});
+closes.forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    btn.parentElement.parentElement.style.display='none';
+  });
+});
+enters.forEach(btn=>{
+  btn.addEventListener('click',e=>{
+    e.preventDefault();
+    modals.forEach(m=>m.style.display='none');
+    document.getElementById('splash').style.display='none';
+    document.getElementById('portal').style.display='block';
+    window.scrollTo(0,0);
+  });
 });
 </script>
-
 </body>
 </html>
