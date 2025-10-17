@@ -4,102 +4,85 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Wiggers — Dionatan Wiggers</title>
-<meta name="description" content="Dionatan Wiggers — tecnologia, criação, construção e arte marcial em um só nome. Serviços em desenvolvimento web, obras, festas e jiu-jitsu em Porto Alegre e Região Metropolitana.">
+<meta name="description" content="Dionatan Wiggers — tecnologia, criação, construção e arte marcial em um só nome.">
 <link rel="icon" href="img/logo-ww.jpg" type="image/jpg">
 
 <style>
 :root{
-  --bg:#0b0d11;
-  --text:#e9eef5;
-  --muted:#9ca9b8;
-  --brand:#38bdf8;
-  --radius:18px;
-  --shadow:0 8px 25px rgba(0,0,0,.3);
+  --bg:#0b0d11; --text:#e9eef5; --muted:#9ca9b8; 
+  --brand:#38bdf8; --radius:18px; --shadow:0 8px 25px rgba(0,0,0,.3);
 }
+
+/* BASE */
 *{box-sizing:border-box;margin:0;padding:0}
 body{
   font-family:"Inter",system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
-  background:var(--bg);
-  color:var(--text);
-  min-height:100vh;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
+  background:var(--bg);color:var(--text);overflow-x:hidden;
 }
+a{text-decoration:none;color:inherit}
+
+/* SPLASH */
+#splash{
+  position:fixed;top:0;left:0;width:100%;height:100vh;
+  background:url('img/dionatan.jpg') center/cover no-repeat;
+  display:flex;flex-direction:column;justify-content:center;align-items:center;
+  text-align:center;color:#fff;z-index:999;
+}
+#splash::before{
+  content:"";position:absolute;inset:0;
+  background:linear-gradient(to bottom,rgba(0,0,0,.6),rgba(0,0,0,.85));
+}
+#splash-content{
+  position:relative;z-index:2;max-width:700px;padding:20px;
+  animation:fadeIn 1.5s ease forwards;
+}
+#splash h1{
+  font-size:clamp(26px,4vw,42px);
+  line-height:1.2;margin-bottom:16px;
+}
+#splash p{
+  color:#cfd8e3;font-size:1.05rem;margin-bottom:24px;
+}
+#splash .btn{
+  display:inline-flex;align-items:center;gap:10px;
+  background:#25D366;color:#0b2817;padding:14px 24px;
+  border-radius:999px;font-weight:900;box-shadow:var(--shadow);
+  transition:.3s;font-size:1.05rem;
+}
+#splash .btn:hover{transform:translateY(-2px);}
+
+/* PORTAL PRINCIPAL */
+#portal{display:none;animation:fadeIn 1s ease forwards;}
 header{
-  width:100%;
-  position:sticky;
-  top:0;
+  position:sticky;top:0;background:rgba(15,17,23,.75);
+  backdrop-filter:blur(10px);border-bottom:1px solid rgba(255,255,255,.05);
   z-index:50;
-  background:rgba(15,17,23,.75);
-  backdrop-filter:blur(10px);
-  border-bottom:1px solid rgba(255,255,255,.05);
 }
 nav{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  max-width:1200px;
-  margin:auto;
-  padding:14px 20px;
+  display:flex;justify-content:space-between;align-items:center;
+  max-width:1200px;margin:auto;padding:14px 20px;
 }
-.logo{
-  font-weight:900;
-  font-size:1.2rem;
-  letter-spacing:.5px;
-  color:var(--brand);
+.logo{font-weight:900;font-size:1.2rem;color:var(--brand);letter-spacing:.5px}
+.hero{text-align:center;padding:80px 20px 50px;max-width:800px;margin:auto;}
+.hero h2{font-size:clamp(28px,4vw,44px);line-height:1.2;margin-bottom:14px;}
+.hero p{font-size:1.1rem;color:var(--muted);margin-bottom:20px;}
+.hero .btn{
+  background:linear-gradient(135deg,#38bdf8,#7dd3fc);color:#0b1117;
+  padding:12px 20px;border-radius:12px;font-weight:800;text-decoration:none;
+  box-shadow:var(--shadow);transition:.2s;
 }
-.hero{
-  text-align:center;
-  padding:80px 20px 50px;
-  max-width:800px;
-}
-.hero h1{
-  font-size:clamp(28px,4vw,44px);
-  line-height:1.2;
-  margin-bottom:14px;
-}
-.hero p{
-  font-size:1.1rem;
-  color:var(--muted);
-  margin-bottom:20px;
-}
-.btn{
-  display:inline-flex;
-  align-items:center;
-  gap:10px;
-  background:linear-gradient(135deg,#38bdf8,#7dd3fc);
-  color:#0b1117;
-  padding:12px 20px;
-  border-radius:12px;
-  font-weight:800;
-  text-decoration:none;
-  box-shadow:var(--shadow);
-  transition:.2s;
-}
-.btn:hover{transform:translateY(-2px)}
+.hero .btn:hover{transform:translateY(-2px)}
 
 .grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
-  gap:24px;
-  width:min(1100px,92%);
-  margin:50px auto;
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+  gap:24px;width:min(1100px,92%);margin:50px auto;
 }
 .card{
-  border-radius:var(--radius);
-  padding:30px 20px;
-  text-align:center;
-  color:#fff;
-  cursor:pointer;
-  transition:.3s;
-  text-decoration:none;
+  border-radius:var(--radius);padding:30px 20px;text-align:center;color:#fff;
+  transition:.3s;text-decoration:none;
 }
-.card:hover{
-  transform:translateY(-5px) scale(1.02);
-  box-shadow:0 0 25px rgba(255,255,255,.1);
-}
-.card h2{margin-bottom:8px;font-size:1.4rem}
+.card:hover{transform:translateY(-5px) scale(1.02);box-shadow:0 0 25px rgba(255,255,255,.1);}
+.card h3{margin-bottom:8px;font-size:1.4rem}
 .card p{font-size:.95rem;color:#e0e6ee}
 .ti{background:linear-gradient(135deg,#0d1b2a,#1b263b);border:1px solid #38bdf8}
 .obras{background:linear-gradient(135deg,#332e2e,#4f463c);border:1px solid #c0a060}
@@ -107,82 +90,87 @@ nav{
 .jj{background:linear-gradient(135deg,#1a1a1a,#3f2e00);border:1px solid #d4af37}
 
 footer{
-  margin-top:auto;
-  width:100%;
-  text-align:center;
-  padding:25px 10px;
-  color:var(--muted);
+  text-align:center;padding:25px 10px;color:var(--muted);
   border-top:1px solid rgba(255,255,255,.05);
 }
-footer a{color:var(--brand);text-decoration:none}
-footer a:hover{text-decoration:underline}
-
+footer a{color:var(--brand)}footer a:hover{text-decoration:underline}
 .wpp-float{
-  position:fixed;
-  right:18px;
-  bottom:18px;
-  display:inline-flex;
-  align-items:center;
-  gap:10px;
-  background:#25D366;
-  color:#0b2817;
-  border-radius:999px;
-  padding:12px 14px;
-  font-weight:900;
-  box-shadow:var(--shadow);
-  text-decoration:none;
+  position:fixed;right:18px;bottom:18px;display:inline-flex;align-items:center;
+  gap:10px;background:#25D366;color:#0b2817;border-radius:999px;padding:12px 14px;
+  font-weight:900;box-shadow:var(--shadow);text-decoration:none;z-index:60;
 }
 .wpp-float img{width:22px;height:22px}
+
+/* ANIMAÇÕES */
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
 </style>
 </head>
 <body>
 
-<header>
-  <nav>
-    <div class="logo">WIGGERS</div>
-    <a class="btn" href="https://wa.me/5551989378751?text=Ol%C3%A1%2C%20vi%20seu%20site%20e%20gostaria%20de%20mais%20informa%C3%A7%C3%B5es.">Falar no WhatsApp</a>
-  </nav>
-</header>
-
-<section class="hero">
-  <h1>Dionatan Wiggers — tecnologia, criação, construção e arte marcial em um só nome.</h1>
-  <p>Atendimento em Porto Alegre e Região Metropolitana. Soluções digitais, serviços de obras e móveis sob medida, locação de brinquedos e projetos voltados ao jiu-jitsu.</p>
-  <a class="btn" href="https://wa.me/5551989378751?text=Ol%C3%A1%2C%20quero%20falar%20sobre%20seus%20servi%C3%A7os.">Entrar em contato</a>
+<!-- SPLASH -->
+<section id="splash">
+  <div id="splash-content">
+    <h1>Dionatan Wiggers — tecnologia, criação, construção e arte marcial em um só nome.</h1>
+    <p>Bem-vindo ao universo WIGGERS. Quatro áreas, uma só energia.</p>
+    <a href="https://wa.me/5551989378751?text=Ol%C3%A1%2C%20vi%20seu%20site%20e%20gostaria%20de%20falar%20sobre%20seus%20servi%C3%A7os." 
+       class="btn" id="enterSite">💬 Falar no WhatsApp</a>
+  </div>
 </section>
 
-<section class="grid">
-  <a href="ti/index.html" class="card ti">
-    <h2>💻 Desenvolvimento Web</h2>
-    <p>Sites, sistemas, gestão e apps personalizados.</p>
-  </a>
+<!-- PORTAL PRINCIPAL -->
+<div id="portal">
+  <header>
+    <nav>
+      <div class="logo">WIGGERS</div>
+      <a class="btn" href="https://wa.me/5551989378751?text=Ol%C3%A1%2C%20quero%20falar%20sobre%20os%20servi%C3%A7os%20da%20Wiggers.">Falar no WhatsApp</a>
+    </nav>
+  </header>
 
-  <a href="obras/index.html" class="card obras">
-    <h2>🧱 Obras & Móveis</h2>
-    <p>Instalação de pisos vinílicos e móveis sob medida com acabamento profissional.</p>
-  </a>
+  <section class="hero">
+    <h2>Dionatan Wiggers — tecnologia, criação, construção e arte marcial em um só nome.</h2>
+    <p>Atendimento em Porto Alegre e Região Metropolitana. Soluções digitais, serviços de obras, festas e jiu-jitsu.</p>
+    <a class="btn" href="https://wa.me/5551989378751">Entrar em contato</a>
+  </section>
 
-  <a href="festas/index.html" class="card festas">
-    <h2>🎉 Festas & Brinquedos</h2>
-    <p>Aluguel de brinquedos, camas elásticas e diversão garantida.</p>
-  </a>
+  <section class="grid">
+    <a href="ti/index.html" class="card ti">
+      <h3>💻 Desenvolvimento Web</h3>
+      <p>Sites, sistemas, gestão e apps personalizados.</p>
+    </a>
+    <a href="obras/index.html" class="card obras">
+      <h3>🧱 Obras & Móveis</h3>
+      <p>Instalação de pisos vinílicos e móveis sob medida.</p>
+    </a>
+    <a href="festas/index.html" class="card festas">
+      <h3>🎉 Festas & Brinquedos</h3>
+      <p>Aluguel de brinquedos, camas elásticas e diversão garantida.</p>
+    </a>
+    <a href="jiujitsu/index.html" class="card jj">
+      <h3>🥋 Jiu-Jitsu Puro</h3>
+      <p>Disciplina, técnica e mentalidade faixa preta.</p>
+    </a>
+  </section>
 
-  <a href="jiujitsu/index.html" class="card jj">
-    <h2>🥋 Jiu-Jitsu Puro</h2>
-    <p>Disciplina, técnica e mentalidade faixa preta.</p>
-  </a>
-</section>
+  <footer>
+    <p>© <span id="year"></span> Wiggers — Dionatan Wiggers | Porto Alegre e Região Metropolitana</p>
+    <p><a href="https://instagram.com/wiggers_dionatan" target="_blank" rel="noopener">Instagram</a> • 
+       <a href="https://wa.me/5551989378751" target="_blank" rel="noopener">WhatsApp</a></p>
+  </footer>
+</div>
 
-<footer>
-  <p>© <span id="year"></span> Wiggers — Dionatan Wiggers | Porto Alegre e Região Metropolitana</p>
-  <p><a href="https://instagram.com/wiggers_dionatan" target="_blank" rel="noopener">Instagram</a> • <a href="https://wa.me/5551989378751" target="_blank" rel="noopener">WhatsApp</a></p>
-</footer>
-
-<a class="wpp-float" href="https://wa.me/5551989378751?text=Ol%C3%A1%2C%20gostaria%20de%20um%20or%C3%A7amento." target="_blank" rel="noopener">
+<!-- BOTÃO WHATSAPP FIXO -->
+<a class="wpp-float" href="https://wa.me/5551989378751?text=Ol%C3%A1%2C%20quero%20um%20or%C3%A7amento." target="_blank" rel="noopener">
   <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt=""> Falar no Whats
 </a>
 
 <script>
 document.getElementById('year').textContent = new Date().getFullYear();
+
+document.getElementById('enterSite').addEventListener('click', (e)=>{
+  e.preventDefault();
+  document.getElementById('splash').style.display='none';
+  document.getElementById('portal').style.display='block';
+});
 </script>
 
 </body>
