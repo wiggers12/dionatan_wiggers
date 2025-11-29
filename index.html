@@ -247,30 +247,36 @@ const SignalModal = ({ open, onClose, prediction }) => {
 };
 
 /* ============================================================
-   MODAL — REGRAS
+   MODAL — REGRAS (NOVO COM BOTÃO VOLTAR)
    ============================================================ */
 const RulesModal = ({ open, onClose }) => {
     if (!open) return null;
 
     return (
         <div className="fixed inset-0 bg-black/70 z-50 flex justify-center items-center p-4">
-            <div className="bg-[#1a1a1a] w-full max-w-md p-6 rounded-xl shadow-xl">
+            <div className="bg-[#1a1a1a] w-full max-w-md rounded-xl p-6 shadow-xl max-h-[85vh] overflow-hidden">
 
+                {/* TOPO + BOTÃO VOLTAR */}
                 <div className="flex justify-between items-center border-b border-gray-700 pb-3">
                     <h2 className="text-xl font-bold flex items-center">
                         <i data-lucide="zap" class="w-5 h-5 text-yellow-500 mr-2"></i>
                         Regras da Estratégia
                     </h2>
-                    <button onClick={onClose}>
-                        <i data-lucide="x" class="w-6 h-6 text-white"></i>
+
+                    <button
+                        onClick={onClose}
+                        className="text-white bg-red-600 hover:bg-red-700 px-3 py-1 rounded-lg text-sm font-semibold shadow"
+                    >
+                        Voltar
                     </button>
                 </div>
 
+                {/* CONTEÚDO */}
                 <div className="space-y-4 mt-4 text-gray-300 text-sm">
 
                     <div className="bg-[#262626] p-3 rounded-lg">
                         <p className="font-bold text-green-400 mb-1">🎯 Objetivo:</p>
-                        Buscar no mínimo **2.0x** após o sinal da IA.
+                        Buscar no mínimo <strong>2.0x</strong> após o sinal da IA.
                     </div>
 
                     <div className="bg-[#262626] p-3 rounded-lg">
@@ -283,15 +289,14 @@ const RulesModal = ({ open, onClose }) => {
 
                     <div className="bg-[#262626] p-3 rounded-lg">
                         <p className="font-bold text-red-500 mb-1">🛑 STOP:</p>
-                        Se 3 velas forem abaixo de 2.0x → RED.
+                        Se **3 velas abaixo de 2.0x** → RED.
                     </div>
 
                 </div>
             </div>
         </div>
     );
-};
-/* ============================================================
+};/* ============================================================
    NAVIGATION BAR (Topo)
    ============================================================ */
 const NavigationBar = ({ nextSignal, onHistory }) => {
