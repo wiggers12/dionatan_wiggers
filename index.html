@@ -5,8 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
     <title>WiggersDev - Plataforma PRO</title>
-    <link rel="manifest" href="manifest.json">
-
 
     <!-- Tailwind -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -49,6 +47,25 @@
 </head>
 
 <body>
+<div id="relogioFloating" 
+     style="
+        position: fixed;
+        top: 60px;
+        left: 15px;
+        background: rgba(0,0,0,0.65);
+        padding: 8px 14px;
+        border-radius: 8px;
+        color: #00e676;
+        font-size: 16px;
+        font-weight: 700;
+        border: 2px solid #00e676;
+        box-shadow: 0 0 10px rgba(0,230,118,0.6);
+        z-index: 9999;
+        backdrop-filter: blur(6px);
+     ">
+    00:00:00
+</div>
+
     <div id="root"></div>
 
     <script type="text/babel">
@@ -601,19 +618,28 @@ ReactDOM.createRoot(document.getElementById("root")).render(<App />);
 setTimeout(() => {
     lucide.createIcons();
 }, 300);
-</script>
 
-</script>
-if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => {
-    navigator.serviceWorker
-      .register("sw.js")
-      .then(() => console.log("PWA ativo ✔"))
-      .catch(err => console.error("Erro SW:", err));
-  });
+</script> 
+
+<script>
+function atualizarRelogio() {
+    const el = document.getElementById("relogioFloating");
+    if (!el) return;
+
+    const agora = new Date();
+    const h = String(agora.getHours()).padStart(2, '0');
+    const m = String(agora.getMinutes()).padStart(2, '0');
+    const s = String(agora.getSeconds()).padStart(2, '0');
+
+    el.textContent = `${h}:${m}:${s}`;
 }
-</script>
 
+// Atualiza imediatamente
+atualizarRelogio();
+
+// Atualiza a cada segundo
+setInterval(atualizarRelogio, 1000);
+</script>
 </body>
 </html>
 
