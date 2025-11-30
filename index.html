@@ -20,6 +20,9 @@
     <!-- Firebase v9 compat (somente leitura) -->
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+    <script src="firebase-init.js"></script>
+    <script src="pwa-notifications.js"></script>
+
 
     <style>
         body {
@@ -47,24 +50,6 @@
 </head>
 
 <body>
-<div id="relogioFloating" 
-     style="
-        position: fixed;
-        top: 60px;
-        left: 15px;
-        background: rgba(0,0,0,0.65);
-        padding: 8px 14px;
-        border-radius: 8px;
-        color: #00e676;
-        font-size: 16px;
-        font-weight: 700;
-        border: 2px solid #00e676;
-        box-shadow: 0 0 10px rgba(0,230,118,0.6);
-        z-index: 9999;
-        backdrop-filter: blur(6px);
-     ">
-    00:00:00
-</div>
 
     <div id="root"></div>
 
@@ -326,8 +311,16 @@ const NavigationBar = ({ nextSignal, onHistory }) => {
             
             {/* MENU */}
             <div className="flex space-x-6 text-sm font-medium">
-                <span className="text-green-400 font-bold">🎮 JOGO</span>
-                <span 
+    <span className="text-green-400 font-bold">🎮 JOGO</span>
+
+    {/* RELÓGIO */}
+    <span 
+        id="relogioFloating"
+        className="text-gray-300 font-mono text-sm px-2 py-1 bg-[#222] rounded-lg ml-2"
+    >
+        --:--:--
+    </span>
+
                     className="text-gray-400 hover:text-white cursor-pointer transition"
                     onClick={onHistory}
                 >
@@ -431,6 +424,24 @@ const FooterBar = ({
    COMPONENTE PRINCIPAL
    ============================================================ */
 const App = () => {
+React.useEffect(() => {
+    function atualizarRelogio() {
+        const el = document.getElementById("relogioFloating");
+        if (!el) return;
+
+        const agora = new Date();
+        const h = String(agora.getHours()).padStart(2, '0');
+        const m = String(agora.getMinutes()).padStart(2, '0');
+        const s = String(agora.getSeconds()).padStart(2, '0');
+
+        el.textContent = `${h}:${m}:${s}`;
+    }
+
+    atualizarRelogio();
+    const interval = setInterval(atualizarRelogio, 1000);
+
+    return () => clearInterval(interval);
+}, []);
 
     /* -------------------------------------------
        1 — Config Firebase (somente leitura)
@@ -620,26 +631,6 @@ setTimeout(() => {
 }, 300);
 
 </script> 
-
-<script>
-function atualizarRelogio() {
-    const el = document.getElementById("relogioFloating");
-    if (!el) return;
-
-    const agora = new Date();
-    const h = String(agora.getHours()).padStart(2, '0');
-    const m = String(agora.getMinutes()).padStart(2, '0');
-    const s = String(agora.getSeconds()).padStart(2, '0');
-
-    el.textContent = `${h}:${m}:${s}`;
-}
-
-// Atualiza imediatamente
-atualizarRelogio();
-
-// Atualiza a cada segundo
-setInterval(atualizarRelogio, 1000);
-</script>
 </body>
 </html>
 
