@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel Estrategista - Frequência de Velas</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Firebase CDNs (Versão 9) -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.9.1/firebase-firestore-compat.js"></script>
+    <!-- Chart.js CDN para visualização de dados históricos -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0d1117; /* Fundo escuro */
+        }
+        .card {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease-in-out;
+        }
+        .bg-alta { background-color: #10b981; } /* Esmeralda */
+        .bg-baixa { background-color: #ef4444; } /* Vermelho */
+        .bg-transicao { background-color: #f59e0b; } /* Amarelo/Âmbar */
+        .bg-rosa { background-color: #e81d77; } /* Rosa forte para > 10.00x */
+    </style>
+</head>
+<body class="p-4 md:p-8">
+
+    <div class="max-w-6xl mx-auto">
+        <h1 class="text-3xl font-bold text-white mb-6 border-b border-gray-700 pb-2">
+            🤖 Robô Estrategista: Monitoramento e Análise de Frequência
+        </h1>
+        
+        <!-- Grid de Métricas Principais (3 Cards) -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            
+            <!-- CARD DE CICLO ATUAL (GRANDE IMPACTO VISUAL) -->
+            <div id="ciclo-card" class="card bg-gray-800 text-white rounded-lg p-6">
+                <p class="text-sm uppercase tracking-wider text-gray-300">Detecção de Ciclo Atual</p>
+                <p id="ciclo-atual" class="text-2xl md:text-4xl font-extrabold mt-1">
+                    Aguardando Análise...
+                </p>
+            </div>
+
+            <!-- NOVO CARD: ASSERTIVIDADE DO CLIQUE (Lido da Coleção Assertividade) -->
+            <div id="assertividade-card" class="card bg-blue-900 text-white rounded-lg p-6 flex flex-col justify-between">
+                <p class="text-sm uppercase tracking-wider text-blue-300">Assertividade do Robô (Cliques)</p>
+                <div class="text-5xl font-extrabold mt-1">
+                    <span id="assertividade-valor">0.00%</span>
+                </div>
+                <p class="text-xs text-blue-300 mt-2">
+                    <span id="greens-count">0</span>G • <span id="reds-count">0</span>R
+                    <span id="total-operacoes-assert" class="text-gray-500"> (0 total)</span>
+                </p>
+            </div>
+
+            <!-- Card de Rodadas Analisadas -->
+            <div class="card bg-gray-700 text-white rounded-lg p-6">
+                <p class="text-sm uppercase tracking-wider text-gray-400">Total de Velas Analisadas</p>
+                <p id="total-rodadas-analisadas" class="text-4xl font-extrabold mt-1">0</p>
+                <p class="text-xs text-gray-500 mt-2">Usado para cálculo do Ciclo (últimas 300)</p>
+            </div>
+        </div>
+
+
+        <!-- Grid Principal (Frequência e Status) -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+            
+            <!-- Card de Frequência de Multiplicadores (Últimas 100 Rodadas) -->
+            <div class="card bg-gray-900 text-white rounded-lg p-6 md:col-span-1">
+                <h2 class="text-xl font-semibold mb-3 text-yellow-500 border-b border-gray-700 pb-2">
+                    📊 Top 8 Multiplicadores Mais Frequentes (Últimas 100)
+                </h2>
+                <div id="frequencia-list" class="space-y-2">
+                    <!-- Lista de multiplicadores mais frequentes será injetada aqui -->
+                    <p class="text-sm text-gray-400">Calculando...</p>
+                </div>
+            </div>
+
+            <!-- Card de Status do Robô -->
+            <div class="card bg-gray-800 text-white rounded-lg p-6">
+                <h2 class="text-xl font-semibold mb-3 text-blue-400 border-b border-gray-700 pb-2">
+                    Status Atual e Sugestão
+                </h2>
+                <div class="space-y-4">
+                    <div>
+                        <p class="text-sm text-gray-400">Padrão Ativo:</p>
+                        <p id="padrao-ativo" class="text-xl font-bold text-yellow-300">Aguardando Padrão</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-400">Última Sugestão de Curto Prazo (Cache 50):</p>
+                        <p id="sugestao-ia" class="text-md italic text-gray-300">Aguardando análise de 50 rodadas...</p>
+                    </div>
+                    <p class="text-xs text-gray-500 pt-2 border-t border-gray-700">
+                        Última atualização: <span id="ultimo-update">--</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Gráfico de Histórico de Resultados -->
+        <div class="bg-gray-800 text-white rounded-lg p-6 mb-6">
+            <h2 class="text-xl font-semibold mb-3 text-cyan-400">Histórico de Últimas Rodadas (Valor)</h2>
+            <div class="relative h-72">
+                <canvas id="historicalChart"></canvas>
+            </div>
+        </div>
+
+        <!-- PAINEL DE ANÁLISE LONGO PRAZO E TEMPO -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+            
+            <!-- Longo Prazo (Padrões) -->
+            <div class="bg-gray-900 text-white rounded-lg p-6">
+                <h2 class="text-xl font-semibold mb-3 text-fuchsia-400">Padrões de Longo Prazo (300 Velas)</h2>
+                <p class="text-sm text-gray-400">Sugestão Otimizada (Baseada em milhares de dados):</p>
+                <p id="sugestao-longo-prazo" class="text-lg font-medium text-white mt-1">Aguardando primeira análise de 300 velas...</p>
+            </div>
+            
+            <!-- Análise de Tempo (Picos) -->
+            <div class="bg-gray-900 text-white rounded-lg p-6">
+                <h2 class="text-xl font-semibold mb-3 text-lime-400">Análise de Tempo (Horários de Pico)</h2>
+                <p class="text-sm text-gray-400">Melhores momentos para alta probabilidade de pico (Roxa/Rosa):</p>
+                <p id="analise-tempo" class="text-lg font-medium text-white mt-1">Aguardando primeira análise de tempo...</p>
+            </div>
+
+        </div>
+
+
+        <!-- Alerta de Configuração -->
+        <div id="config-alert" class="bg-yellow-800 text-white p-4 rounded-lg mb-4 hidden">
+            ⚠️ Por favor, preencha suas configurações de Firebase no código JavaScript.
+        </div>
+    </div>
+
+    <script>
+        // --- CONFIGURAÇÃO FIREBASE ---
+        // 🚨 Configurações inseridas pelo usuário
+        const firebaseConfig = {
+            apiKey: "AIzaSyBod8YVf5pKWI98m9rRR8axokDkNMlXX-k", 
+            authDomain: "aviatordaniel100x.app.com",
+            projectId: "aviatordaniel100x",
+            storageBucket: "aviatordaniel100x.storage.app",
+            messagingSenderId: "169015417803",
+            appId: "1:169015417803:web:ce4aa4f9b77d5ddb07344e"
+        };
+        
+        // COLEÇÕES CORRIGIDAS
+        const STATUS_COLECAO = "setup"; 
+        const HISTORICO_COLECAO = "historico_analise_ia"; 
+        const ASSERTIVIDADE_COLECAO = "assertividade"; // NOVO
+        const ASSERTIVIDADE_DOCUMENT = "dado"; // NOVO
+        const STATUS_DOCUMENT = "dashboard_metrics";
+
+        let db;
+        let chartInstance = null;
+
+        // Mapeamento de cores para o gráfico
+        const COLOR_MAP = {
+            'AZUL': 'rgba(37, 99, 235, 0.8)',      // Valor < 2.00
+            'ROXO': 'rgba(147, 51, 234, 0.8)',      // Valor >= 2.00 e < 10.00
+            'ROSA': 'rgba(232, 29, 119, 0.8)',      // Valor >= 10.00 (NOVO LIMITE)
+            'OUTRA': 'rgba(255, 255, 255, 0.8)' 
+        };
+
+        // Função para inicializar o Firebase
+        function initializeFirebase() {
+            if (firebaseConfig.projectId === "aviatordaniel100x") {
+                document.getElementById('config-alert').classList.add('hidden');
+            }
+            try {
+                firebase.initializeApp(firebaseConfig);
+                db = firebase.firestore();
+                listenForDataAndCalculate(); 
+                listenForAssertividade(); // Nova escuta para Assertividade
+            } catch (e) {
+                console.error("Erro ao inicializar Firebase:", e);
+                document.getElementById('config-alert').classList.remove('hidden'); 
+            }
+        }
+
+        // --- FUNÇÃO DEDICADA PARA ASSERTIVIDADE ---
+        function listenForAssertividade() {
+            if (!db) return;
+
+            db.collection(ASSERTIVIDADE_COLECAO).doc(ASSERTIVIDADE_DOCUMENT).onSnapshot(doc => {
+                if (doc.exists) {
+                    const data = doc.data();
+                    const greens = data.greens || 0;
+                    const reds = data.reds || 0;
+                    const total = greens + reds;
+                    const assertividadePct = total > 0 ? ((greens / total) * 100).toFixed(1) : '0.00';
+
+                    // Atualiza a UI da Assertividade
+                    document.getElementById('assertividade-valor').textContent = `${assertividadePct}%`;
+                    document.getElementById('greens-count').textContent = greens;
+                    document.getElementById('reds-count').textContent = reds;
+                    document.getElementById('total-operacoes-assert').textContent = `(${total} total)`;
+                    
+                    const assertividadeCard = document.getElementById('assertividade-card');
+                    assertividadeCard.classList.remove('bg-blue-900', 'bg-green-700');
+                    if (parseFloat(assertividadePct) >= 60) {
+                        assertividadeCard.classList.add('bg-green-700');
+                    } else {
+                        assertividadeCard.classList.add('bg-blue-900');
+                    }
+
+                }
+            }, error => {
+                console.error("Erro ao escutar assertividade:", error);
+            });
+        }
+
+
+        // --- FUNÇÃO DE CÁLCULO DE MÉTRICAS NO FRONTEND ---
+
+        const LIMITE_ROXO = 2.00;
+        const LIMITE_ROSA = 10.00; // NOVO LIMITE ROSA
+
+        // Função para determinar a cor do frontend
+        function determineColor(valor) {
+            if (valor >= LIMITE_ROSA) return 'ROSA';
+            if (valor >= LIMITE_ROXO) return 'ROXO';
+            return 'AZUL';
+        }
+
+        function calculateMetrics(history) {
+            let multiplicadores = {};
+            const totalRodadas = history.length; 
+            
+            if (totalRodadas === 0) {
+                return {
+                    frequencia_multiplicadores: [],
+                    total_rodadas: 0,
+                    ciclo_atual: "INDEFINIDO (Aguardando Dados)",
+                };
+            }
+
+            // 1. Agrupar e Contar Frequência
+            history.forEach(item => {
+                const valorNumerico = parseFloat(item.valor); 
+                const valorArredondado = valorNumerico ? valorNumerico.toFixed(2) : 'N/A';
+                
+                if (valorArredondado === 'N/A' || isNaN(valorNumerico)) return; 
+
+                if (multiplicadores[valorArredondado]) {
+                    multiplicadores[valorArredondado]++;
+                } else {
+                    multiplicadores[valorArredondado] = 1;
+                }
+            });
+
+            // 2. Converter para Array e Calcular Porcentagem
+            let frequenciaArray = Object.keys(multiplicadores).map(valor => {
+                const count = multiplicadores[valor];
+                return {
+                    valor: valor,
+                    count: count,
+                    percentage: ((count / totalRodadas) * 100).toFixed(2)
+                };
+            });
+
+            // 3. Ordenar por contagem (mais frequente primeiro)
+            frequenciaArray.sort((a, b) => b.count - a.count);
+            
+            // 4. Calcular Ciclo (Baseado na Taxa de Acerto >= 2.00x)
+            let totalAcerto = history.filter(item => parseFloat(item.valor) >= LIMITE_ROXO).length;
+            
+            let roxoPct = totalRodadas > 0 ? (totalAcerto / totalRodadas) * 100 : 0;
+            
+            let ciclo = "INDEFINIDO (Aguardando Dados)";
+            if (totalRodadas >= 20) {
+                if (roxoPct >= 40) {
+                    ciclo = `CICLO DE ALTA / TENDÊNCIA FORTE (${roxoPct.toFixed(1)}%)`;
+                } else if (roxoPct >= 25) {
+                    ciclo = `CICLO DE TRANSIÇÃO / LATERAL (${roxoPct.toFixed(1)}%)`;
+                } else {
+                    ciclo = `CICLO DE BAIXA / RISCO ALTO (${roxoPct.toFixed(1)}%)`;
+                }
+            }
+            
+            return {
+                frequencia_multiplicadores: frequenciaArray.slice(0, 8), // Retorna os 8 mais frequentes
+                total_rodadas: totalRodadas,
+                ciclo_atual: ciclo,
+            };
+        }
+
+        // --- ESCUTA DE DADOS E ORQUESTRAÇÃO ---
+        
+        function listenForDataAndCalculate() {
+            if (!db) return;
+
+            // 1. ESCUTA DO HISTÓRICO (Fonte de Verdade - 300 Velas)
+            db.collection(HISTORICO_COLECAO)
+                .orderBy('criado', 'desc')
+                .limit(300) // Limite de 300 para o cálculo no painel
+                .onSnapshot(historySnapshot => {
+                    
+                    const history = [];
+                    historySnapshot.forEach(doc => {
+                        history.push(doc.data());
+                    });
+                    
+                    const sortedHistory = history.reverse();
+
+                    // Calcula as métricas (Frequência e Ciclo)
+                    const calculatedMetrics = calculateMetrics(sortedHistory);
+                    
+                    const historyForChart = sortedHistory.slice(-30); 
+                    renderChart(historyForChart);
+
+                    // 2. Busca o Status da IA (Sugestões de Texto)
+                    db.collection(STATUS_COLECAO).doc(STATUS_DOCUMENT).onSnapshot(statusDoc => {
+                        let statusData = statusDoc.exists ? statusDoc.data() : {};
+                        
+                        // Combina os dados calculados (Ciclo, Frequência) com os dados de status/IA
+                        const combinedData = {
+                            ...calculatedMetrics, 
+                            ...statusData 
+                        };
+                        
+                        updateDashboard(combinedData);
+                    }, error => {
+                        console.error("Erro ao escutar status da IA:", error);
+                        updateDashboard(calculatedMetrics); 
+                    });
+
+
+                }, error => {
+                    console.error("Erro ao escutar histórico:", error);
+                });
+        }
+        
+        // --- MÉTODOS DE VISUALIZAÇÃO DO GRÁFICO ---
+
+        function renderChart(history) {
+            const ctx = document.getElementById('historicalChart').getContext('2d');
+            
+            const labels = history.map((_, index) => `#${index + 1}`);
+            // Garantir que a cor seja baseada no valor numérico
+            const backgroundColors = history.map(item => {
+                const val = parseFloat(item.valor);
+                return COLOR_MAP[determineColor(val)] || COLOR_MAP['OUTRA'];
+            });
+
+            if (chartInstance) {
+                chartInstance.destroy();
+            }
+
+            chartInstance = new Chart(ctx, {
+                type: 'bar', 
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Valor Multiplicador (X)',
+                        data: history.map(item => parseFloat(item.valor)), 
+                        backgroundColor: backgroundColors,
+                        borderColor: backgroundColors.map(c => c.replace('0.8', '1')), 
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: { color: 'rgba(255, 255, 255, 0.1)' },
+                            ticks: { color: 'white' }
+                        },
+                        x: {
+                            grid: { display: false },
+                            ticks: { color: 'white' }
+                        }
+                    },
+                    plugins: {
+                        legend: { labels: { color: 'white' } },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `Resultado: ${context.parsed.y}x`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+
+        // --- MÉTODOS DE ATUALIZAÇÃO DO DASHBOARD ---
+
+        function updateDashboard(data) {
+            const cicloCard = document.getElementById('ciclo-card');
+            const cicloAtualText = document.getElementById('ciclo-atual');
+            const totalRodadasAnalisadas = document.getElementById('total-rodadas-analisadas');
+            const frequenciaList = document.getElementById('frequencia-list');
+            const padraoAtivo = document.getElementById('padrao-ativo');
+            const sugestaoIa = document.getElementById('sugestao-ia');
+            const sugestaoLongoPrazo = document.getElementById('sugestao-longo-prazo');
+            const analiseTempo = document.getElementById('analise-tempo'); 
+            const ultimoUpdate = document.getElementById('ultimo-update');
+
+            // Leitura e Cálculo da Assertividade (Baseado no robô Python)
+            const totalCliques = data.total_operacoes || 0;
+            const acertosCliques = data.total_acertos || 0;
+            const assertividadePct = totalCliques > 0 ? ((acertosCliques / totalCliques) * 100).toFixed(2) : '0.00';
+
+
+            // 1. Atualizar o Card de Ciclo
+            const ciclo = data.ciclo_atual || "INDEFINIDO (Aguardando Dados)"; 
+            cicloAtualText.textContent = ciclo;
+            cicloCard.classList.remove('bg-alta', 'bg-baixa', 'bg-transicao', 'bg-gray-800');
+            
+            if (ciclo.includes("ALTA") || ciclo.includes("FORTE")) {
+                cicloCard.classList.add('bg-alta');
+            } else if (ciclo.includes("BAIXA") || ciclo.includes("RISCO ALTO")) {
+                cicloCard.classList.add('bg-baixa');
+            } else if (ciclo.includes("TRANSIÇÃO") || ciclo.includes("LATERAL")) {
+                cicloCard.classList.add('bg-transicao');
+            } else {
+                cicloCard.classList.add('bg-gray-800');
+            }
+
+
+            // 2. Atualizar o Card de Assertividade (Lê da Coleção 'assertividade')
+            const assertividadeCard = document.getElementById('assertividade-card');
+            const currentGreens = document.getElementById('greens-count').textContent;
+            const currentReds = document.getElementById('reds-count').textContent;
+            const totalAssert = parseFloat(currentGreens) + parseFloat(currentReds);
+            const currentAssertPct = totalAssert > 0 ? ((parseFloat(currentGreens) / totalAssert) * 100).toFixed(1) : '0.00';
+            
+            document.getElementById('assertividade-valor').textContent = `${currentAssertPct}%`;
+            document.getElementById('total-operacoes-assert').textContent = `(${totalAssert} total)`;
+
+
+            assertividadeCard.classList.remove('bg-blue-900', 'bg-green-700');
+            if (parseFloat(currentAssertPct) >= 60) { 
+                assertividadeCard.classList.add('bg-green-700');
+            } else {
+                assertividadeCard.classList.add('bg-blue-900');
+            }
+
+
+            // 3. Atualizar a Frequência de Multiplicadores
+            totalRodadasAnalisadas.textContent = data.total_rodadas || 0;
+            frequenciaList.innerHTML = ''; // Limpa a lista
+            
+            if (data.frequencia_multiplicadores && data.frequencia_multiplicadores.length > 0) {
+                data.frequencia_multiplicadores.forEach(item => {
+                    const row = document.createElement('div');
+                    row.className = 'flex justify-between items-center p-2 rounded-md transition duration-150';
+
+                    // Determina a cor de fundo baseado na NOVA regra
+                    let bgColor = 'bg-gray-700'; 
+                    const val = parseFloat(item.valor);
+                    
+                    if (val >= 10.00) {
+                        bgColor = 'bg-rosa'; // ROSA >= 10.00
+                    } else if (val >= 2.00) {
+                        bgColor = 'bg-fuchsia-700/70'; // ROXO >= 2.00
+                    } 
+                    row.classList.add(bgColor);
+                    
+                    row.innerHTML = `
+                        <span class="font-bold text-lg">${item.valor}x</span>
+                        <div class="flex items-center space-x-2">
+                            <span class="text-sm text-gray-300">${item.count} vezes</span>
+                            <span class="text-sm font-semibold text-cyan-400">(${item.percentage}%)</span>
+                        </div>
+                    `;
+                    frequenciaList.appendChild(row);
+                });
+            } else {
+                frequenciaList.innerHTML = '<p class="text-sm text-gray-400">Aguardando dados de rodadas para análise de frequência.</p>';
+            }
+            
+            // 4. Atualizar Status e Sugestões
+            padraoAtivo.textContent = data.padrao_ativo || 'Nenhum';
+            sugestaoIa.textContent = data.ultima_sugestao_ia || 'Aguardando análise de 50 rodadas...';
+            sugestaoLongoPrazo.textContent = data.sugestao_longo_prazo || 'Aguardando primeira análise de 300 velas...';
+            analiseTempo.textContent = data.analise_tempo || 'Aguardando primeira análise de tempo...'; 
+
+            
+            // 5. Atualizar timestamp 
+            if (data.ultimo_update && data.ultimo_update.toDate) {
+                const date = data.ultimo_update.toDate();
+                ultimoUpdate.textContent = date.toLocaleTimeString('pt-BR');
+            } else {
+                 ultimoUpdate.textContent = new Date().toLocaleTimeString('pt-BR');
+            }
+        }
+
+        // Inicializa o app ao carregar a página
+        window.onload = initializeFirebase;
+    </script>
+</body>
+</html>
