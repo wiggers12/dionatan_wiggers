@@ -69,6 +69,85 @@
     <div id="root"></div>
 
     <script type="text/babel">
+        /* ============================================================
+   TELA DE CADASTRO (NOME + TELEFONE COM VALIDAÇÃO)
+   ============================================================ */
+const CadastroScreen = ({ onSubmit }) => {
+    const [nome, setNome] = React.useState("");
+    const [telefone, setTelefone] = React.useState("");
+    const [erro, setErro] = React.useState("");
+
+    function validarTelefone(tel) {
+        return /^55\d{11}$/.test(tel);
+    }
+
+    function handleSubmit(e) {
+        e.preventDefault();
+
+        if (nome.trim().length < 3) {
+            setErro("Nome precisa ter pelo menos 3 letras.");
+            return;
+        }
+
+        if (!validarTelefone(telefone)) {
+            setErro("Telefone inválido. Use: 55 + DDD + número (ex: 5598987654321)");
+            return;
+        }
+
+        setErro("");
+        onSubmit({ nome, telefone });
+    }
+
+    return (
+        <div className="fixed inset-0 bg-black flex justify-center items-center p-6 z-50">
+            <div className="bg-[#1a1a1a] w-full max-w-sm p-6 rounded-2xl shadow-xl border border-gray-700">
+
+                <h2 className="text-2xl font-bold text-center mb-4 text-green-400">
+                    Criar Acesso
+                </h2>
+
+                <form onSubmit={handleSubmit} className="space-y-4">
+
+                    <div>
+                        <label className="text-sm text-gray-300">Seu nome</label>
+                        <input 
+                            className="w-full p-3 mt-1 bg-[#222] border border-gray-600 text-white rounded-lg focus:ring-2 focus:ring-green-400"
+                            type="text"
+                            value={nome}
+                            onChange={(e) => setNome(e.target.value)}
+                            placeholder="Digite seu nome"
+                        />
+                    </div>
+
+                    <div>
+                        <label className="text-sm text-gray-300">Telefone (55 + DDD)</label>
+                        <input 
+                            className="w-full p-3 mt-1 bg-[#222] border border-gray-600 text-white rounded-lg focus:ring-2 focus:ring-green-400"
+                            type="tel"
+                            value={telefone}
+                            onChange={(e) => setTelefone(e.target.value.replace(/\D/g, ""))}
+                            placeholder="5598987654321"
+                            maxLength="13"
+                        />
+                    </div>
+
+                    {erro && (
+                        <p className="text-red-400 text-sm">{erro}</p>
+                    )}
+
+                    <button
+                        className="w-full bg-green-600 hover:bg-green-700 transition p-3 rounded-lg font-bold text-white"
+                        type="submit"
+                    >
+                        Continuar
+                    </button>
+
+                </form>
+
+            </div>
+        </div>
+    );
+};
 /* ============================================================
    FUNÇÕES DE UTILIDADE
    ============================================================ */
@@ -427,10 +506,17 @@ const FooterBar = ({
     );
 };
 
+        
 /* ============================================================
    COMPONENTE PRINCIPAL
    ============================================================ */
 const App = () => {
+// 🔥 ESTADO DO USUÁRIO
+const [userData, setUserData] = React.useState(
+    () => JSON.parse(localStorage.getItem("userData")) || null
+);
+
+const [userConfig, setUserConfig] = React.useState(null);
 
     /* -------------------------------------------
        1 — Config Firebase (somente leitura)
@@ -474,7 +560,20 @@ const App = () => {
        3 — Firestore Listeners
        ------------------------------------------- */
     React.useEffect(() => {
-        if (!db) return;
+    if (!db) return;
+    if (!userData || !userData.telefone) return;
+// Listener: Config do usuário (vip, ativo, bloqueado, etc.)
+db.collection("usuarios")
+  .doc(userData.telefone)
+  .collection("apps")
+  .doc("aviatorPro")
+  .onSnapshot((doc) => {
+      if (!doc.exists) return;
+
+      const cfg = doc.data();
+      setUserConfig(cfg);
+  });
+
 
         /* ----------- LISTENER: histórico_sinais ----------- */
         db.collection("historico_sinais")
@@ -550,6 +649,68 @@ const App = () => {
             });
 
     }, [db]);
+
+// ============================================================
+// 🔥 SE O USUÁRIO AINDA NÃO CADASTROU, MOSTRA TELA DE CADASTRO
+// ============================================================
+if (!userData) {
+    return (
+        <CadastroScreen
+            onSubmit={(dados) => {
+                if (db) {
+
+                    // DADOS DO USUÁRIO (documento principal)
+                    db.collection("usuarios")
+                      .doc(dados.telefone)
+                      .set({
+                          nome: dados.nome,
+                          telefone: dados.telefone,
+                          criado: new Date(),
+                          ultimoAcesso: new Date()
+                      });
+
+                    // CONFIG DO APP
+                    db.collection("usuarios")
+                      .doc(dados.telefone)
+                      .collection("apps")
+                      .doc("aviatorPro")
+                      .set({
+                          criado: new Date(),
+                          ultimoAcesso: new Date(),
+
+                          vip: false,
+                          ativo: true,
+                          notificacoes: true,
+                          acessoJogo: true,
+                          bloqueado: false
+                      });
+                }
+
+                localStorage.setItem("userData", JSON.stringify(dados));
+                setUserData(dados);
+            }}
+        />
+    );   // 👈 ESSA LINHA FALTAVA!
+}
+// 🚫 Usuário bloqueado
+if (userConfig?.bloqueado === true) {
+    return (
+        <div className="text-center text-red-500 p-6 text-xl">
+            Seu acesso foi bloqueado.  
+            Entre em contato com o suporte.
+        </div>
+    );
+}
+
+// 🚫 Usuário inativo
+if (userConfig?.ativo === false) {
+    return (
+        <div className="text-center text-yellow-400 p-6 text-xl">
+            Seu acesso está desativado temporariamente.
+        </div>
+    );
+}
+
     /* -------------------------------------------
        4 — Renderização
        ------------------------------------------- */
