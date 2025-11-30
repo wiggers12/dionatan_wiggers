@@ -580,99 +580,99 @@ React.useEffect(() => {
     const [openSignal, setOpenSignal] = React.useState(false);
     const [openRules, setOpenRules] = React.useState(false);
 
-    /* -------------------------------------------
-       3 — Firestore Listeners
-       ------------------------------------------- */
-    React.useEffect(() => {
+   /* -------------------------------------------
+   3 — Firestore Listeners
+   ------------------------------------------- */
+React.useEffect(() => {
     if (!db) return;
     if (!userData || !userData.telefone) return;
-// Listener: Config do usuário (vip, ativo, bloqueado, etc.)
-db.collection("usuarios")
-  .doc(userData.telefone)
-  .collection("apps")
-  .doc("aviatorPro")
-  .onSnapshot((doc) => {
-      if (!doc.exists) return;
 
-      const cfg = doc.data();
-      setUserConfig(cfg);
-  });
+    // Listener: Config do usuário (vip, ativo, bloqueado, etc.)
+    db.collection("usuarios")
+      .doc(userData.telefone)
+      .collection("apps")
+      .doc("aviatorPro")
+      .onSnapshot((doc) => {
+          if (!doc.exists) return;
+          const cfg = doc.data();
+          setUserConfig(cfg);
+      });
 
+    // Listener — histórico
+    db.collection("historico_sinais")
+      .orderBy("criado", "desc")
+      .limit(40)
+      .onSnapshot((snap) => {
+          const arr = snap.docs.map((doc) => {
+              const d = doc.data();
+              return {
+                  id: doc.id,
+                  multiplier: Number(d.valor).toFixed(2),
+                  color: getColorFromMultiplier(d.valor),
+                  time: d.criado.toDate().toLocaleTimeString("pt-BR", {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                  })
+              };
+          });
+          setHistory(arr);
+      });
 
-        /* ----------- LISTENER: histórico_sinais ----------- */
-        db.collection("historico_sinais")
-            .orderBy("criado", "desc")
-            .limit(40)
-            .onSnapshot((snap) => {
-                const arr = snap.docs.map((doc) => {
-                    const d = doc.data();
-                    return {
-                        id: doc.id,
-                        multiplier: Number(d.valor).toFixed(2),
-                        color: getColorFromMultiplier(d.valor),
-                        time: d.criado.toDate().toLocaleTimeString("pt-BR", {
-                            hour: "2-digit",
-                            minute: "2-digit",
-                        })
-                    };
-                });
-                setHistory(arr);
-            });
+    // Listener — último sinal
+    db.collection("ultimo_sinal")
+      .doc("dados")
+      .onSnapshot((doc) => {
+          if (!doc.exists) return setNextSignal(null);
+          const d = doc.data();
+          setNextSignal({
+              valor: Number(d.valor),
+              cor: d.cor,
+              hora: d.hora
+          });
+      });
 
-        /* ----------- LISTENER: ultimo_sinal/dados ----------- */
-        db.collection("ultimo_sinal")
-            .doc("dados")
-            .onSnapshot((doc) => {
-                if (!doc.exists) return setNextSignal(null);
-                const d = doc.data();
-                setNextSignal({
-                    valor: Number(d.valor),
-                    cor: d.cor,
-                    hora: d.hora
-                });
-            });
+    // Listener — assertividade
+    db.collection("assertividade")
+      .doc("dado")
+      .onSnapshot((doc) => {
+          if (!doc.exists) return;
+          const d = doc.data();
+          setGreens(d.greens || 0);
+          setReds(d.reds || 0);
+          setTotal(d.total || 0);
+      });
 
-        /* ----------- LISTENER: assertividade/dado ----------- */
-        db.collection("assertividade")
-            .doc("dado")
-            .onSnapshot((doc) => {
-                if (!doc.exists) return;
-                const d = doc.data();
-                setGreens(d.greens || 0);
-                setReds(d.reds || 0);
-                setTotal(d.total || 0);
-            });
+    // Listener — análises IA
+    db.collection("analises")
+      .doc("sequencia_3_azuis")
+      .collection("sinais")
+      .orderBy("criado", "desc")
+      .limit(1)
+      .onSnapshot((snap) => {
+          if (snap.empty) {
+              setPrediction(null);
+              setPredicting(true);
+              return;
+          }
 
-        /* ----------- LISTENER: analises/sequencia_3_azuis/sinais ----------- */
-        db.collection("analises")
-            .doc("sequencia_3_azuis")
-            .collection("sinais")
-            .orderBy("criado", "desc")
-            .limit(1)
-            .onSnapshot((snap) => {
-                if (snap.empty) {
-                    setPrediction(null);
-                    setPredicting(true);
-                    return;
-                }
+          const d = snap.docs[0].data();
 
-                const d = snap.docs[0].data();
+          if (d.status !== "ATIVO") {
+              setPrediction(null);
+              setPredicting(true);
+              return;
+          }
 
-                if (d.status !== "ATIVO") {
-                    setPrediction(null);
-                    setPredicting(true);
-                    return;
-                }
+          setPrediction({
+              status: d.status,
+              signals: d.valores
+          });
 
-                setPrediction({
-                    status: d.status,
-                    signals: d.valores
-                });
+          setPredicting(false);
+      });
 
-                setPredicting(false);
-            });
+}, [db, userData]);
 
-    }, [db]);
 
 // ============================================================
 // 🔥 SE O USUÁRIO AINDA NÃO CADASTROU, MOSTRA TELA DE CADASTRO
