@@ -538,6 +538,30 @@ const [userConfig, setUserConfig] = React.useState(null);
         const _db = firebase.firestore(app);
         setDb(_db);
     }, []);
+/* ============================================================
+   🔧 REPARADOR AUTOMÁTICO — GARANTE apps/aviatorPro
+   ============================================================ */
+React.useEffect(() => {
+    if (!db || !userData) return;
+
+    const ref = db.collection("usuarios")
+        .doc(userData.telefone)
+        .collection("apps")
+        .doc("aviatorPro");
+
+    ref.get().then(doc => {
+        if (!doc.exists) {
+            ref.set({
+                criado: new Date(),
+                vip: false,
+                ativo: true,
+                notificacoes: true,
+                acessoJogo: true,
+                bloqueado: false
+            });
+        }
+    });
+}, [db, userData]);
 
     /* -------------------------------------------
        2 — Estados
