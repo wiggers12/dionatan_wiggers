@@ -35,16 +35,16 @@
         </h1>
         <p class="text-sm text-gray-400 text-center mb-6">Acesse com seu número e inicie o teste de 12h.</p>
 
-        <!-- NOVO: Container Flex Responsivo para Botões de Pagamento -->
+        <!-- Container Flex Responsivo para Botões de Pagamento -->
         <div class="flex flex-col sm:flex-row sm:space-x-3 mb-6">
             
-            <!-- Botão de Pagamento VIP (PADRÃO) - Ocupa 50% no SM+ -->
-            <a href="https://www.mercadopago.com.br/checkout/v1/payment/redirect/f8d4f7a9-eb4e-49af-9215-01aba2821fbf/review/?preference-id=2668676373-99c75d7f-9139-44c5-8d69-7122dec4577b&router-request-id=164df468-f77d-4ba3-a813-8d7f55d3d022" target="_blank" class="block w-full sm:flex-1 bg-yellow-500 hover:bg-yellow-600 text-black font-bold py-3 rounded-lg text-center transition duration-200 shadow-lg shadow-yellow-500/50 mb-3 sm:mb-0 text-sm">
+            <!-- Botão de Pagamento VIP (PADRÃO) -->
+            <a href="https://www.mercadopago.com.br/subscriptions/checkout?preapproval_id=f7a7a7b632f541da96d818c3996de727" target="_blank" class="block w-full sm:flex-1 bg-yellow-500 hover:bg-yellow-600 text-black font-bold py-3 rounded-lg text-center transition duration-200 shadow-lg shadow-yellow-500/50 mb-3 sm:mb-0 text-sm">
                 <i data-lucide="credit-card" class="w-4 h-4 mr-1 inline-block"></i> TORNE-SE VIP
             </a>
             
-            <!-- NOVO: Botão de Pagamento PAINEL IA (EXTRA) - Ocupa 50% no SM+ -->
-            <a href="https://www.mercadopago.com.br/checkout/v1/payment/redirect/f8d4f7a9-eb4e-49af-9215-01aba2821fbf/review/?preference-id=2668676373-99c75d7f-9139-44c5-8d69-7122dec4577b&router-request-id=164df468-f77d-4ba3-a813-8d7f55d3d022" target="_blank" class="block w-full sm:flex-1 bg-pink-600 hover:bg-pink-700 text-white font-bold py-3 rounded-lg text-center transition duration-200 shadow-lg shadow-pink-600/50 text-sm">
+            <!-- Botão de Pagamento PAINEL IA (EXTRA) -->
+            <a href="https://www.mercadopago.com.br/checkout/v1/subscription/redirect/dc6948a0-3669-41da-8dbf-c6cee927e1d7/payment-option-form/?preference-id=2668676373-c8114912-e9f6-4213-90d7-81b074971f56&router-request-id=293bc831-96af-4ddc-8374-8ac5984759bd&p=80c5d1fcfe322ae61baeca68433a1079" target="_blank" class="block w-full sm:flex-1 bg-pink-600 hover:bg-pink-700 text-white font-bold py-3 rounded-lg text-center transition duration-200 shadow-lg shadow-pink-600/50 text-sm">
                 <i data-lucide="gauge" class="w-4 h-4 mr-1 inline-block"></i> COMPRAR PAINEL IA
             </a>
         </div>
@@ -106,7 +106,7 @@
     <!-- Script de Autenticação e Lógica -->
     <script>
         // --- VARIÁVEIS GLOBAIS DE REDIRECIONAMENTO ---
-        const TARGET_PLATFORM_URL = "platforma_sinais.html"; 
+        const TARGET_PLATFORM_URL = "/platforma_sinais.html"; // MUDANÇA: Caminho absoluto para o servidor
         const TARGET_IA_PANEL_URL = "https://wiggers.dev.br/painelia.html";
         const MILLISECONDS_IN_12_HOURS = 12 * 60 * 60 * 1000;
         
@@ -129,12 +129,16 @@
             msgElement.style.display = 'block';
         };
 
-        // Função segura para Redirecionar
-        const secureRedirect = (url) => {
-            // Atraso de segurança e uso do método mais fiável em JS
+        // Função de Redirecionamento CORRIGIDA: Usa location.href
+        const secureRedirect = (urlBase, phone) => {
+            // MUDANÇA: Para garantir que o navegador não confunda caminhos relativos
+            // Passamos a URL base e o parâmetro do telefone
+            const finalUrl = `${urlBase}?userphone=${phone}`;
+            
+            // O navegador deve ser capaz de resolver o caminho absoluto (se hospedado) ou relativo (se local)
             setTimeout(() => {
-                 window.location.href = url;
-            }, 1000); 
+                 window.location.href = finalUrl;
+            }, 50); 
         }
 
         // Função para verificar se o utilizador tem acesso ativo (Usa o telefone como ID)
@@ -161,10 +165,10 @@
             if (data.status === 'VIP' && data.data_expiracao && data.data_expiracao.toDate().getTime() > now) {
                 if (data.acesso_ia === true) { 
                     showStatus("Acesso VIP Master IA concedido. Redirecionando para o painel avançado...", false);
-                    secureRedirect(TARGET_IA_PANEL_URL);
+                    secureRedirect(TARGET_IA_PANEL_URL, phone);
                 } else {
                     showStatus("Acesso VIP concedido. Redirecionando...", false);
-                    secureRedirect(TARGET_PLATFORM_URL);
+                    secureRedirect(TARGET_PLATFORM_URL, phone);
                 }
                 return true;
             }
@@ -178,7 +182,7 @@
                 if (timeLeft > 0) {
                     const hoursLeft = Math.ceil(timeLeft / (60 * 60 * 1000));
                     showStatus(`Acesso de Teste ativo. Restam ${hoursLeft} horas. Redirecionando...`, false);
-                    secureRedirect(TARGET_PLATFORM_URL);
+                    secureRedirect(TARGET_PLATFORM_URL, phone);
                     return true;
                 } else {
                     showStatus("Seu período de teste de 12h expirou. Por favor, torne-se VIP.", true);
@@ -232,7 +236,7 @@
                     };
                     await userRef.set(userData, { merge: true });
                     showStatus("Teste de 12h iniciado com sucesso! Redirecionando...", false);
-                    secureRedirect(TARGET_PLATFORM_URL);
+                    secureRedirect(TARGET_PLATFORM_URL, phone);
                 } else {
                     // Usuário existente (TESTE ativo ou VIP) -> Verifica o acesso
                     await checkAccess(phone);
