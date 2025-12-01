@@ -24,7 +24,7 @@
     <style>
         body {
             margin: 0;
-            background: #111; /* Corrigido: Tom de cinza escuro para melhor contraste */
+            background: #111; /* Tom de cinza escuro para melhor contraste */
             color: #fff;
             overflow-x: hidden;
             font-family: 'Poppins', sans-serif;
@@ -113,7 +113,7 @@ const OnboardingImageModal = ({ open, onClose, onOptOut }) => {
                     <div className="bg-[#262626] p-4 rounded-xl border-l-4 border-red-500">
                         <h3 className="font-bold text-lg text-red-400 flex items-center mb-2">
                             <i data-lucide="bell" className="w-5 h-5 mr-2"></i>
-                            Alertas RÃ¡pidos (Topo Central)
+                            Alertas RÃ¡pidos (Topo Esquerdo)
                         </h3>
                         <p className="text-xs">
                             Estes sinais aparecem logo abaixo do cabeÃ§alho e indicam a leitura de sequÃªncias perigosas ou altamente lucrativas.
@@ -121,7 +121,6 @@ const OnboardingImageModal = ({ open, onClose, onOptOut }) => {
                         <ul className="list-disc list-inside space-y-1 ml-2 mt-2 text-xs font-semibold">
                              <li>{`**Sinais de 4 Rodadas (BUSCAR):** Ativados apÃ³s um gatilho de ciclo (ex: Roxa > 10x seguida de Azul < 1.50x). Permanecem visÃ­veis por 4 rodadas.`}</li>
                              <li>**Alertas RÃ¡pidos:** Incluem **"PossÃ­vel 2x/3x"** e **"ExplosÃ£o Detectada"** (apÃ³s 8 azuis seguidas).</li>
-                             {/* REMOVIDO: Regra Mercado Recolhendo */}
                         </ul>
                     </div>
                     
@@ -138,7 +137,7 @@ const OnboardingImageModal = ({ open, onClose, onOptOut }) => {
                         </div>
                         <div className="bg-[#262626] p-3 rounded-lg border-l-4 border-purple-400">
                             <p className="font-bold text-sm">PrevisÃ£o IA (Sinais)</p>
-                            <p className="text-xs">SugestÃ£o de alvos (Roxo ou Rosa) para as prÃ³ximas rodadas. **Aparece somente apÃ³s a confirmaÃ§Ã£o de 3 velas azuis seguidas.**</p>
+                            <p className="text-xs">SugestÃ£o de alvos (Roxo ou Rosa) para as prÃ³ximas rodadas. O sinal Ã© ativado pelo sistema de backend com base em padrÃµes de velas.</p>
                         </div>
                         <div className="bg-[#262626] p-3 rounded-lg border-l-4 border-yellow-400">
                             <p className="font-bold text-sm">IA de Minutos (EstratÃ©gia)</p>
@@ -393,13 +392,13 @@ const MenuModal = ({ open, onClose, onHistory, onProfile, onRiskManagement, onAt
                     <div className="border-t border-gray-800 pt-4 space-y-4">
                         <MenuItem 
                             icon="settings" 
-                            label="ConfiguraÃ§Ãµes & Risco" 
+                            label="ConfiguraÃ§Ãµes e Risco" 
                             color="text-yellow-400"
                             onClick={onRiskManagement}
                         />
                         <MenuItem 
                             icon="shield-alert" 
-                            label="Stop Loss & Gain (Meta)" 
+                            label="Stop Loss e Gain (Meta)" 
                             color="text-orange-400"
                             onClick={onRiskManagement}
                         />
@@ -540,7 +539,7 @@ const RiskManagementModal = ({ open, onClose }) => {
                 <div className="flex justify-between items-center pb-4 border-b border-gray-700">
                     <h2 className="text-xl font-bold flex items-center text-yellow-400">
                         <i data-lucide="calculator" className="w-6 h-6 mr-2"></i>
-                        CÃ¡lculo de Risco & Stake
+                        CÃ¡lculo de Risco e Stake
                     </h2>
                     <button 
                         onClick={onClose}
@@ -806,8 +805,7 @@ const SignalModal = ({ open, onClose, prediction }) => {
                 </div>
 
                 <p className="text-xs text-gray-500 mt-4 border-t border-gray-700 pt-2">
-                    A IA monitora as prÃ³ximas 3 velas apÃ³s o sinal.  
-                    Green confirmado se qualquer uma delas atingir o alvo.
+                    A IA monitora as prÃ³ximas 3 velas apÃ³s o sinal. Green confirmado se qualquer uma delas atingir o alvo.
                 </p>
             </div>
         </div>
@@ -1183,7 +1181,7 @@ const FooterBar = ({
 // ============================================================
 const FastAlertIndicator = ({ fastAlert, signal4Rounds }) => {
     
-    // CORREÃÃO: PosiÃ§Ã£o ajustada para o canto superior esquerdo (abaixo do Menu)
+    // PosiÃ§Ã£o ajustada para o canto superior esquerdo (abaixo do Menu)
     const baseClasses = "fixed top-[58px] left-2 p-2 rounded-lg shadow-2xl z-[90] animate-pulse-hot";
 
     // 1. Prioridade MÃ¡xima: Sinal de 4 Rodadas (Nova Regra)
@@ -1285,8 +1283,6 @@ const App = () => {
     const [total, setTotal] = React.useState(0);
     const [prediction, setPrediction] = React.useState(null);
     const [predicting, setPredicting] = React.useState(true);
-    
-    // REMOVIDO: const [has3AzuisCondition, setHas3AzuisCondition] = React.useState(false); 
     
     // Alertas rÃ¡pidos de sequÃªncia
     const [fastAlert, setFastAlert] = React.useState(null); 
@@ -1737,39 +1733,43 @@ React.useEffect(() => {
                   };
               });
               
-              // Verifica se a rodada Ã© nova usando o array de histÃ³rico mais recente (arr[0])
-              // e o histÃ³rico jÃ¡ renderizado (history[0])
-              const isNewRound = history.length > 0 && arr.length > 0 && arr[0].id !== history[0].id;
-              
-              // REMOVIDO: setHas3AzuisCondition(check3Azuis(arr));
-              
+              // DETECTOR DE NOVA RODADA
+              // Compara o ID do item mais recente no snapshot (arr[0]) com o ID do estado anterior (history[0])
+              const currentLatestId = arr.length > 0 ? arr[0].id : null;
+              const previousLatestId = history.length > 0 ? history[0].id : null;
+              const isNewRound = currentLatestId !== previousLatestId;
+
               // --- LÃ³gica de Contador e PersistÃªncia do Sinal de 4 Rodadas ---
               setSignal4Rounds(prev => {
                   
-                  // 1. Check for expiration
-                  if (prev.active && prev.count >= 4) {
+                  // 1. EXPIRE: Se ativo, a contagem chegou a 4 e uma nova rodada (a 5Âª) chegou, desativar.
+                  if (prev.active && prev.count >= 4 && isNewRound) {
                       return { active: false, count: 0, target: null };
                   }
+                  
+                  // 2. INCREMENT: Se ativo e um novo dado real (nova rodada) chegou, incrementa.
+                  // Note: count 1, 2, 3 will become 2, 3, 4 here.
+                  if (prev.active && isNewRound) {
+                      return { ...prev, count: prev.count + 1 };
+                  }
 
-                  // 2. Check for a NEW trigger (only if signal is NOT active or just expired)
+                  // 3. NEW TRIGGER: Se inativo (ou recÃ©m-expirado, count=0)
                   if (!prev.active || prev.count === 0) { 
                       
                       // Check TIPO 2: 2x a 6x (Prioridade MÃ¡xima)
                       if (checkSignal2x6x(arr)) { 
+                          // Inicia contagem em 1 se o gatilho foi detectado no dado mais recente (arr[0])
                           return { active: true, count: 1, target: "BUSCAR 2.0x a 6x" };
                       }
                       
                       // Check TIPO 1: 2x a 27x
                       if (checkSignal2x27x(arr)) {
+                          // Inicia contagem em 1 se o gatilho foi detectado no dado mais recente (arr[0])
                           return { active: true, count: 1, target: "BUSCAR 2.0x a 27x" };
                       }
                   }
-
-                  // 3. Maintain and Increment Count (only if signal IS active and it's a new round)
-                  if (prev.active && isNewRound) {
-                      return { ...prev, count: prev.count + 1 };
-                  }
-
+                  
+                  // 4. Default: Retorna o estado anterior (ex: ativo, mas ainda esperando a prÃ³xima rodada)
                   return prev;
               });
 
@@ -1833,13 +1833,13 @@ React.useEffect(() => {
 }, [
     db, 
     userData, 
-    check3Azuis, // Mantidas como dependÃªncias por serem funÃ§Ãµes estÃ¡veis
+    check3Azuis, 
     calcularMinutosIA, 
     analisarIA3Niveis, 
     analisarSinaisRapidos, 
     checkSignal2x27x, 
     checkSignal2x6x
-]); // REMOVIDA A DEPENDÃNCIA CRÃTICA 'history'
+]);
 
 // ð« UsuÃ¡rio bloqueado
 if (userConfig?.bloqueado === true) {
@@ -2020,4 +2020,3 @@ setTimeout(() => {
 </script> 
 </body>
 </html>
-
