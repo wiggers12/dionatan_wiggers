@@ -149,10 +149,10 @@
         const handleLogout = () => {
             auth.signOut().then(() => {
                 // Redireciona para o login após o logout
-                window.location.href = "login_page.html";
+                window.location.href = "platforma_sinais.html";
             }).catch(error => {
                 console.error("Erro ao fazer logout:", error);
-                window.location.href = "login_page.html"; // Força o redirecionamento mesmo com erro
+                window.location.href = "platforma_sinais.html"; // Força o redirecionamento mesmo com erro
             });
         };
 
@@ -192,7 +192,7 @@
                         <div class="space-y-4 mt-4 text-red-200 text-sm">
                             <p>O Painel de Previsões IA Avançado requer um UPGRADE de acesso.</p>
                             <p>Este recurso só é liberado para o nível PAINEL IA.</p>
-                            <a href="login_page.html" class="block mt-4 text-center text-sm font-bold bg-white text-red-900 py-2 rounded-lg hover:bg-gray-200 transition">
+                            <a href="platforma_sinais.html" class="block mt-4 text-center text-sm font-bold bg-white text-red-900 py-2 rounded-lg hover:bg-gray-200 transition">
                                 Retornar para Upgrade
                             </a>
                         </div>
@@ -540,7 +540,7 @@
                 
                 if (!phone) {
                     // Se não houver telefone na URL, redireciona para o login
-                    window.location.href = "login_page.html";
+                    window.location.href = "platforma_sinais.html";
                     return;
                 }
 
@@ -558,7 +558,7 @@
                         if (data.ativo === false || isExpired) {
                             // Se desativado ou expirado, força redirecionamento
                             auth.signOut();
-                            window.location.href = "login_page.html";
+                            window.location.href = "platforma_sinais.html";
                             return;
                         }
                         
@@ -577,11 +577,11 @@
                     } else {
                         // Se o documento não existe no Firestore, força redirecionamento
                         auth.signOut();
-                        window.location.href = "login_page.html";
+                        window.location.href = "platforma_sinais.html";
                     }
                 }).catch(e => {
                     console.error("Erro ao verificar jogador no Firestore:", e);
-                    window.location.href = "login_page.html"; // Falha de comunicação = volta para login
+                    window.location.href = "platforma_sinais.html"; // Falha de comunicação = volta para login
                 });
                 
             } catch (e) {
