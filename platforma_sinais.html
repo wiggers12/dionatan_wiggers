@@ -51,9 +51,16 @@
             0%, 100% { opacity: 1; transform: scale(1); }
             50% { opacity: 0.7; transform: scale(1.05); }
         }
-        /* Mantido infinito aqui, mas o React controla o tempo de visibilidade */
         .animate-pulse-recolhe { 
-            animation: pulse-recolhe 0.6s infinite; 
+            animation: pulse-recolhe 0.6s 2; /* Pisca 2 vezes */
+        }
+        /* Estilos para o indicador de Janela Quente */
+        @keyframes pulse-hot {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.8; transform: scale(1.05); }
+        }
+        .animate-pulse-hot {
+            animation: pulse-hot 1.5s infinite;
         }
     </style>
 </head>
@@ -73,66 +80,20 @@ const getColorFromMultiplier = (v) => {
     return "text-yellow-300";
 };
 
-/**
- * Função que simula uma previsão IA com base em probabilidades.
- * Gera 1 a 3 sinais, priorizando picos maiores.
- * @returns {Array<string>} Lista de multiplicadores previstos.
- */
-const generateSimulatedPrediction = () => {
-    const signals = [];
-    
-    // 50% de chance de gerar um sinal Roxo (2.0x a 9.9x)
-    if (Math.random() < 0.5) {
-        // Gera um valor entre 2.00 e 9.99
-        const roxo = (Math.random() * 7.99 + 2.00).toFixed(2);
-        signals.push(roxo);
-    }
-    
-    // 15% de chance de gerar um sinal Rosa (10x a 25x)
-    if (Math.random() < 0.15) {
-        // Gera um valor entre 10.00 e 25.00
-        const rosa = (Math.random() * 15.00 + 10.00).toFixed(2);
-        signals.push(rosa);
-    }
-    
-    // Se não houver sinais, garante pelo menos um baixo valor (1.5x a 2.5x)
-    if (signals.length === 0) {
-        const baixo = (Math.random() * 1.0 + 1.5).toFixed(2);
-        signals.push(baixo);
-    }
-    
-    // Ordena para que o maior sinal fique em primeiro (é o mais importante)
-    signals.sort((a, b) => Number(b) - Number(a));
-    
-    return signals;
-};
-
-
 /* ============================================================
-   MODAL — ONBOARDING VISUAL (TOUR COMPLETO INTEGRADO)
+   MODAL — ONBOARDING (TOUR VISUAL COM CARDS)
    ============================================================ */
 const OnboardingImageModal = ({ open, onClose, onOptOut }) => {
     if (!open) return null;
-
-    const FeatureCard = ({ icon, title, description, color }) => (
-        <div className={`bg-[#262626] p-4 rounded-xl border-l-4 ${color}`}>
-            <h3 className={`font-bold text-lg ${color.replace('border-', 'text-')} flex items-center mb-1`}>
-                <i data-lucide={icon} className="w-5 h-5 mr-2"></i>
-                {title}
-            </h3>
-            <p className="text-xs text-gray-300">{description}</p>
-        </div>
-    );
-
     return (
-        <div className="fixed inset-0 bg-black/95 z-[100] flex flex-col justify-center items-center p-4">
+        <div className="fixed inset-0 bg-black/90 z-[100] flex justify-center items-center p-4">
             <div className="bg-[#1a1a1a] w-full max-w-lg rounded-2xl shadow-2xl flex flex-col max-h-[90vh] overflow-hidden border border-green-500/50">
 
                 {/* TOPO */}
                 <div className="flex justify-between items-center bg-[#111] px-6 py-4 border-b border-gray-700">
                     <h2 className="text-2xl font-extrabold flex items-center text-green-400">
-                        <i data-lucide="compass" className="w-7 h-7 mr-3"></i>
-                        Tour Rápido da Plataforma
+                        <i data-lucide="sparkles" className="w-7 h-7 mr-3"></i>
+                        Guia de Navegação PRO!
                     </h2>
                     <button 
                         onClick={onClose}
@@ -143,109 +104,79 @@ const OnboardingImageModal = ({ open, onClose, onOptOut }) => {
                 </div>
 
                 {/* CONTEÚDO SCROLLABLE */}
-                <div className="overflow-y-auto p-6 space-y-6">
+                <div className="overflow-y-auto p-6 space-y-6 text-gray-300">
                     
-                    <p className="text-base font-semibold text-white">
-                        Boas-vindas, PRO! Aqui está o seu guia rápido para utilizar todo o poder da nossa IA e gerir os seus lucros.
+                    <p className="text-sm border-b border-gray-700 pb-3">
+                        Seu app de análise e gestão foi carregado. Para maximizar seus lucros, entenda a função de cada ferramenta de IA e os seus gatilhos.
                     </p>
 
-                    {/* SECÇÃO 1: ALERTAS E NAVEGAÇÃO (TOPO) */}
-                    <h3 className="text-xl font-bold text-cyan-400">
-                        1. Alertas e Navegação (Topo)
-                    </h3>
-                    <div className="space-y-3">
-                        <FeatureCard 
-                            icon="user-check"
-                            title="Nome e Hora"
-                            description="Visualização rápida do seu acesso e a hora exata da plataforma (crucial para timings)."
-                            color="border-yellow-400"
-                        />
-                        <FeatureCard 
-                            icon="line-chart"
-                            title="TIPMINER (Histórico)"
-                            description="Aceda ao histórico de multiplicadores para validação manual e estudos de ciclo."
-                            color="border-cyan-400"
-                        />
-                        <FeatureCard 
-                            icon="award"
-                            title="Mentoria PRO"
-                            description="Clique para aceder à oferta de consultoria e suporte em tempo real."
-                            color="border-pink-500"
-                        />
+                    {/* SEÇÃO 1: ALERTAS DE AÇÃO IMEDIATA */}
+                    <div className="bg-[#262626] p-4 rounded-xl border-l-4 border-red-500">
+                        <h3 className="font-bold text-lg text-red-400 flex items-center mb-2">
+                            <i data-lucide="bell" className="w-5 h-5 mr-2"></i>
+                            Alertas Rápidos (Topo Central)
+                        </h3>
+                        <p className="text-xs">
+                            Estes sinais aparecem logo abaixo do cabeçalho e indicam a leitura de sequências perigosas ou altamente lucrativas.
+                        </p>
+                        <ul className="list-disc list-inside space-y-1 ml-2 mt-2 text-xs font-semibold">
+                             <li>{`**Sinais de 4 Rodadas (BUSCAR):** Ativados após um gatilho de ciclo (ex: Roxa > 10x seguida de Azul < 1.50x). Permanecem visíveis por 4 rodadas.`}</li>
+                             <li>**Alertas Rápidos:** Incluem **"Possível 2x/3x"** e **"Explosão Detectada"** (após 8 azuis seguidas).</li>
+                             <li>**Mercado Recolhendo:** Indica mais de 50% de velas azuis nas últimas 30 rodadas.</li>
+                        </ul>
                     </div>
                     
-                    {/* SECÇÃO 2: SINAIS DE AÇÃO IMEDIATA (CENTRO) */}
-                    <h3 className="text-xl font-bold text-purple-400">
-                        2. Sinais de Ação Imediata (Centro)
-                    </h3>
+                    {/* SEÇÃO 2: FERRAMENTAS DO RODAPÉ (FOOTER) */}
                     <div className="space-y-3">
-                        <FeatureCard 
-                            icon="zap"
-                            title="ALERTAS RÁPIDOS (BUSCAR Xx)"
-                            description="Sinais de entrada de alta prioridade com ciclo de 4 rodadas. O alerta indica o alvo (e.g., 2.0x a 6x) após a deteção de gatilhos de drenagem ou inversão de ciclo."
-                            color="border-green-400"
-                        />
+                        <h3 className="font-bold text-lg text-cyan-400 flex items-center">
+                            <i data-lucide="bar-chart-3" className="w-5 h-5 mr-2"></i>
+                            Ferramentas de Análise (Rodapé)
+                        </h3>
+                        
+                        <div className="bg-[#262626] p-3 rounded-lg border-l-4 border-cyan-400">
+                            <p className="font-bold text-sm">Assertividade (G/R)</p>
+                            <p className="text-xs">Sua taxa de sucesso histórica. É a prova social da eficácia do sistema.</p>
+                        </div>
+                        <div className="bg-[#262626] p-3 rounded-lg border-l-4 border-purple-400">
+                            <p className="font-bold text-sm">Previsão IA (Sinais)</p>
+                            <p className="text-xs">Sugestão de alvos (Roxo ou Rosa) para as próximas rodadas. **Aparece somente após a confirmação de 3 velas azuis seguidas.**</p>
+                        </div>
+                        <div className="bg-[#262626] p-3 rounded-lg border-l-4 border-yellow-400">
+                            <p className="font-bold text-sm">IA de Minutos (Estratégia)</p>
+                            <p className="text-xs">Calcula o **Score de Confiança (0-3)** medindo o atraso dos picos (2x, 5x, 10x). O score 2 ou 3 indica "Janela Quente" (Hora de Entrar!).</p>
+                        </div>
+                        <div className="bg-[#262626] p-3 rounded-lg border-l-4 border-pink-500">
+                            <p className="font-bold text-sm">Explosão IA (Nível 1-3)</p>
+                            <p className="text-xs">Analisa a densidade de drenagem para prever a intensidade do próximo ciclo de alta (Nível 3 = Alta Probabilidade de Rosa).</p>
+                        </div>
                     </div>
 
-                    {/* SECÇÃO 3: FERRAMENTAS DE ANÁLISE (RODAPÉ) */}
-                    <h3 className="text-xl font-bold text-orange-400">
-                        3. Ferramentas de Análise (Rodapé)
-                    </h3>
+                    {/* SEÇÃO 3: GESTÃO E SUPORTE */}
                     <div className="space-y-3">
-                        <FeatureCard 
-                            icon="check-circle"
-                            title="ASSERTIVIDADE (G/R)"
-                            description="Monitoriza a taxa de sucesso da IA em tempo real. Essencial para avaliar a performance do sistema no ciclo atual."
-                            color="border-cyan-400"
-                        />
-                        <FeatureCard 
-                            icon="brain"
-                            title="PREVISÃO IA (Sinais)"
-                            description="Acede ao sinal de entrada principal, que fornece o alvo do multiplicador (Roxo ou Rosa) para as próximas 3 velas."
-                            color="border-purple-400"
-                        />
-                        <FeatureCard 
-                            icon="clock-4"
-                            title="IA de Minutos (Estratégia)"
-                            description="Mede o atraso dos picos (2x, 5x, 10x). O Score (1/3 a 3/3) indica a urgência de entrada em janelas quentes."
-                            color="border-yellow-500"
-                        />
-                        <FeatureCard 
-                            icon="bomb"
-                            title="IA de Explosão (Nível 1-3)"
-                            description="Prevê a intensidade do próximo ciclo de alta, com Nível 3 a sinalizar alta probabilidade de velas ROSA (+10x)."
-                            color="border-orange-500"
-                        />
+                        <h3 className="font-bold text-lg text-pink-400 flex items-center">
+                            <i data-lucide="shield-half" className="w-5 h-5 mr-2"></i>
+                            Gestão de Risco e Suporte
+                        </h3>
+                        
+                        <div className="bg-[#262626] p-3 rounded-lg border-l-4 border-yellow-400">
+                            <p className="font-bold text-sm">Gerenciamento de Risco (Menu)</p>
+                            <p className="text-xs">Use a calculadora para definir o **Valor Ideal de Stake** com base na sua Banca Total e no Risco Máximo (recomendado 1% a 2%).</p>
+                        </div>
                     </div>
-                    
-                    {/* SECÇÃO 4: GESTÃO E SUPORTE (MENU) */}
-                    <h3 className="text-xl font-bold text-red-400">
-                        4. Gestão e Suporte (Menu)
-                    </h3>
-                    <div className="space-y-3">
-                        <FeatureCard 
-                            icon="shield"
-                            title="Gerenciamento de Risco"
-                            description="Utilize a calculadora (Menu ☰) para definir o STAKE ideal (entrada única) com base na sua banca total. Nunca arrisque mais de 2%."
-                            color="border-red-400"
-                        />
-                    </div>
+
                 </div>
 
-                {/* FOOTER - OPÇÕES */}
+                {/* FOOTER */}
                 <div className="p-4 bg-[#111] border-t border-gray-700 flex justify-between items-center">
-                    <button 
-                        onClick={onOptOut}
-                        className="text-red-400 hover:text-red-300 transition text-sm font-semibold flex items-center space-x-1"
-                    >
+                    <span onClick={onOptOut} className="flex items-center space-x-2 cursor-pointer text-gray-500 hover:text-white transition text-xs">
                          <i data-lucide="eye-off" className="w-4 h-4"></i>
-                         <span>Não ver mais</span>
-                    </button>
+                         <span>Não mostrar este guia novamente.</span>
+                    </span>
                     <button 
                         onClick={onClose}
-                        className="bg-green-600 hover:bg-green-700 p-3 rounded-xl font-bold text-white text-md shadow-lg transition"
+                        className="bg-green-600 hover:bg-green-700 p-3 rounded-xl font-bold text-white text-lg shadow-lg transition"
                     >
-                        INICIAR APP
+                        ENTENDI, VAMOS FATURAR!
                     </button>
                 </div>
 
@@ -314,6 +245,85 @@ const LastMinuteOfferModal = ({ open, onAccept, onReject, onOptOut }) => {
                          <i data-lucide="eye-off" className="w-4 h-4"></i>
                          <span>Não mostrar esta oferta novamente.</span>
                     </span>
+                </div>
+
+            </div>
+        </div>
+    );
+};
+
+
+/* ============================================================
+   MODAL — LIVE STREAM (Apenas para VIPs)
+   ============================================================ */
+const LiveStreamModal = ({ open, onClose, isVip }) => {
+    if (!open) return null;
+
+    // VOCÊ DEVE COLAR O TOKEN JWT VÁLIDO (GERADO NO BACKEND) AQUI
+    // IMPORTANTE: Este token tem uma validade de 1h
+    const tokenDeAcesso = "COLE O SEU TOKEN JWT AQUI"; 
+
+    // O URL para o seu VPaaS Jitsi Meet (deve ser o mesmo no ficheiro Admin)
+    const jitsiBaseUrl = "https://8x8.vc/vpaas-magic-cookie-bea217d68a5746d6b367f99361c20750";
+    const roomName = "live_do_milhao"; 
+
+    const jitsiUrl = `${jitsiBaseUrl}/${roomName}?t=${tokenDeAcesso}&config.prejoinPageEnabled=false&interfaceConfig.TOOLBAR_BUTTONS=%5B%27camera%27%2C%20%27chat%27%2C%20%27fullscreen%27%2C%20%27tileview%27%5D`;
+
+    return (
+        <div className="fixed inset-0 bg-black/80 z-50 flex justify-center items-center p-4">
+            <div className="bg-[#1a1a1a] w-full max-w-2xl rounded-xl shadow-xl flex flex-col max-h-[95vh] overflow-hidden">
+
+                {/* TOPO */}
+                <div className="flex justify-between items-center bg-red-700 px-4 py-3 text-white font-bold rounded-t-xl">
+                    <h2 className="text-lg flex items-center">
+                        <div className="w-3 h-3 bg-white rounded-full animate-ping mr-2"></div>
+                        LIVE EXCLUSIVA VIP
+                    </h2>
+                    <button 
+                        onClick={onClose}
+                        className="bg-black/20 hover:bg-black/40 px-3 py-1 rounded-lg text-sm font-semibold shadow"
+                    >
+                        Fechar
+                    </button>
+                </div>
+
+                {/* CONTEÚDO DA LIVE */}
+                <div className="flex-1 overflow-hidden p-3 md:p-4 bg-[#0a0a0a] flex justify-center items-center">
+                    
+                    {isVip ? (
+                        tokenDeAcesso && tokenDeAcesso.length > 50 ? ( // Verifica se o token foi colado
+                            <iframe
+                                src={jitsiUrl}
+                                allow="camera; microphone; display-capture"
+                                title="Live Stream VIP"
+                                className="w-full h-full min-h-[400px] rounded-lg border-2 border-green-500"
+                            ></iframe>
+                        ) : (
+                            <div className="text-center p-6 bg-[#262626] rounded-xl text-yellow-500">
+                                <i data-lucide="alert-triangle" className="w-8 h-8 mx-auto mb-3"></i>
+                                <p className="font-bold">ERRO DE CONFIGURAÇÃO (APP)</p>
+                                <p className="text-sm text-gray-400">O token JWT de acesso não foi colado no código do aplicativo.</p>
+                            </div>
+                        )
+                    ) : (
+                        /* TELA DE BLOQUEIO PARA NÃO-VIP */
+                        <div className="text-center p-8 bg-red-800/20 rounded-xl border border-red-700 max-w-sm">
+                            <i data-lucide="lock" className="w-10 h-10 text-red-500 mx-auto mb-4"></i>
+                            <p className="text-xl font-bold text-red-400 mb-2">ACESSO BLOQUEADO</p>
+                            <p className="text-gray-300 text-sm">Esta é uma transmissão exclusiva para membros VIP.</p>
+                            <a 
+                                href="#"
+                                className="mt-4 inline-block bg-pink-600 hover:bg-pink-700 text-white font-bold p-3 rounded-lg transition shadow-lg"
+                                onClick={() => { 
+                                    onClose(); 
+                                    document.getElementById('openMentoriaButton').click(); // Simula o clique no botão de Mentoria
+                                }}
+                            >
+                                <i data-lucide="star" className="w-5 h-5 mr-1 inline-block"></i>
+                                Clique e Garanta seu Acesso VIP
+                            </a>
+                        </div>
+                    )}
                 </div>
 
             </div>
@@ -698,23 +708,19 @@ const HistoryModal = ({ open, onClose, history }) => {
 const SignalModal = ({ open, onClose, prediction }) => {
     if (!open) return null;
 
-    // A prediction agora vem da simulação e já está ordenada
     let roxa = null;
     let rosa = null;
 
     if (prediction && prediction.signals.length > 0) {
-        const signals = prediction.signals.map(Number);
-        
-        // Pega o maior roxo
-        roxo = signals.find(v => v >= 2 && v < 10);
-        
-        // Pega o maior rosa
-        rosa = signals.find(v => v >= 10);
+        const sorted = [...prediction.signals].map(Number);
+
+        roxa = sorted.filter(v => v >= 2 && v < 10).sort((a, b) => b - a)[0];
+        rosa = sorted.filter(v => v >= 10).sort((a, b) => b - a)[0];
     }
 
     return (
         <div className="fixed inset-0 bg-black/70 z-50 flex justify-center items-center p-4">
-            <div className="bg-[#1a1a1a] w-full max-w-md rounded-xl p-6 shadow-xl flex flex-col max-h-[85vh] overflow-hidden">
+            <div className="bg-[#1a1a1a] w-full max-w-md rounded-xl p-6 shadow-xl max-h-[85vh] overflow-hidden">
 
                 {/* TOPO + BOTÃO VOLTAR */}
                 <div className="flex justify-between items-center pb-3 border-b border-gray-700">
@@ -734,17 +740,17 @@ const SignalModal = ({ open, onClose, prediction }) => {
                 {/* CONTEÚDO */}
                 <div className="space-y-4 mt-4">
 
-                    {!roxo && !rosa && (
+                    {!roxa && !rosa && (
                         <p className="text-center text-gray-400 text-sm">
                             Nenhuma entrada ativa no momento.
                         </p>
                     )}
 
-                    {roxo && (
+                    {roxa && (
                         <div className="bg-[#262626] p-4 rounded-lg border-l-4 border-purple-400 flex justify-between items-center">
                             <span className="text-purple-400 font-bold">ENTRADA ROXA</span>
                             <span className="text-3xl font-extrabold text-purple-400">
-                                {roxo.toFixed(2)}x
+                                {roxa.toFixed(2)}x
                             </span>
                         </div>
                     )}
@@ -775,7 +781,7 @@ const SignalModal = ({ open, onClose, prediction }) => {
 const MinutosIAModal = ({ open, onClose, minutos2x, minutos5x, minutos10x, janelaQuenteScore, sugestaoMinutos }) => {
     if (!open) return null;
 
-    const getStatus = (min, minMin, minMax, maxMax) => {
+    const getStatus = (min, minMin, minMax) => {
         if (min < minMin) {
             return { text: "Normal", color: "text-green-400", bg: "bg-green-700/20", border: "border-green-400" };
         }
@@ -785,11 +791,12 @@ const MinutosIAModal = ({ open, onClose, minutos2x, minutos5x, minutos10x, janel
         if (min > minMax) {
             return { text: "Atraso Extremo", color: "text-red-400", bg: "bg-red-700/20", border: "border-red-400" };
         }
+        return { text: "Normal", color: "text-green-400", bg: "bg-green-700/20", border: "border-green-400" };
     };
 
-    const status2x = getStatus(minutos2x, 3, 5, 8);
-    const status5x = getStatus(minutos5x, 7, 10, 15);
-    const status10x = getStatus(minutos10x, 10, 15, 20);
+    const status2x = getStatus(minutos2x, 3, 5);
+    const status5x = getStatus(minutos5x, 7, 10);
+    const status10x = getStatus(minutos10x, 10, 15);
 
     let scoreText;
     if (janelaQuenteScore >= 3) {
@@ -806,7 +813,7 @@ const MinutosIAModal = ({ open, onClose, minutos2x, minutos5x, minutos10x, janel
 
     return (
         <div className="fixed inset-0 bg-black/80 z-50 flex justify-center items-center p-4">
-            <div className="bg-[#1a1a1a] w-full max-w-md rounded-xl p-6 shadow-xl flex flex-col">
+            <div className="bg-[#1a1a1a] w-full max-w-md rounded-xl p-6 shadow-xl max-h-[85vh] overflow-hidden">
 
                 {/* TOPO + BOTÃO VOLTAR */}
                 <div className="flex justify-between items-center pb-3 border-b border-gray-700">
@@ -895,7 +902,7 @@ const ExplosionPanelModal = ({ open, onClose, nivelAtual, proximaExplosao, min2x
     
     // Fallback se a análise ainda não rodou
     if (!proximaExplosao.tipo) {
-        proximaExplosao.tipo = "Analisando Ciclo...";
+        proximaExplosao.tipo = "Análise Indisponível";
         proximaExplosao.faixa = "--";
         proximaExplosao.prob = "--";
         proximaExplosao.motivo = "--";
@@ -996,6 +1003,7 @@ const NavigationBar = ({ onMenu, onHistory, onMentoria, currentTime, firstName }
                 
                  {/* MENTORIA VISÍVEL */}
                  <button
+                    id="openMentoriaButton"
                     onClick={onMentoria}
                     className="p-2 rounded-lg hover:bg-[#222] transition"
                  >
@@ -1020,7 +1028,8 @@ const FooterBar = ({
     janelaQuenteScore,
     openExplosionIA, 
     nivelAtual,
-    sugestaoMinutos 
+    sugestaoMinutos,
+    openLive
 }) => {
     const percent = total > 0 ? ((greens / total) * 100).toFixed(1) : "0.0";
 
@@ -1043,7 +1052,17 @@ const FooterBar = ({
             {/* px-2 e pb-3 para margem lateral e inferior. pt-1 para um toque de espaço superior. */}
             <div className="flex w-full max-w-lg space-x-2"> 
                 
-                {/* 1. ASSERTIVIDADE */}
+                {/* 1. LIVE EXCLUSIVA */}
+                <button
+                    onClick={openLive}
+                    className="flex-1 bg-red-700/60 backdrop-blur-sm border border-red-500/50 rounded-xl p-2 flex flex-col items-center hover:bg-red-600/60 transition"
+                >
+                    <i data-lucide="video" className="w-5 h-5 text-white" fill="white"></i>
+                    <span className="text-xs mt-0.5 font-bold text-white">LIVE VIP</span>
+                    <span className="text-[10px] text-red-200">Exclusiva</span>
+                </button>
+
+                {/* 2. ASSERTIVIDADE */}
                 <div className="flex-1 bg-[#111]/60 backdrop-blur-sm border border-gray-700/50 rounded-xl p-2 flex flex-col items-center">
                     <i data-lucide="check-circle" className="w-5 h-5 text-cyan-400"></i>
                     <span className="text-xs mt-0.5 font-bold">{percent}%</span>
@@ -1052,7 +1071,7 @@ const FooterBar = ({
                     </span>
                 </div>
 
-                {/* 2. IA DE SINAIS */}
+                {/* 3. IA DE SINAIS */}
                 <button
                     onClick={openSignal}
                     className="flex-1 bg-[#111]/60 backdrop-blur-sm border border-gray-700/50 rounded-xl p-2 flex flex-col items-center hover:bg-white/10 transition"
@@ -1072,12 +1091,12 @@ const FooterBar = ({
                     <span className="text-[10px] text-gray-400">Previsão IA</span>
                 </button>
 
-                {/* 3. IA DE MINUTOS (COM SUGESTÃO DE ENTRADA) */}
+                {/* 4. IA DE MINUTOS (COM SUGESTÃO DE ENTRADA) */}
                 <button
                     onClick={openMinutosIA}
                     className={`flex-1 backdrop-blur-sm rounded-xl p-2 flex flex-col items-center hover:bg-white/10 transition ${
                         janelaQuenteScore >= 2
-                            ? 'bg-pink-600/80 border border-pink-500 shadow-xl animate-pulse'
+                            ? 'bg-pink-600/80 border border-pink-500 shadow-xl animate-pulse-hot'
                             : 'bg-[#111]/60 border border-gray-700/50'
                     }`}
                 >
@@ -1090,12 +1109,12 @@ const FooterBar = ({
                     </span>
                 </button>
                 
-                {/* 4. EXPLOSÃO IA */}
+                {/* 5. EXPLOSÃO IA */}
                 <button
                     onClick={openExplosionIA}
                     className={`flex-1 backdrop-blur-sm rounded-xl p-2 flex flex-col items-center hover:bg-white/10 transition ${
                         nivelAtual >= 3 
-                            ? 'bg-orange-600/80 border border-orange-400 shadow-xl animate-pulse'
+                            ? 'bg-orange-600/80 border border-orange-400 shadow-xl animate-pulse-hot'
                             : 'bg-[#111]/60 border border-gray-700/50'
                     }`}
                 >
@@ -1103,7 +1122,7 @@ const FooterBar = ({
                     <span className={`text-xs font-bold mt-0.5 ${nivelAtual >= 3 ? 'text-white' : 'text-orange-400'}`}>
                         {explosionText}
                     </span>
-                    <span className={`text-[10px] ${nivelAtual >= 3 ? 'text-orange-200' : 'text-gray-400'}`}>Explosão IA</span>
+                    <span className="text-[10px] text-gray-400">Explosão IA</span>
                 </button>
             </div>
         </div>
@@ -1111,7 +1130,7 @@ const FooterBar = ({
 };
 
 // ============================================================
-// NOVO COMPONENTE: ALERTA RÁPIDO FLUTUANTE (ALERTAS DE SEQUÊNCIA)
+// NOVO COMPONENTE: ALERTA RÁPIDO FLUTUANTE (ALERTAS)
 // ============================================================
 const FastAlertIndicator = ({ fastAlert, signal4Rounds }) => {
     
@@ -1121,7 +1140,7 @@ const FastAlertIndicator = ({ fastAlert, signal4Rounds }) => {
         const count = signal4Rounds.count;
         return (
              <div 
-                className="fixed top-[58px] left-1/2 transform -translate-x-1/2 p-2 rounded-lg bg-green-700/80 border border-green-400 shadow-2xl z-[90] animate-pulse"
+                className="fixed top-[58px] left-1/2 transform -translate-x-1/2 p-2 rounded-lg bg-green-700/80 border border-green-400 shadow-2xl z-[90] animate-pulse-hot"
                 style={{ backdropFilter: 'blur(4px)' }}
             >
                 <span className="text-sm font-bold text-white">
@@ -1137,10 +1156,11 @@ const FastAlertIndicator = ({ fastAlert, signal4Rounds }) => {
         let alertColor = "bg-yellow-600/80 border-yellow-400";
         if (fastAlert.includes('Explodiu')) alertColor = "bg-pink-600/80 border-pink-400";
         if (fastAlert.includes('Recolhendo')) alertColor = "bg-red-700/80 border-red-500";
-        
+        if (fastAlert.includes('Explosão Detectada')) alertColor = "bg-purple-600/80 border-purple-400";
+
         return (
             <div 
-                className={`fixed top-[58px] left-1/2 transform -translate-x-1/2 p-2 rounded-lg ${alertColor} shadow-2xl z-[90] animate-pulse`}
+                className={`fixed top-[58px] left-1/2 transform -translate-x-1/2 p-2 rounded-lg ${alertColor} shadow-2xl z-[90] animate-pulse-hot`}
                 style={{ backdropFilter: 'blur(4px)' }}
             >
                 <span className="text-sm font-bold text-white">
@@ -1168,11 +1188,13 @@ const App = () => {
         }
     );
 
-    const [userConfig, setUserConfig] = React.useState({
-        vip: false,
-        ativo: true,
-        bloqueado: false
-    }); 
+    const [userConfig, setUserConfig] = React.useState(
+        () => JSON.parse(localStorage.getItem("userConfig")) || {
+            vip: false,
+            ativo: true,
+            bloqueado: false
+        }
+    ); 
 
     /* -------------------------------------------
        1 — Config Firebase (somente leitura)
@@ -1199,7 +1221,6 @@ const App = () => {
                 localStorage.setItem("anon_id", new Date().getTime());
             }
         } catch (error) {
-            // Se falhar, registra, mas o estado `db` permanece `null`
             console.error("Erro ao inicializar Firebase:", error);
         }
     }, []);
@@ -1208,33 +1229,24 @@ const App = () => {
        2 — Estados
        ------------------------------------------- */
     const [history, setHistory] = React.useState([]);
-    const [nextSignal, setNextSignal] = React.useState(null); 
     const [greens, setGreens] = React.useState(0);
     const [reds, setReds] = React.useState(0);
     const [total, setTotal] = React.useState(0);
-    const [prediction, setPrediction] = React.useState(null); // Simulação de previsão
+    const [prediction, setPrediction] = React.useState(null);
     const [predicting, setPredicting] = React.useState(true);
-    
-    // Alerta Centralizado (Recolhe/Crash) - REMOVIDO
     
     // Alertas rápidos de sequência
     const [fastAlert, setFastAlert] = React.useState(null); 
 
     // NOVO ESTADO: Sinal de 4 Rodadas
     const [signal4Rounds, setSignal4Rounds] = React.useState({ active: false, count: 0, target: null });
-    
+
     // NOVO ESTADO: Oferta Last Minute
     const [showLastMinuteOffer, setShowLastMinuteOffer] = React.useState(false);
     
     // NOVO ESTADO: Persistência de Opt-Out da Oferta
     const [doNotShowOffer, setDoNotShowOffer] = React.useState(
         () => localStorage.getItem('doNotShowOffer') === 'true'
-    );
-    
-    // NOVO ESTADO: Onboarding Visual
-    const [showOnboardingImage, setShowOnboardingImage] = React.useState(false);
-    const [doNotShowOnboardingImage, setDoNotShowOnboardingImage] = React.useState(
-        () => localStorage.getItem('doNotShowOnboardingImage') === 'true'
     );
 
 
@@ -1269,37 +1281,16 @@ const App = () => {
     const [openMentoria, setOpenMentoria] = React.useState(false); 
     const [openRiskManagement, setOpenRiskManagement] = React.useState(false); 
     const [openExplosionIA, setOpenExplosionIA] = React.useState(false); 
+    const [openLive, setOpenLive] = React.useState(false);
+
 
     /* -------------------------------------------
-       3 — Lógica do Onboarding Visual
-       ------------------------------------------- */
-    React.useEffect(() => {
-        const hasSeenOnboarding = localStorage.getItem('hasSeenOnboarding');
-        if (!hasSeenOnboarding && !doNotShowOnboardingImage) {
-            setShowOnboardingImage(true);
-        }
-    }, [doNotShowOnboardingImage]);
-    
-    const handleOnboardingComplete = () => {
-        localStorage.setItem('hasSeenOnboarding', 'true');
-        setShowOnboardingImage(false);
-    };
-
-    const handleOnboardingOptOut = () => {
-        localStorage.setItem('doNotShowOnboardingImage', 'true');
-        setDoNotShowOnboardingImage(true);
-        setShowOnboardingImage(false);
-    };
-
-    /* -------------------------------------------
-       4 — Lógica do Logout/Oferta (Gatilho)
+       3 — Lógica do Logout/Oferta (Gatilho)
        ------------------------------------------- */
     const performLogout = () => {
         localStorage.removeItem("userData");
         localStorage.removeItem("anon_id");
-        // Remove a persistência de Onboarding também
-        localStorage.removeItem('hasSeenOnboarding'); 
-        localStorage.removeItem('doNotShowOnboardingImage');
+        localStorage.removeItem("userConfig");
         window.location.href = window.location.pathname; 
     };
 
@@ -1331,12 +1322,11 @@ const App = () => {
     const handleAcceptOffer = () => {
         setShowLastMinuteOffer(false);
         // O link do WhatsApp já é clicado, então apenas fechamos o modal.
-        // O usuário pode voltar e continuar navegando, ou o navegador pode fechar.
     };
 
 
     /* -------------------------------------------
-       5 — Lógica do Relógio
+       4 — Lógica do Relógio
        ------------------------------------------- */
     React.useEffect(() => {
         const updateTime = () => {
@@ -1355,7 +1345,7 @@ const App = () => {
 
 
     /* -------------------------------------------
-       6 — Lógica da IA de 3 Níveis
+       5 — Lógica da IA de 3 Níveis
        ------------------------------------------- */
     const analisarIA3Niveis = React.useCallback((lista) => {
         if (!lista || lista.length < 5) {
@@ -1432,11 +1422,11 @@ const App = () => {
         
         setNivelAtual(nivel);
         setProximaExplosao(previsao);
-    }, [setNivelAtual, setProximaExplosao, setMin2xExp, setMin5xExp, setMin10xExp, setDensidadeBaixa, setTendencia]);
+    }, [setMin2xExp, setMin5xExp, setMin10xExp, setDensidadeBaixa, setTendencia, setNivelAtual, setProximaExplosao]);
 
 
     /* -------------------------------------------
-       7 — Lógica da IA de Minutos (ATUALIZADA)
+       6 — Lógica da IA de Minutos (ATUALIZADA)
        ------------------------------------------- */
     const calcularMinutosIA = React.useCallback((lista) => {
         if (!lista || lista.length === 0) return;
@@ -1484,7 +1474,7 @@ const App = () => {
     }, [setMinutos2x, setMinutos5x, setMinutos10x, setSugestaoMinutos, setJanelaQuenteScore]);
     
     /* -------------------------------------------
-       8 — Lógica de Sinais Rápidos (Regras de Sequência)
+       7 — Lógica de Sinais Rápidos (Regras de Sequência)
        ------------------------------------------- */
     const analisarSinaisRapidos = React.useCallback((history) => {
         if (!history || history.length < 3) {
@@ -1495,7 +1485,8 @@ const App = () => {
         const h = history.map(v => Number(v.mul));
         
         // Helpers
-        const isBlue = val => val < 1.20;
+        const isBlueLow = val => val > 0 && val < 1.20;
+        const isBlueMed = val => val > 0 && val < 1.50; // Para regras de ciclo
         const isPurple = val => val >= 2.00 && val < 10.00;
         const isPinkExplosion = val => val >= 20;
 
@@ -1507,7 +1498,7 @@ const App = () => {
 
         // Regra 5: Mercado Recolhendo (Maioria azul nas últimas 30)
         const last30 = h.slice(0, 30);
-        const blueCount = last30.filter(val => val < 1.50).length; // Usando 1.50x como métrica de recolhimento
+        const blueCount = last30.filter(isBlueMed).length;
         if (blueCount >= 16) { 
             setFastAlert("Mercado Recolhendo");
             return;
@@ -1515,7 +1506,7 @@ const App = () => {
 
         // Regra 3: Possível Explosão (8 azuis seguidas)
         const last8 = h.slice(0, 8);
-        const is8Blue = last8.length === 8 && last8.every(isBlue);
+        const is8Blue = last8.length === 8 && last8.every(isBlueLow);
         if (is8Blue) {
             setFastAlert("Possível Explosão Detectada (8 Azuis)");
             return;
@@ -1524,7 +1515,7 @@ const App = () => {
         // Regra 2: Sequência (Azul + Roxa + Azul) -> Possível 3x
         if (h.length >= 3) {
              // Ordem de leitura: h[2] (mais antiga) -> h[1] (meio) -> h[0] (mais nova)
-            if (isBlue(h[2]) && isPurple(h[1]) && isBlue(h[0])) {
+            if (isBlueLow(h[2]) && isPurple(h[1]) && isBlueLow(h[0])) {
                 setFastAlert("Possível 3x nas próximas 3 rodadas");
                 return;
             }
@@ -1533,7 +1524,7 @@ const App = () => {
         // Regra 1: Sequência (Roxa + Azul) -> Possível 2x
         if (h.length >= 2) {
             // Ordem de leitura: h[1] (mais antiga) -> h[0] (mais nova)
-            if (isPurple(h[1]) && isBlue(h[0])) {
+            if (isPurple(h[1]) && isBlueLow(h[0])) {
                 setFastAlert("Possível 2x nas 2 rodadas seguintes");
                 return;
             }
@@ -1545,7 +1536,7 @@ const App = () => {
     }, [setFastAlert]);
 
     /* -------------------------------------------
-       9 — Lógica de SINAL DE 4 RODADAS - TIPO 1 (2x a 27x)
+       8 — Lógica de SINAL DE 4 RODADAS - TIPO 1 (2x a 27x)
        ------------------------------------------- */
     // Gatilho: [1-3x Azul < 1.50] seguido por [P/Pi >= 3.0x]
     const checkSignal2x27x = React.useCallback((h) => {
@@ -1553,7 +1544,7 @@ const App = () => {
 
         const h0 = Number(h[0].mul); // Latest (Trigger)
         const h1 = Number(h[1].mul); 
-        const h2 = Number(h[2].mul); 
+        const h2 = Number(h[2]?.mul || 0); 
         const h3 = Number(h[3]?.mul || 0); 
 
         const isBlueLow = val => val > 0 && val < 1.50;
@@ -1571,7 +1562,7 @@ const App = () => {
 
 
     /* -------------------------------------------
-       10 — Lógica de SINAL DE 4 RODADAS - TIPO 2 (2x a 6x)
+       9 — Lógica de SINAL DE 4 RODADAS - TIPO 2 (2x a 6x)
        ------------------------------------------- */
     // Gatilho: [Roxa/Rosa > 10x] seguido por [Azul < 1.50x]
     const checkSignal2x6x = React.useCallback((h) => {
@@ -1588,18 +1579,29 @@ const App = () => {
 
         return false;
     }, []);
-
+    
     /* -------------------------------------------
-       11 — Gerenciamento do Alerta RECOLHE! (REMOVIDO)
+       10 — Lógica de 3 Azuis (Estratégia de Previsão)
        ------------------------------------------- */
-    // Removido useEffect que controlava o pisca do recolhe.
+    const check3Azuis = React.useCallback((h) => {
+        if (h.length < 3) return false;
+        
+        // As 3 velas mais recentes
+        const h0 = Number(h[0].mul); 
+        const h1 = Number(h[1].mul); 
+        const h2 = Number(h[2].mul); 
+        
+        // Azul é definido como < 1.20x para esta estratégia
+        const isBlue = val => val > 0 && val < 1.20;
+
+        return isBlue(h0) && isBlue(h1) && isBlue(h2);
+    }, []);
 
 
    /* -------------------------------------------
-   12 — Firestore Listeners
+   11 — Firestore Listeners
    ------------------------------------------- */
 React.useEffect(() => {
-    // ESSENCIAL: Só inicia os listeners se o DB estiver pronto
     if (!db) return;
 
     const userId = userData.telefone;
@@ -1626,12 +1628,12 @@ React.useEffect(() => {
               if (doc.exists) {
                   const cfg = doc.data();
                   setUserConfig(cfg);
+                  localStorage.setItem("userConfig", JSON.stringify(cfg));
               }
           }, (error) => console.log("Config do usuário não encontrada (OK para anônimo)."));
 
         // Listener — histórico (Mapeia para mul e ts para as IAs)
-        // OBS: Passamos o novo array (arr) para as funções de IA, e não o estado `history`
-        const unsubscribeHistory = db.collection("historico_sinais")
+        db.collection("historico_sinais")
           .orderBy("criado", "desc")
           .limit(50) 
           .onSnapshot((snap) => {
@@ -1653,9 +1655,7 @@ React.useEffect(() => {
                   };
               });
               
-              // Usamos o snapshot anterior para verificar se a rodada mudou (mais estável)
-              const previousHistoryId = history.length > 0 ? history[0].id : null;
-              const isNewRound = arr.length > 0 && arr[0].id !== previousHistoryId;
+              const isNewRound = history.length > 0 && arr.length > 0 && arr[0].id !== history[0].id;
               
               // --- Lógica de Contador e Persistência do Sinal de 4 Rodadas ---
               setSignal4Rounds(prev => {
@@ -1691,44 +1691,9 @@ React.useEffect(() => {
               calcularMinutosIA(arr); 
               analisarIA3Niveis(arr); 
               analisarSinaisRapidos(arr); 
-              
-              // ------------------------------------------------
-              // 🔥 CORREÇÃO: SINAIS ALEATÓRIOS E ATUALIZADOS (STEP 1)
-              // ------------------------------------------------
-              if (arr.length > 0) {
-                   // A. Atualiza o "Último Sinal" para o valor mais recente do histórico
-                  const latest = arr[0];
-                  setNextSignal({
-                      valor: Number(latest.mul),
-                      cor: latest.mul >= 2 ? 'roxo' : 'azul', // Usa a cor simples
-                      hora: latest.time
-                  });
-
-                  // B. Gera a Previsão IA aleatória a cada nova rodada
-                  if (isNewRound || previousHistoryId === null) {
-                       setPredicting(true);
-                       // Simula o tempo de análise (delay)
-                       setTimeout(() => {
-                            const newSignals = generateSimulatedPrediction();
-                            setPrediction({
-                                status: "ATIVO",
-                                signals: newSignals // Usando a nova função de simulação
-                            });
-                            setPredicting(false);
-                       }, 2000); // 2 segundos de delay para simular a análise
-                  }
-                  
-              }
-              
           }, (error) => console.error("Erro no listener de TipMiner:", error));
 
-        // Listener de ultimo_sinal REMOVIDO/SUBSTITUÍDO.
-        /*
-        db.collection("ultimo_sinal")
-          .doc("dados")
-          ...
-          */
-          
+        // Listener — assertividade
         db.collection("assertividade")
           .doc("dado")
           .onSnapshot((doc) => {
@@ -1739,35 +1704,41 @@ React.useEffect(() => {
               setTotal(d.total || 0);
           }, (error) => console.error("Erro no listener de Assertividade:", error));
 
-        // Listener de 'analises' REMOVIDO/SUBSTITUÍDO PELA GERAÇÃO ALEATÓRIA.
-        /*
+        // Listener — análises IA (SINAIS FIXOS)
         db.collection("analises")
           .doc("sequencia_3_azuis")
-          ...
-        */
+          .collection("sinais")
+          .orderBy("criado", "desc")
+          .limit(1)
+          .onSnapshot((snap) => {
+              
+              const has3Azuis = check3Azuis(history); // Verifica as 3 Azuis
 
-        // Retorna a função de limpeza (unsubscribe)
-        return () => {
-            // O unsubscribe não foi alterado significativamente, mas a lógica de leitura sim.
-        };
+              if (!snap.empty && has3Azuis) {
+                  // O sinal existe E a condição de 3 Azuis é verdadeira: ATIVAR
+                  const d = snap.docs[0].data();
+                  
+                  if (d.status === "ATIVO" && d.valores && d.valores.length > 0) {
+                      setPrediction({
+                          status: d.status,
+                          signals: d.valores
+                      });
+                      setPredicting(false);
+                      return;
+                  }
+              }
+
+              // Se não houver 3 Azuis ou se o sinal não estiver ATIVO: DESATIVAR
+              setPrediction(null);
+              setPredicting(true);
+
+          }, (error) => console.error("Erro no listener de Análises IA:", error));
 
     } catch (e) {
         console.error("Erro geral nos Listeners Firestore:", e);
     }
 
-// A lista de dependências está completa para garantir a estabilidade
-}, [db, userData, calcularMinutosIA, analisarIA3Niveis, analisarSinaisRapidos, checkSignal2x27x, checkSignal2x6x]); 
-
-
-// NOVO: Tela de carregamento enquanto o Firebase/DB não está pronto
-if (!db) {
-    return (
-        <div className="flex flex-col justify-center items-center h-screen text-xl text-green-400 bg-black">
-            <i data-lucide="loader" className="w-8 h-8 mr-3 animate-spin"></i>
-            <p className="mt-4">Carregando Plataforma PRO...</p>
-        </div>
-    );
-}
+}, [db, userData, history, calcularMinutosIA, analisarIA3Niveis, analisarSinaisRapidos, checkSignal2x27x, checkSignal2x6x, check3Azuis]); 
 
 
 // 🚫 Usuário bloqueado
@@ -1789,57 +1760,29 @@ if (userConfig?.ativo === false) {
     );
 }
 
-// ============================================================
-// COMPONENTE FLUTUANTE JANELA QUENTE
-// ============================================================
-const IndicadorMinutos = () => {
-    // Agora usa o Score de Confiança
-    if (janelaQuenteScore === 0) return null;
-
-    const text = janelaQuenteScore >= 2 ? '⚡ SINAL FORTE' : '⚠️ Janela Quente';
-    const bgColor = janelaQuenteScore >= 2 ? '#ff0066' : '#ffc107'; // Rosa Forte ou Amarelo
-
-    return (
-        <div
-            style={{
-                position: "fixed",
-                top: "120px",
-                right: "15px",
-                background: bgColor,
-                padding: "8px 12px", // Reduzido o padding
-                borderRadius: "10px",
-                color: "#fff",
-                fontSize: "14px", // Reduzido o tamanho da fonte
-                fontWeight: "700",
-                zIndex: 9999,
-                boxShadow: `0 0 12px ${bgColor}80`,
-                animation: 'pulse 1.5s infinite'
-            }}
-        >
-            {text}
-            <style jsx>{`
-                @keyframes pulse {
-                    0%, 100% { opacity: 1; transform: scale(1); }
-                    50% { opacity: 0.8; transform: scale(1.05); }
-                }
-            `}</style>
+// Exibe a tela de carregamento até que o DB seja inicializado
+if (!db) {
+     return (
+        <div className="fixed inset-0 bg-black flex justify-center items-center">
+            <div className="text-center text-green-400">
+                <i data-lucide="loader-circle" className="w-10 h-10 animate-spin mb-4 mx-auto"></i>
+                <p className="text-lg">Carregando Plataforma PRO...</p>
+            </div>
         </div>
     );
-};
+}
 
 
     /* -------------------------------------------
-       13 — Renderização
+       11 — Renderização
        ------------------------------------------- */
     return (
         <div className="min-h-screen flex flex-col bg-[#0a0a0a]">
             
-            <IndicadorMinutos /> {/* INDICADOR FLUTUANTE DE MINUTOS */}
-            
             <FastAlertIndicator 
                 fastAlert={fastAlert} 
-                signal4Rounds={signal4Rounds} // PASSANDO O NOVO SINAL
-            /> {/* NOVO INDICADOR RÁPIDO/RECOLHE */}
+                signal4Rounds={signal4Rounds}
+            /> {/* INDICADOR RÁPIDO/ALERTAS */}
 
             {/* NAVBAR */}
             <NavigationBar
@@ -1859,7 +1802,7 @@ const IndicadorMinutos = () => {
                 ></iframe>
             </div>
 
-            {/* RODAPÉ (4 BOTÕES) */}
+            {/* RODAPÉ (5 BOTÕES) */}
             <FooterBar
                 greens={greens}
                 reds={reds}
@@ -1872,6 +1815,7 @@ const IndicadorMinutos = () => {
                 openExplosionIA={() => setOpenExplosionIA(true)} 
                 nivelAtual={nivelAtual} 
                 sugestaoMinutos={sugestaoMinutos}
+                openLive={() => setOpenLive(true)}
             />
 
             {/* MODAIS */}
@@ -1901,14 +1845,6 @@ const IndicadorMinutos = () => {
                 onReject={handleRejectOffer}
                 onOptOut={handleOptOut}
             />
-            
-            {/* NOVO MODAL: ONBOARDING VISUAL (SÓ MOSTRA UMA VEZ) */}
-            <OnboardingImageModal
-                open={showOnboardingImage}
-                onClose={handleOnboardingComplete}
-                onOptOut={handleOnboardingOptOut}
-            />
-
 
             <HistoryModal
                 open={openHistory}
@@ -1950,6 +1886,12 @@ const IndicadorMinutos = () => {
                 userData={userData}
                 userConfig={userConfig}
                 onAttemptLogout={handleAttemptLogout} /* PASSANDO A FUNÇÃO DE SAÍDA */
+            />
+            
+            <LiveStreamModal
+                open={openLive}
+                onClose={() => setOpenLive(false)}
+                isVip={userConfig?.vip}
             />
         </div>
     );
