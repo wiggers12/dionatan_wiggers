@@ -6,22 +6,19 @@
 
     <title>WiggersDev - Plataforma PRO</title>
 
-    <!-- Tailwind -->
+    <!-- Tailwind CSS (Estilos) -->
     <script src="https://cdn.tailwindcss.com"></script>
 
-    <!-- React / ReactDOM / Babel -->
-    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-
-    <!-- Lucide Icons -->
+    <!-- Lucide Icons (Ícones) -->
     <script src="https://unpkg.com/lucide@latest"></script>
-
-    <!-- Firebase v9 compat (somente leitura) -->
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+    
+    <!-- Firebase SDKs (v8 Puro e Estável) -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
 
     <style>
+        /* Estilos base para a aplicação mobile-first */
         body {
             margin: 0;
             background: #0a0a0a;
@@ -32,10 +29,12 @@
             user-select: none;
         }
 
+        /* Garantir que o jogo ocupe o máximo de altura disponível */
         iframe {
             width: 100%;
             border: none;
-            height: calc(100vh - 140px);
+            /* Ajustado para compensar o cabeçalho (~48px) e o rodapé flutuante (~72px) */
+            height: calc(100vh - 120px);
         }
 
         /* Scroll invisível */
@@ -43,788 +42,651 @@
             width: 0;
             height: 0;
         }
+        /* Garantir que o JS dos ícones seja executado */
+        [data-lucide] {
+            display: inline-block;
+        }
+        /* Estilo para simular o estado de indisponível do ícone IA */
+        .access-locked {
+            opacity: 0.5;
+            cursor: not-allowed;
+            filter: grayscale(100%);
+        }
+        /* Estilos do relógio (mantido) */
+        #relogioFloating {
+            position: fixed;
+            top: 60px;
+            left: 15px;
+            background: rgba(0,0,0,0.65);
+            padding: 8px 14px;
+            border-radius: 8px;
+            color: #00e676;
+            font-size: 16px;
+            font-weight: 700;
+            border: 2px solid #00e676;
+            box-shadow: 0 0 10px rgba(0,230,118,0.6);
+            z-index: 9999;
+            backdrop-filter: blur(6px);
+        }
     </style>
 </head>
 
 <body>
-<div id="relogioFloating" 
-     style="
-        position: fixed;
-        top: 60px;
-        left: 15px;
-        background: rgba(0,0,0,0.65);
-        padding: 8px 14px;
-        border-radius: 8px;
-        color: #00e676;
-        font-size: 16px;
-        font-weight: 700;
-        border: 2px solid #00e676;
-        box-shadow: 0 0 10px rgba(0,230,118,0.6);
-        z-index: 9999;
-        backdrop-filter: blur(6px);
-     ">
-    00:00:00
-</div>
-
-    <div id="root"></div>
-
-    <script type="text/babel">
-        /* ============================================================
-   TELA DE CADASTRO (NOME + TELEFONE COM VALIDAÇÃO)
-   ============================================================ */
-const CadastroScreen = ({ onSubmit }) => {
-    const [nome, setNome] = React.useState("");
-    const [telefone, setTelefone] = React.useState("");
-    const [erro, setErro] = React.useState("");
-
-    function validarTelefone(tel) {
-        return /^55\d{11}$/.test(tel);
-    }
-
-    function handleSubmit(e) {
-        e.preventDefault();
-
-        if (nome.trim().length < 3) {
-            setErro("Nome precisa ter pelo menos 3 letras.");
-            return;
-        }
-
-        if (!validarTelefone(telefone)) {
-            setErro("Telefone inválido. Use: 55 + DDD + número (ex: 5598987654321)");
-            return;
-        }
-
-        setErro("");
-        onSubmit({ nome, telefone });
-    }
-
-    return (
-        <div className="fixed inset-0 bg-black flex justify-center items-center p-6 z-50">
-            <div className="bg-[#1a1a1a] w-full max-w-sm p-6 rounded-2xl shadow-xl border border-gray-700">
-
-                <h2 className="text-2xl font-bold text-center mb-4 text-green-400">
-                    Criar Acesso
-                </h2>
-
-                <form onSubmit={handleSubmit} className="space-y-4">
-
-                    <div>
-                        <label className="text-sm text-gray-300">Seu nome</label>
-                        <input 
-                            className="w-full p-3 mt-1 bg-[#222] border border-gray-600 text-white rounded-lg focus:ring-2 focus:ring-green-400"
-                            type="text"
-                            value={nome}
-                            onChange={(e) => setNome(e.target.value)}
-                            placeholder="Digite seu nome"
-                        />
-                    </div>
-
-                    <div>
-                        <label className="text-sm text-gray-300">Telefone (55 + DDD)</label>
-                        <input 
-                            className="w-full p-3 mt-1 bg-[#222] border border-gray-600 text-white rounded-lg focus:ring-2 focus:ring-green-400"
-                            type="tel"
-                            value={telefone}
-                            onChange={(e) => setTelefone(e.target.value.replace(/\D/g, ""))}
-                            placeholder="5598987654321"
-                            maxLength="13"
-                        />
-                    </div>
-
-                    {erro && (
-                        <p className="text-red-400 text-sm">{erro}</p>
-                    )}
-
-                    <button
-                        className="w-full bg-green-600 hover:bg-green-700 transition p-3 rounded-lg font-bold text-white"
-                        type="submit"
-                    >
-                        Continuar
-                    </button>
-
-                </form>
-
-            </div>
+    <div id="relogioFloating">00:00:00</div>
+    <div id="app">
+        <!-- O conteúdo da aplicação é injetado aqui -->
+        <div class="w-full min-h-screen flex items-center justify-center bg-[#1a1a1a] text-white">
+            Aguardando verificação de acesso e carregamento de dados...
         </div>
-    );
-};
-/* ============================================================
-   FUNÇÕES DE UTILIDADE
-   ============================================================ */
-const getColorFromMultiplier = (v) => {
-    const val = Number(v);
-    if (val >= 10) return "text-pink-500";
-    if (val >= 2) return "text-purple-400";
-    if (val < 1.20) return "text-red-500";
-    return "text-yellow-300";
-};
+    </div>
 
-/* ============================================================
-   MODAL — HISTÓRICO (NOVA VERSÃO COM CARDS COLORIDOS + VOLTAR)
-   ============================================================ */
-const HistoryModal = ({ open, onClose, history }) => {
-    if (!open) return null;
-
-    const getBgFromValue = (v) => {
-        const val = Number(v);
-        if (val >= 10) return "bg-pink-600";       // ROSA
-        if (val >= 2) return "bg-purple-600";     // ROXA
-        return "bg-blue-600";                     // AZUL
-    };
-
-    return (
-        <div className="fixed inset-0 bg-black/80 z-50 flex justify-center items-center p-4">
-            <div className="bg-[#1a1a1a] w-full max-w-lg rounded-xl shadow-xl flex flex-col max-h-[85vh] overflow-hidden">
-
-                {/* TOPO */}
-                <div className="flex justify-between items-center bg-[#111] px-4 py-3 border-b border-gray-800">
-                    <h2 className="text-lg font-bold flex items-center">
-                        <i data-lucide="clock" class="w-5 h-5 text-green-400 mr-2"></i>
-                        Histórico de Multiplicadores
-                    </h2>
-
-                    <button 
-                        onClick={onClose}
-                        className="text-white bg-red-600 hover:bg-red-700 px-3 py-1 rounded-lg text-sm font-semibold shadow"
-                    >
-                        Voltar
-                    </button>
-                </div>
-
-                {/* LISTA DE CARDS */}
-                <div className="overflow-y-auto p-4 grid grid-cols-3 gap-3">
-
-                    {history.map((item) => (
-                        <div
-                            key={item.id}
-                            className={`rounded-lg p-3 text-center shadow-lg text-white font-bold ${getBgFromValue(item.multiplier)}`}
-                        >
-                            <span className="text-sm">{item.time}</span>
-                            <div className="text-xl mt-1">{item.multiplier}x</div>
-                        </div>
-                    ))}
-                </div>
-
-            </div>
-        </div>
-    );
-};
-
-/* ============================================================
-   MODAL — LIVE (CHAT FICTÍCIO)
-   ============================================================ */
-const LiveModal = ({ open, onClose }) => {
-    if (!open) return null;
-
-    const [messages, setMessages] = React.useState([
-        { user: "Admin", text: "Bem-vindos à Live! Próxima análise em 2 minutos." },
-        { user: "AnalistaPRO", text: "Fiquem atentos ao sinal 🔥" },
-        { user: "User123", text: "Bora lucrar 🔥🔥" },
-    ]);
-
-    const [msg, setMsg] = React.useState("");
-
-    const sendMessage = (e) => {
-        e.preventDefault();
-        if (!msg.trim()) return;
-        setMessages((prev) => [...prev, { user: "Você", text: msg }]);
-        setMsg("");
-    };
-
-    return (
-        <div className="fixed inset-0 bg-black/70 z-50 flex justify-center items-end md:items-center p-0 md:p-4">
-            <div className="bg-[#1a1a1a] w-full max-w-lg h-[90vh] md:h-auto rounded-t-xl md:rounded-xl shadow-xl flex flex-col">
-                
-                <div className="bg-red-700 p-4 text-white font-bold flex justify-between items-center rounded-t-xl">
-                    <div className="flex items-center">
-                        <div className="w-3 h-3 bg-white rounded-full animate-ping mr-2"></div>
-                        LIVE AO VIVO — Sala PRO
-                    </div>
-                    <button onClick={onClose}>
-                        <i data-lucide="x" class="w-6 h-6 text-white"></i>
-                    </button>
-                </div>
-
-                <div className="h-40 bg-black flex items-center justify-center text-gray-500 italic border-b border-gray-800">
-                    Transmissão do Analista...
-                </div>
-
-                <div className="flex-1 overflow-y-auto p-3 space-y-2 text-sm">
-                    {messages.map((m, i) => (
-                        <div key={i}>
-                            <span className="font-bold text-green-400">{m.user}: </span>
-                            <span>{m.text}</span>
-                        </div>
-                    ))}
-                </div>
-
-                <form onSubmit={sendMessage} className="p-3 border-t border-gray-700">
-                    <input
-                        value={msg}
-                        onChange={(e) => setMsg(e.target.value)}
-                        className="w-full p-2 rounded-lg bg-[#262626] text-white border border-green-500 focus:ring-1 focus:ring-green-500"
-                        placeholder="Digite sua mensagem..."
-                    />
-                </form>
-            </div>
-        </div>
-    );
-};
-
-/* ============================================================
-   MODAL — SINAIS IA (NOVO COM BOTÃO VOLTAR)
-   ============================================================ */
-const SignalModal = ({ open, onClose, prediction }) => {
-    if (!open) return null;
-
-    let roxa = null;
-    let rosa = null;
-
-    if (prediction && prediction.signals.length > 0) {
-        const sorted = [...prediction.signals].map(Number);
-
-        roxa = sorted.filter(v => v >= 2 && v < 10).sort((a, b) => b - a)[0];
-        rosa = sorted.filter(v => v >= 10).sort((a, b) => b - a)[0];
-    }
-
-    return (
-        <div className="fixed inset-0 bg-black/70 z-50 flex justify-center items-center p-4">
-            <div className="bg-[#1a1a1a] w-full max-w-md rounded-xl p-6 shadow-xl max-h-[85vh] overflow-hidden">
-
-                {/* TOPO + BOTÃO VOLTAR */}
-                <div className="flex justify-between items-center pb-3 border-b border-gray-700">
-                    <h2 className="text-xl font-bold flex items-center">
-                        <i data-lucide="trending-up" class="w-5 h-5 text-purple-400 mr-2"></i>
-                        Próximas Entradas IA
-                    </h2>
-
-                    <button 
-                        onClick={onClose}
-                        className="text-white bg-red-600 hover:bg-red-700 px-3 py-1 rounded-lg text-sm font-semibold shadow"
-                    >
-                        Voltar
-                    </button>
-                </div>
-
-                {/* CONTEÚDO */}
-                <div className="space-y-4 mt-4">
-
-                    {!roxa && !rosa && (
-                        <p className="text-center text-gray-400 text-sm">
-                            Nenhuma entrada ativa no momento.
-                        </p>
-                    )}
-
-                    {roxa && (
-                        <div className="bg-[#262626] p-4 rounded-lg border-l-4 border-purple-400 flex justify-between items-center">
-                            <span className="text-purple-400 font-bold">ENTRADA ROXA</span>
-                            <span className="text-3xl font-extrabold text-purple-400">
-                                {roxa.toFixed(2)}x
-                            </span>
-                        </div>
-                    )}
-
-                    {rosa && (
-                        <div className="bg-[#262626] p-4 rounded-lg border-l-4 border-pink-500 flex justify-between items-center">
-                            <span className="text-pink-500 font-bold">ENTRADA ROSA</span>
-                            <span className="text-3xl font-extrabold text-pink-500">
-                                {rosa.toFixed(2)}x
-                            </span>
-                        </div>
-                    )}
-
-                </div>
-
-                <p className="text-xs text-gray-500 mt-4 border-t border-gray-700 pt-2">
-                    A IA monitora as próximas 3 velas após o sinal.  
-                    Green confirmado se qualquer uma delas atingir o alvo.
-                </p>
-            </div>
-        </div>
-    );
-};
-
-/* ============================================================
-   MODAL — REGRAS (NOVO COM BOTÃO VOLTAR)
-   ============================================================ */
-const RulesModal = ({ open, onClose }) => {
-    if (!open) return null;
-
-    return (
-        <div className="fixed inset-0 bg-black/70 z-50 flex justify-center items-center p-4">
-            <div className="bg-[#1a1a1a] w-full max-w-md rounded-xl p-6 shadow-xl max-h-[85vh] overflow-hidden">
-
-                {/* TOPO + BOTÃO VOLTAR */}
-                <div className="flex justify-between items-center border-b border-gray-700 pb-3">
-                    <h2 className="text-xl font-bold flex items-center">
-                        <i data-lucide="zap" class="w-5 h-5 text-yellow-500 mr-2"></i>
-                        Regras da Estratégia
-                    </h2>
-
-                    <button
-                        onClick={onClose}
-                        className="text-white bg-red-600 hover:bg-red-700 px-3 py-1 rounded-lg text-sm font-semibold shadow"
-                    >
-                        Voltar
-                    </button>
-                </div>
-
-                {/* CONTEÚDO */}
-                <div className="space-y-4 mt-4 text-gray-300 text-sm">
-
-                    <div className="bg-[#262626] p-3 rounded-lg">
-                        <p className="font-bold text-green-400 mb-1">🎯 Objetivo:</p>
-                        Buscar no mínimo <strong>2.0x</strong> após o sinal da IA.
-                    </div>
-
-                    <div className="bg-[#262626] p-3 rounded-lg">
-                        <p className="font-bold text-yellow-400 mb-1">⚠️ Gestão de Risco:</p>
-                        <ul className="list-disc list-inside space-y-1 ml-2">
-                            <li>Após bater 2.0x, decisão é sua.</li>
-                            <li>Máximo 4 tentativas por sinal.</li>
-                        </ul>
-                    </div>
-
-                    <div className="bg-[#262626] p-3 rounded-lg">
-                        <p className="font-bold text-red-500 mb-1">🛑 STOP:</p>
-                        Se **3 velas abaixo de 2.0x** → RED.
-                    </div>
-
-                </div>
-            </div>
-        </div>
-    );
-};/* ============================================================
-   NAVIGATION BAR (Topo)
-   ============================================================ */
-const NavigationBar = ({ nextSignal, onHistory }) => {
-    const value = nextSignal ? Number(nextSignal.valor) : null;
-
-    return (
-        <div className="bg-[#111] text-white p-3 flex justify-between items-center shadow-xl z-10">
-            
-            {/* MENU */}
-            <div className="flex space-x-6 text-sm font-medium">
-                <span className="text-green-400 font-bold">🎮 JOGO</span>
-                <span 
-                    className="text-gray-400 hover:text-white cursor-pointer transition"
-                    onClick={onHistory}
-                >
-                    📜 HISTÓRICO
-                </span>
-                <span className="text-gray-400">👤 PERFIL</span>
-            </div>
-
-            {/* ÚLTIMO SINAL */}
-            <div className="flex items-center bg-[#2a3b2f] p-2 rounded-full border border-green-500/40">
-                <i data-lucide="zap" class="w-4 h-4 text-green-400 mr-1"></i>
-                <span className="text-xs text-gray-400">Último:</span>
-
-                <span className={`ml-2 font-bold ${
-                    value ? getColorFromMultiplier(value) : "text-gray-500"
-                }`}>
-                    {value ? `${value.toFixed(2)}x` : "--"}
-                </span>
-            </div>
-        </div>
-    );
-};
-
-/* ============================================================
-   FOOTER FLUTUANTE
-   ============================================================ */
-const FooterBar = ({
-    greens,
-    reds,
-    total,
-    prediction,
-    predicting,
-    openSignal,
-    openLive,
-    openRules
-}) => {
-    const percent = total > 0 ? ((greens / total) * 100).toFixed(1) : "0.0";
-
-    const mainValue = prediction?.signals?.[0]
-        ? Number(prediction.signals[0])
-        : null;
-
-    return (
-        <div className="fixed bottom-0 left-0 right-0 p-4 flex justify-center z-20">
-            <div className="flex w-full max-w-lg space-x-2">
-
-                {/* ASSERTIVIDADE */}
-                <div className="flex-1 bg-[#111]/60 backdrop-blur-sm border border-gray-700/50 rounded-xl p-3 flex flex-col items-center">
-                    <i data-lucide="check-circle" class="w-6 h-6 text-cyan-400"></i>
-                    <span className="text-sm mt-1 font-bold">{percent}%</span>
-                    <span className="text-[11px] text-gray-400">
-                        {greens}G • {reds}R
-                    </span>
-                </div>
-
-                {/* IA */}
-                <button
-                    onClick={openSignal}
-                    className="flex-1 bg-[#111]/60 backdrop-blur-sm border border-gray-700/50 rounded-xl p-3 flex flex-col items-center hover:bg-white/10 transition"
-                >
-                    {predicting || !mainValue ? (
-                        <i data-lucide="loader" class="w-6 h-6 text-purple-400 animate-spin"></i>
-                    ) : (
-                        <i data-lucide="trending-up" class="w-6 h-6 text-purple-400"></i>
-                    )}
-
-                    <span className={`text-sm font-bold mt-1 ${
-                        predicting ? "text-gray-400" : getColorFromMultiplier(mainValue)
-                    }`}>
-                        {predicting ? "Analisando..." : `${mainValue.toFixed(2)}x`}
-                    </span>
-
-                    <span className="text-[10px] text-gray-400">Previsão IA</span>
-                </button>
-
-                {/* REGRAS */}
-                <button
-                    onClick={openRules}
-                    className="flex-1 bg-[#111]/60 backdrop-blur-sm border border-gray-700/50 rounded-xl p-3 flex flex-col items-center hover:bg-white/10 transition"
-                >
-                    <i data-lucide="zap" class="w-6 h-6 text-yellow-500"></i>
-                    <span className="text-sm font-bold mt-1">Regras</span>
-                    <span className="text-[10px] text-gray-400">Estratégia</span>
-                </button>
-
-                {/* LIVE */}
-                <button
-                    onClick={openLive}
-                    className="flex-1 bg-[#111]/60 backdrop-blur-sm border border-gray-700/50 rounded-xl p-3 flex flex-col items-center hover:bg-white/10 transition"
-                >
-                    <i data-lucide="heart" class="w-6 h-6 text-red-500" fill="red"></i>
-                    <span className="text-sm font-bold mt-1">Live</span>
-                    <span className="text-[10px] text-gray-400">Analista</span>
-                </button>
-            </div>
-        </div>
-    );
-};
-
+    <script>
+        // --- Configuração e Mapeamento de Dados ---
+        const firebaseConfig = {
+            apiKey: "AIzaSyBod8YVf5pKWI98m9rRR8axokDkNMlXX-k", 
+            authDomain: "aviatordaniel100x.firebaseapp.com",
+            projectId: "aviatordaniel100x",
+            storageBucket: "aviatordaniel100x.firebasestorage.app",
+            messagingSenderId: "169015417803",
+            appId: "1:169015417803:web:ce4aa4f9b77d5ddb07344e"
+        };
         
-/* ============================================================
-   COMPONENTE PRINCIPAL
-   ============================================================ */
-const App = () => {
-// 🔥 ESTADO DO USUÁRIO
-const [userData, setUserData] = React.useState(
-    () => JSON.parse(localStorage.getItem("userData")) || null
-);
+        // Variáveis de Estado (Simulam o estado do React)
+        let db = null;
+        let auth = null;
+        let currentUserPhone = null; 
+        let hasIaAccess = false;    
+        
+        let history = [];
+        let nextSignal = null;
+        let iaPrediction = null;
+        let geminiSuggestion = null; 
+        let greens = 0;
+        let reds = 0;
+        let total = 0;
+        let predicting = true;
+        
+        // --- NOVO: Dados do Usuário Logado ---
+        let userProfileData = { nome: 'Convidado', status: 'TESTE', telefone: '' };
+        
+        // UI State (Controle de Modais)
+        let openHistory = false;
+        let openSignal = false;
+        let openRules = false;
+        let openLive = false;
+        let openGemini = false; 
+        let openAccessLock = false; 
+        let openProfile = false; 
 
-const [userConfig, setUserConfig] = React.useState(null);
+        const gameUrl = "https://rn72q.com/subscribeReward?pid=575973404"; 
+        const WHATSAPP_LINK = "https://wa.me/5598987654321"; // Coloque o seu número de WhatsApp aqui
+        const TARGET_IA_PANEL_URL = "https://wiggers.dev.br/painelia.html";
 
-    /* -------------------------------------------
-       1 — Config Firebase (somente leitura)
-       ------------------------------------------- */
-    const firebaseConfig = {
-        apiKey: "AIzaSyBod8YVf5pKWI98m9rRR8axokDkNMlXX-k",
-        authDomain: "aviatordaniel100x.firebaseapp.com",
-        projectId: "aviatordaniel100x",
-        storageBucket: "aviatordaniel100x.firebasestorage.app",
-        messagingSenderId: "169015417803",
-        appId: "1:169015417803:web:ce4aa4f9b77d5ddb07344e"
-    };
+        /* ============================================================
+           FUNÇÕES DE UTILIDADE
+           ============================================================ */
+        const getColorFromMultiplier = (v) => {
+            const val = Number(v);
+            if (val >= 10) return "text-pink-500";
+            if (val >= 2) return "text-purple-400";
+            if (val < 1.20) return "text-red-500";
+            return "text-yellow-300";
+        };
 
-    const [db, setDb] = React.useState(null);
+        const getPredictionColor = (prediction) => {
+            if (!prediction || !prediction.signals || prediction.signals.length === 0) return 'text-gray-400';
+            
+            const signalValues = prediction.signals.map(v => parseFloat(v.valor));
+            const hasRosa = signalValues.some(v => v >= 10.00);
+            const hasRoxa = signalValues.some(v => v >= 2.00);
 
-    /* Initialize Firebase once */
-    React.useEffect(() => {
-        const app = firebase.initializeApp(firebaseConfig);
-        const _db = firebase.firestore(app);
-        setDb(_db);
-    }, []);
-/* ============================================================
-   🔧 REPARADOR AUTOMÁTICO — GARANTE apps/aviatorPro
-   ============================================================ */
-React.useEffect(() => {
-    if (!db || !userData) return;
-
-    const ref = db.collection("usuarios")
-        .doc(userData.telefone)
-        .collection("apps")
-        .doc("aviatorPro");
-
-    ref.get().then(doc => {
-        if (!doc.exists) {
-            ref.set({
-                criado: new Date(),
-                vip: false,
-                ativo: true,
-                notificacoes: true,
-                acessoJogo: true,
-                bloqueado: false
+            if (hasRosa) return 'text-pink-500'; 
+            if (hasRoxa) return 'text-purple-400'; 
+            return 'text-gray-400';
+        };
+        
+        // Função para Logout
+        const handleLogout = () => {
+            auth.signOut().then(() => {
+                // Redireciona para o login após o logout
+                window.location.href = "login_page.html";
+            }).catch(error => {
+                console.error("Erro ao fazer logout:", error);
+                window.location.href = "login_page.html"; // Força o redirecionamento mesmo com erro
             });
-        }
-    });
-}, [db, userData]);
+        };
 
-    /* -------------------------------------------
-       2 — Estados
-       ------------------------------------------- */
-    const [history, setHistory] = React.useState([]);
-    const [nextSignal, setNextSignal] = React.useState(null);
-    const [greens, setGreens] = React.useState(0);
-    const [reds, setReds] = React.useState(0);
-    const [total, setTotal] = React.useState(0);
-    const [prediction, setPrediction] = React.useState(null);
-    const [predicting, setPredicting] = React.useState(true);
+        /* ============================================================
+           MODAL FUNCTIONS (JS Puro) - Início
+           ============================================================ */
+        
+        const toggleModal = (modalName) => {
+            // Função para fechar/abrir todos os modais
+            openHistory = modalName === 'History' ? !openHistory : false;
+            openSignal = modalName === 'Signal' ? !openSignal : false;
+            openRules = modalName === 'Rules' ? !openRules : false;
+            openLive = modalName === 'Live' ? !openLive : false;
+            openGemini = modalName === 'Gemini' ? !openGemini : false; 
+            openAccessLock = modalName === 'AccessLock' ? !openAccessLock : false;
+            openProfile = modalName === 'Profile' ? !openProfile : false;
+            
+            renderApp();
+        };
 
-    /* Modais */
-    const [openHistory, setOpenHistory] = React.useState(false);
-    const [openLive, setOpenLive] = React.useState(false);
-    const [openSignal, setOpenSignal] = React.useState(false);
-    const [openRules, setOpenRules] = React.useState(false);
+        // --- MODAL: Bloqueio de Acesso IA ---
+        const renderAccessLockModal = () => {
+            if (!openAccessLock) return '';
+            
+            return `
+                <div class="fixed inset-0 bg-black/70 z-50 flex justify-center items-center p-4">
+                    <div class="bg-red-900 w-full max-w-md p-6 rounded-xl shadow-xl border border-red-700">
+                        <div class="flex justify-between items-center pb-3 border-b border-red-600">
+                            <h2 class="text-xl font-bold flex items-center text-red-100">
+                                <i data-lucide="alert-triangle" class="w-5 h-5 mr-2"></i>
+                                ACESSO RESTRITO AO PAINEL IA
+                            </h2>
+                            <button onclick="toggleModal('AccessLock')">
+                                <i data-lucide="x" class="w-6 h-6 text-red-100"></i>
+                            </button>
+                        </div>
+                        <div class="space-y-4 mt-4 text-red-200 text-sm">
+                            <p>O Painel de Previsões IA Avançado requer um UPGRADE de acesso.</p>
+                            <p>Este recurso só é liberado para o nível PAINEL IA.</p>
+                            <a href="login_page.html" class="block mt-4 text-center text-sm font-bold bg-white text-red-900 py-2 rounded-lg hover:bg-gray-200 transition">
+                                Retornar para Upgrade
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            `;
+        };
 
-   /* -------------------------------------------
-   3 — Firestore Listeners
-   ------------------------------------------- */
-React.useEffect(() => {
-    if (!db) return;
-    if (!userData || !userData.telefone) return;
+        // --- MODAIS COM BOTÃO VOLTAR ---
+        const renderHistoryModal = () => { 
+            if (!openHistory) return '';
+            
+            const historyList = history.map(item => `
+                <div class="bg-[#263b2d] p-3 rounded-lg flex justify-between items-center">
+                    <span class="text-sm text-gray-300">${item.time}</span>
+                    <span class="text-lg font-bold ${item.color}">${item.multiplier}x</span>
+                </div>
+            `).join('');
 
-    // Listener: Config do usuário (vip, ativo, bloqueado, etc.)
-    db.collection("usuarios")
-      .doc(userData.telefone)
-      .collection("apps")
-      .doc("aviatorPro")
-      .onSnapshot((doc) => {
-          if (!doc.exists) return;
-          const cfg = doc.data();
-          setUserConfig(cfg);
-      });
+            return `
+                <div class="fixed inset-0 bg-black/70 z-50 flex justify-center items-center p-4">
+                    <div class="bg-[#1E3224] w-full max-w-md p-5 rounded-xl shadow-xl max-h-[80vh] flex flex-col">
+                        <div class="flex justify-between items-center border-b border-gray-600 pb-3">
+                            <h2 class="text-xl font-bold flex items-center">
+                                <i data-lucide="clock" class="w-5 h-5 text-green-400 mr-2"></i>
+                                Histórico de Multiplicadores
+                            </h2>
+                            <button onclick="toggleModal('History')" class="text-white bg-red-600 hover:bg-red-700 px-3 py-1 rounded-lg text-sm font-semibold shadow">
+                                Voltar
+                            </button>
+                        </div>
+                        <div class="overflow-y-auto mt-4 space-y-2 flex-1">
+                            ${historyList}
+                        </div>
+                    </div>
+                </div>
+            `;
+        };
 
-    // Listener — histórico
-    db.collection("historico_sinais")
-      .orderBy("criado", "desc")
-      .limit(40)
-      .onSnapshot((snap) => {
-          const arr = snap.docs.map((doc) => {
-              const d = doc.data();
-              return {
-                  id: doc.id,
-                  multiplier: Number(d.valor).toFixed(2),
-                  color: getColorFromMultiplier(d.valor),
-                  time: d.criado.toDate().toLocaleTimeString("pt-BR", {
-                      hour: "2-digit",
-                      minute: "2-digit",
-                  })
-              };
-          });
-          setHistory(arr);
-      });
+        const renderSignalModal = () => {
+            if (!openSignal || !iaPrediction) return '';
+            
+            const signalValues = iaPrediction.signals ? iaPrediction.signals.map(Number) : [];
+            const roxa = signalValues.filter(v => v >= 2 && v < 10).sort((a, b) => b - a)[0];
+            const rosa = signalValues.filter(v => v >= 10).sort((a, b) => b - a)[0];
 
-    // Listener — último sinal
-    db.collection("ultimo_sinal")
-      .doc("dados")
-      .onSnapshot((doc) => {
-          if (!doc.exists) return setNextSignal(null);
-          const d = doc.data();
-          setNextSignal({
-              valor: Number(d.valor),
-              cor: d.cor,
-              hora: d.hora
-          });
-      });
+            return `
+                <div class="fixed inset-0 bg-black/70 z-50 flex justify-center items-center p-4">
+                    <div class="bg-[#1E3224] w-full max-w-md p-6 rounded-xl shadow-xl">
+                        <div class="flex justify-between items-center border-b border-gray-600 pb-3">
+                            <h2 class="text-xl font-bold flex items-center">
+                                <i data-lucide="trending-up" class="w-5 h-5 text-purple-400 mr-2"></i>
+                                Próximas Entradas IA
+                            </h2>
+                            <button onclick="toggleModal('Signal')" class="text-white bg-red-600 hover:bg-red-700 px-3 py-1 rounded-lg text-sm font-semibold shadow">
+                                Voltar
+                            </button>
+                        </div>
+                        <div class="space-y-4 mt-4">
+                            ${(!roxa && !rosa) ? '<p class="text-center text-gray-400 text-sm">Nenhuma entrada ativa.</p>' : ''}
+                            ${roxa ? `
+                                <div class="bg-[#263b2d] p-4 rounded-lg border-l-4 border-purple-400 flex justify-between items-center">
+                                    <span class="text-purple-400 font-bold">ENTRADA ROXA (2.0x - 9.99x)</span>
+                                    <span class="text-3xl font-extrabold text-purple-400">${roxa.toFixed(2)}x</span>
+                                </div>
+                            ` : ''}
+                            ${rosa ? `
+                                <div class="bg-[#263b2d] p-4 rounded-lg border-l-4 border-pink-500 flex justify-between items-center">
+                                    <span class="text-pink-500 font-bold">ENTRADA ROSA (10.0x - 50.0x)</span>
+                                    <span class="text-3xl font-extrabold text-pink-500">${rosa.toFixed(2)}x</span>
+                                </div>
+                            ` : ''}
+                        </div>
+                        <p class="text-xs text-gray-500 mt-4 border-t border-gray-600 pt-2">
+                            A IA monitora as próximas 3 velas após o sinal. Green confirmado se qualquer uma delas atingir o alvo.
+                        </p>
+                    </div>
+                </div>
+            `;
+        };
 
-    // Listener — assertividade
-    db.collection("assertividade")
-      .doc("dado")
-      .onSnapshot((doc) => {
-          if (!doc.exists) return;
-          const d = doc.data();
-          setGreens(d.greens || 0);
-          setReds(d.reds || 0);
-          setTotal(d.total || 0);
-      });
+        const renderRulesModal = () => { 
+             if (!openRules) return '';
 
-    // Listener — análises IA
-    db.collection("analises")
-      .doc("sequencia_3_azuis")
-      .collection("sinais")
-      .orderBy("criado", "desc")
-      .limit(1)
-      .onSnapshot((snap) => {
-          if (snap.empty) {
-              setPrediction(null);
-              setPredicting(true);
-              return;
-          }
+            return `
+                <div class="fixed inset-0 bg-black/70 z-50 flex justify-center items-center p-4">
+                    <div class="bg-[#1a1a1a] w-full max-w-md rounded-xl p-6 shadow-xl max-h-[85vh] overflow-hidden">
+                        <div class="flex justify-between items-center border-b border-gray-700 pb-3">
+                            <h2 class="text-xl font-bold flex items-center">
+                                <i data-lucide="zap" class="w-5 h-5 text-yellow-500 mr-2"></i>
+                                Regras da Estratégia
+                            </h2>
+                            <button onclick="toggleModal('Rules')" class="text-white bg-red-600 hover:bg-red-700 px-3 py-1 rounded-lg text-sm font-semibold shadow">
+                                Voltar
+                            </button>
+                        </div>
+                        <div class="space-y-4 mt-4 text-gray-300 text-sm">
+                            <div class="bg-[#262626] p-3 rounded-lg"><p class="font-bold text-green-400 mb-1">🎯 Objetivo:</p>Buscar no mínimo <strong>2.0x</strong> após o sinal da IA.</div>
+                            <div class="bg-[#262626] p-3 rounded-lg"><p class="font-bold text-yellow-400 mb-1">⚠️ Gestão de Risco:</p>Máximo 4 tentativas por sinal.</div>
+                            <div class="bg-[#262626] p-3 rounded-lg"><p class="font-bold text-red-500 mb-1">🛑 STOP:</p>Se 3 velas forem abaixo de 2.0x → RED.</div>
+                            <div class="bg-[#262626] p-3 rounded-lg border-t border-gray-600">
+                                <p class="font-bold text-purple-400 mb-1">Dica de GALE (Proporção):</p>
+                                <p class="text-lg font-extrabold text-white tracking-widest">1 - 1 - 2 - 2</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        };
+        
+        const renderLiveModal = () => { 
+             if (!openLive) return '';
 
-          const d = snap.docs[0].data();
+            return `
+                <div class="fixed inset-0 bg-black/70 z-50 flex justify-center items-end md:items-center p-0 md:p-4">
+                    <div class="bg-[#1a1a1a] w-full max-w-lg h-[90vh] md:h-auto rounded-t-xl md:rounded-xl shadow-xl flex flex-col">
+                        <div class="bg-red-700 p-4 text-white font-bold flex justify-between items-center rounded-t-xl">
+                            <div class="flex items-center">
+                                <div class="w-3 h-3 bg-white rounded-full animate-ping mr-2"></div>
+                                LIVE AO VIVO — Sala PRO
+                            </div>
+                            <button onclick="toggleModal('Live')" class="text-white bg-red-600 hover:bg-red-700 px-3 py-1 rounded-lg text-sm font-semibold shadow">
+                                Voltar
+                            </button>
+                        </div>
+                        <div class="h-40 bg-black flex items-center justify-center text-gray-500 italic border-b border-gray-800">
+                            Transmissão do Analista...
+                        </div>
+                        <div class="flex-1 overflow-y-auto p-3 space-y-2 text-sm">
+                            <div style="color: green">Admin: Bem-vindos à Live!</div>
+                        </div>
+                        <form class="p-3 border-t border-gray-700">
+                            <input type="text" placeholder="Digite sua mensagem..." class="w-full p-2 rounded-lg bg-[#262626] text-white border border-green-500"/>
+                        </form>
+                    </div>
+                </div>
+            `;
+        };
+        
+        const renderGeminiModal = () => { 
+            if (!openGemini) return '';
 
-          if (d.status !== "ATIVO") {
-              setPrediction(null);
-              setPredicting(true);
-              return;
-          }
+            const suggestionText = geminiSuggestion && geminiSuggestion.sugestao ? geminiSuggestion.sugestao.replace(/\\n/g, '<br>') : 'Nenhuma sugestão de cenário disponível no momento.';
 
-          setPrediction({
-              status: d.status,
-              signals: d.valores
-          });
+            return `
+                <div class="fixed inset-0 bg-black/70 z-50 flex justify-center items-center p-4">
+                    <div class="bg-[#1a1a1a] w-full max-w-md rounded-xl p-6 shadow-xl">
+                        <div class="flex justify-between items-center border-b border-gray-700 pb-3">
+                            <h2 class="text-xl font-bold flex items-center">
+                                <i data-lucide="message-square" class="w-5 h-5 text-indigo-400 mr-2"></i>
+                                Sugestões da IA (Cenários)
+                            </h2>
+                            <button onclick="toggleModal('Gemini')" class="text-white bg-red-600 hover:bg-red-700 px-3 py-1 rounded-lg text-sm font-semibold shadow">
+                                Voltar
+                            </button>
+                        </div>
+                        <div class="mt-4 text-gray-300 text-sm p-3 bg-[#262626] rounded-lg">
+                            <p>${suggestionText}</p>
+                        </div>
+                        <p class="text-xs text-gray-500 mt-3">Última atualização: ${geminiSuggestion && geminiSuggestion.updateTime ? geminiSuggestion.updateTime : 'N/A'}</p>
+                    </div>
+                </div>
+            `;
+        };
+        
+        const renderProfileModal = () => {
+            if (!openProfile) return '';
+            
+            // Determina a cor do status
+            let statusColor = userProfileData.status === 'VIP' ? 'text-green-500' : (userProfileData.status === 'TESTE' ? 'text-indigo-400' : 'text-gray-500');
 
-          setPredicting(false);
-      });
+            return `
+                <div class="fixed inset-0 bg-black/70 z-50 flex justify-center items-center p-4">
+                    <div class="bg-[#1E3224] w-full max-w-md p-6 rounded-xl shadow-xl border border-gray-700">
+                        <div class="flex justify-between items-center pb-3 border-b border-gray-600">
+                            <h2 class="text-xl font-bold flex items-center text-white">
+                                <i data-lucide="user" class="w-5 h-5 mr-2 text-cyan-400"></i>
+                                Minha Conta
+                            </h2>
+                            <button onclick="toggleModal('Profile')" class="text-white bg-red-600 hover:bg-red-700 px-3 py-1 rounded-lg text-sm font-semibold shadow">
+                                Voltar
+                            </button>
+                        </div>
 
-}, [db, userData]);
+                        <div class="space-y-4 mt-4">
+                            <div class="bg-[#263b2d] p-4 rounded-lg">
+                                <p class="text-xs text-gray-400">NOME:</p>
+                                <p class="text-lg font-semibold text-white">${userProfileData.nome}</p>
+                            </div>
+                            <div class="bg-[#263b2d] p-4 rounded-lg">
+                                <p class="text-xs text-gray-400">TELEFONE:</p>
+                                <p class="text-lg font-semibold text-white">${userProfileData.telefone}</p>
+                            </div>
+                            <div class="bg-[#263b2d] p-4 rounded-lg">
+                                <p class="text-xs text-gray-400">STATUS:</p>
+                                <p class="text-xl font-bold ${statusColor}">${userProfileData.status}</p>
+                            </div>
+                        </div>
+
+                        <hr class="my-6 border-gray-700">
+                        
+                        <!-- BOTÃO DE LOGOUT -->
+                        <button onclick="handleLogout()" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 rounded-lg transition shadow-md">
+                            <i data-lucide="log-out" class="w-4 h-4 mr-2 inline-block"></i> SAIR DA PLATAFORMA
+                        </button>
+                        
+                        <!-- MENTORIA CTA -->
+                        <a href="${WHATSAPP_LINK}" target="_blank" class="block mt-4 text-center text-sm font-bold text-green-400 hover:text-green-300">
+                            <i data-lucide="phone" class="w-4 h-4 mr-1 inline-block"></i> Precisa de ajuda ou mentoria? Fale conosco!
+                        </a>
+                    </div>
+                </div>
+            `;
+        };
 
 
-// ============================================================
-// 🔥 SE O USUÁRIO AINDA NÃO CADASTROU, MOSTRA TELA DE CADASTRO
-// ============================================================
-if (!userData) {
-    return (
-        <CadastroScreen
-            onSubmit={(dados) => {
-                if (db) {
+        /* ============================================================
+           FUNÇÃO DE RE-RENDERIZAÇÃO (Substitui o React)
+           ============================================================ */
+        const renderApp = () => {
+            const appElement = document.getElementById('app');
+            if (!appElement) return;
 
-                    // DADOS DO USUÁRIO (documento principal)
-                    db.collection("usuarios")
-                      .doc(dados.telefone)
-                      .set({
-                          nome: dados.nome,
-                          telefone: dados.telefone,
-                          criado: new Date(),
-                          ultimoAcesso: new Date()
-                      });
+            const successRate = total > 0 ? ((greens / total) * 100).toFixed(2) : "0.00";
+            const iaSignalColor = getPredictionColor(iaPrediction);
+            const iaSignalValue = iaPrediction && iaPrediction.signals && iaPrediction.signals[0] ? parseFloat(iaPrediction.signals[0].valor) : null;
+            
+            const iaSignalText = iaSignalValue ? `${iaSignalValue.toFixed(2)}x` : 'AGUARDANDO...';
+            const predictingClass = predicting || !iaSignalValue ? 'animate-pulse' : '';
+            const loaderIcon = predicting || !iaSignalValue ? `<i data-lucide="loader" class="w-6 h-6 text-purple-400 animate-spin"></i>` : `<i data-lucide="trending-up" class="w-6 h-6" style="color: ${iaSignalColor.replace('text-', '')}"></i>`;
 
-                    // CONFIG DO APP
-                    db.collection("usuarios")
-                      .doc(dados.telefone)
-                      .collection("apps")
-                      .doc("aviatorPro")
-                      .set({
-                          criado: new Date(),
-                          ultimoAcesso: new Date(),
+            // Lógica para o botão de PREVISÕES IA (Bloqueio)
+            const handlePredictingClick = hasIaAccess ? "toggleModal('Signal')" : "toggleModal('AccessLock')";
+            const iaButtonClasses = hasIaAccess ? 'hover:bg-white/10' : 'access-locked';
 
-                          vip: false,
-                          ativo: true,
-                          notificacoes: true,
-                          acessoJogo: true,
-                          bloqueado: false
-                      });
+
+            const mainContent = `
+                <!-- NAVBAR (Topo) -->
+                <div class="bg-[#111] text-white p-3 flex justify-between items-center shadow-xl z-10">
+                    <div class="flex space-x-6 text-sm font-medium">
+                        <span class="text-green-400 font-bold">🎮 JOGO</span>
+                        <span class="text-gray-400 hover:text-white cursor-pointer transition" onclick="toggleModal('History')">
+                            📜 HISTÓRICO
+                        </span>
+                        <span onclick="toggleModal('Profile')" class="text-gray-400 hover:text-white cursor-pointer transition flex items-center">
+                            👤 PERFIL
+                        </span>
+                    </div>
+
+                    <!-- ÚLTIMO SINAL -->
+                    <div class="flex items-center bg-[#2a3b2f] p-2 rounded-full border border-green-500/40">
+                        <i data-lucide="zap" class="w-4 h-4 text-green-400 mr-1"></i>
+                        <span class="text-xs text-gray-400">Último:</span>
+
+                        <span class="ml-2 font-bold ${nextSignal ? getColorFromMultiplier(nextSignal.valor) : "text-gray-500"}">
+                            ${nextSignal ? `${Number(nextSignal.valor).toFixed(2)}x` : "--"}
+                        </span>
+                    </div>
+                </div>
+
+                <!-- ÁREA PRINCIPAL — JOGO -->
+                <div class="flex-1 overflow-hidden">
+                    <iframe
+                        src="${gameUrl}"
+                        allow="fullscreen"
+                        title="Jogo Integrado"
+                    ></iframe>
+                </div>
+
+                <!-- RODAPÉ FLUTUANTE -->
+                <div class="fixed bottom-0 left-0 right-0 p-4 flex justify-center z-20">
+                    <div class="flex w-full max-w-lg space-x-2">
+
+                        <!-- SUGESTÃO IA (NOVO POSICIONAMENTO) -->
+                        <button onclick="toggleModal('Gemini')" class="flex-1 bg-[#111]/60 backdrop-blur-sm border border-gray-700/50 rounded-xl p-3 flex flex-col items-center hover:bg-white/10 transition">
+                            <i data-lucide="message-square" class="w-6 h-6 text-indigo-400"></i>
+                            <span class="text-sm mt-1 font-bold">Sugestão IA</span>
+                            <span class="text-[10px] text-gray-400">${geminiSuggestion ? 'ATIVO' : 'OFF'}</span>
+                        </button>
+                        
+                        <!-- ASSERTIVIDADE -->
+                        <div class="flex-1 bg-[#111]/60 backdrop-blur-sm border border-gray-700/50 rounded-xl p-3 flex flex-col items-center">
+                            <i data-lucide="check-circle" class="w-6 h-6 text-cyan-400"></i>
+                            <span class="text-sm mt-1 font-bold">${successRate}%</span>
+                            <span class="text-[11px] text-gray-400">
+                                ${greens}G • ${reds}R
+                            </span>
+                        </div>
+
+                        <!-- PREVISÕES IA (Controle de Acesso) -->
+                        <button onclick="${handlePredictingClick}" class="flex-1 bg-[#111]/60 backdrop-blur-sm border border-gray-700/50 rounded-xl p-3 flex flex-col items-center hover:bg-white/10 transition ${iaButtonClasses}">
+                            ${loaderIcon}
+                            <span class="text-sm font-bold mt-1 ${iaSignalColor} ${predictingClass}">
+                                ${predicting ? 'AGUARDANDO...' : iaSignalText}
+                            </span>
+                            <span class="text-[10px] text-gray-400">Previsão IA</span>
+                        </button>
+
+                        <!-- REGRAS -->
+                        <button onclick="toggleModal('Rules')" class="flex-1 bg-[#111]/60 backdrop-blur-sm border border-gray-700/50 rounded-xl p-3 flex flex-col items-center hover:bg-white/10 transition">
+                            <i data-lucide="zap" class="w-6 h-6 text-yellow-500"></i>
+                            <span class="text-sm mt-1 font-bold">Regras</span>
+                            <span class="text-[10px] text-gray-400">Estratégia</span>
+                        </button>
+                        
+                        <!-- LIVE -->
+                        <button onclick="toggleModal('Live')" class="flex-1 bg-[#111]/60 backdrop-blur-sm border border-gray-700/50 rounded-xl p-3 flex flex-col items-center hover:bg-white/10 transition">
+                            <i data-lucide="heart" class="w-6 h-6 text-red-500" fill="red"></i>
+                            <span class="text-sm mt-1 font-bold">Live</span>
+                            <span class="text-[10px] text-gray-400">Analista</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- MODAIS -->
+                ${renderHistoryModal()}
+                ${renderSignalModal()}
+                ${renderRulesModal()}
+                ${renderLiveModal()}
+                ${renderGeminiModal()}
+                ${renderAccessLockModal()}
+                ${renderProfileModal()}
+            `;
+            appElement.innerHTML = mainContent;
+            
+            // Ativar Lucide Icons após injeção de HTML
+            if(window.lucide) {
+                window.lucide.createIcons();
+            }
+        };
+
+        /* ============================================================
+           FIREBASE INITIALIZATION & LISTENERS
+           ============================================================ */
+        const initFirebase = () => {
+            try {
+                // Inicialização da aplicação
+                const app = firebase.initializeApp(firebaseConfig);
+                db = firebase.firestore(app);
+                auth = firebase.auth(app); 
+                
+                // --- LEITURA DO TELEFONE DA URL ---
+                const urlParams = new URLSearchParams(window.location.search);
+                const phone = urlParams.get('userphone');
+                
+                if (!phone) {
+                    // Se não houver telefone na URL, redireciona para o login
+                    window.location.href = "login_page.html";
+                    return;
                 }
 
-                localStorage.setItem("userData", JSON.stringify(dados));
-                setUserData(dados);
-            }}
-        />
-    );   // 👈 ESSA LINHA FALTAVA!
-}
-// 🚫 Usuário bloqueado
-if (userConfig?.bloqueado === true) {
-    return (
-        <div className="text-center text-red-500 p-6 text-xl">
-            Seu acesso foi bloqueado.  
-            Entre em contato com o suporte.
-        </div>
-    );
-}
+                currentUserPhone = phone; // Define a chave do usuário logado
+                
+                // --- OBTÉM DADOS DO JOGADOR NO FIRESTORE USANDO O TELEFONE ---
+                db.collection('jogador').doc(phone).get().then(playerDoc => {
+                    if (playerDoc.exists) {
+                        const data = playerDoc.data();
+                        const now = new Date().getTime();
 
-// 🚫 Usuário inativo
-if (userConfig?.ativo === false) {
-    return (
-        <div className="text-center text-yellow-400 p-6 text-xl">
-            Seu acesso está desativado temporariamente.
-        </div>
-    );
-}
+                        // 1. Verifica se a conta está ativa e não expirou
+                        const isExpired = data.status === 'TESTE' && (data.data_inicio_teste.toDate().getTime() + 12 * 60 * 60 * 1000) < now;
+                        
+                        if (data.ativo === false || isExpired) {
+                            // Se desativado ou expirado, força redirecionamento
+                            auth.signOut();
+                            window.location.href = "login_page.html";
+                            return;
+                        }
+                        
+                        hasIaAccess = data.acesso_ia === true; // Define a flag de acesso IA
+                        
+                        // Atualiza o estado do perfil
+                        userProfileData = { 
+                            nome: data.nome || 'Convidado', 
+                            status: data.status || 'N/A', 
+                            telefone: data.telefone || 'N/A' 
+                        };
 
-    /* -------------------------------------------
-       4 — Renderização
-       ------------------------------------------- */
-    return (
-        <div className="min-h-screen flex flex-col bg-[#0a0a0a]">
+                        // Após a verificação de acesso, inicia os Listeners
+                        startDataListeners();
+                        
+                    } else {
+                        // Se o documento não existe no Firestore, força redirecionamento
+                        auth.signOut();
+                        window.location.href = "login_page.html";
+                    }
+                }).catch(e => {
+                    console.error("Erro ao verificar jogador no Firestore:", e);
+                    window.location.href = "login_page.html"; // Falha de comunicação = volta para login
+                });
+                
+            } catch (e) {
+                console.error("Erro Fatal na Inicialização do Firebase:", e);
+                document.getElementById('app').innerHTML = `<div style="padding: 20px; color: red;">Erro ao carregar a plataforma. Verifique sua chave API e conexão de internet.</div>`;
+            }
+        };
 
-            {/* NAVBAR */}
-            <NavigationBar
-                nextSignal={nextSignal}
-                onHistory={() => setOpenHistory(true)}
-            />
+        // --- Inicia Listeners SOMENTE após o Login ser verificado ---
+        const startDataListeners = () => {
+             // 1. LISTENER: histórico_sinais
+            db.collection("historico_sinais").limit(40).onSnapshot((snap) => {
+                history = snap.docs.map((doc) => {
+                    const d = doc.data();
+                    let time = '';
+                    try { time = d.criado && d.criado.toDate ? d.criado.toDate().toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" }) : 'N/A'; } catch (e) { /* silent fail */ }
+                    return { id: doc.id, multiplier: Number(d.valor).toFixed(2), color: getColorFromMultiplier(d.valor), time: time };
+                });
+                renderApp();
+            });
 
-            {/* ÁREA PRINCIPAL — JOGO */}
-            <div className="flex-1 overflow-hidden">
-                <iframe
-                    src="https://rn72q.com/subscribeReward?pid=575973404"
-                    allow="fullscreen"
-                    title="Jogo Integrado"
-                ></iframe>
-            </div>
+            // 2. LISTENER: ultimo_sinal/dados
+            db.collection("ultimo_sinal").doc("dados").onSnapshot((doc) => {
+                if (!doc.exists) return;
+                const d = doc.data();
+                nextSignal = { valor: Number(d.valor), cor: d.cor, hora: d.hora };
+                renderApp();
+            });
 
-            {/* RODAPÉ */}
-            <FooterBar
-                greens={greens}
-                reds={reds}
-                total={total}
-                prediction={prediction}
-                predicting={predicting}
-                openSignal={() => setOpenSignal(true)}
-                openLive={() => setOpenLive(true)}
-                openRules={() => setOpenRules(true)}
-            />
+            // 3. LISTENER: assertividade/dado
+            db.collection("assertividade").doc("dado").onSnapshot((doc) => {
+                if (!doc.exists) return;
+                const d = doc.data();
+                greens = d.greens || 0;
+                reds = d.reds || 0;
+                total = d.total || 0;
+                renderApp();
+            });
 
-            {/* MODAIS */}
-            <HistoryModal
-                open={openHistory}
-                onClose={() => setOpenHistory(false)}
-                history={history}
-            />
+            // 4. LISTENER: analises/sequencia_3_azuis/sinais
+            db.collection("analises").doc("sequencia_3_azuis").collection("sinais").onSnapshot((snap) => {
+                if (snap.empty) {
+                    iaPrediction = null;
+                    predicting = true;
+                    renderApp();
+                    return;
+                }
 
-            <LiveModal
-                open={openLive}
-                onClose={() => setOpenLive(false)}
-            />
+                const sortedDocs = snap.docs.sort((a, b) => b.id.localeCompare(a.id));
+                const d = sortedDocs[0].data();
 
-            <SignalModal
-                open={openSignal}
-                onClose={() => setOpenSignal(false)}
-                prediction={prediction}
-            />
+                if (d.status !== "ATIVO" || !d.valores || d.valores.length < 2) {
+                    iaPrediction = null;
+                    predicting = true;
+                } else {
+                    iaPrediction = {
+                        status: d.status,
+                        signals: d.valores.map(v => ({ valor: Number(v).toFixed(2) }))
+                    };
+                    
+                    setTimeout(() => {
+                       predicting = false;
+                       renderApp();
+                    }, 500);
+                }
+                renderApp();
+            });
+            
+            // 5. LISTENER: setup/dashboard_metrics/ultima_sugestao_ia
+            db.collection("setup").doc("dashboard_metrics").onSnapshot((doc) => {
+                if (!doc.exists) return;
+                const d = doc.data();
+                if (d.ultima_sugestao_ia) {
+                    geminiSuggestion = {
+                        sugestao: d.ultima_sugestao_ia,
+                        updateTime: d.ultimo_update && d.ultimo_update.toDate ? d.ultimo_update.toDate().toLocaleTimeString("pt-BR", {hour: "2-digit", minute: "2-digit"}) : 'N/A'
+                    };
+                } else {
+                     geminiSuggestion = null;
+                }
+                renderApp();
+            });
+        };
 
-            <RulesModal
-                open={openRules}
-                onClose={() => setOpenRules(false)}
-            />
-        </div>
-    );
-};
+        // --- INICIALIZAÇÃO DA APLICAÇÃO ---
+        window.onload = function() {
+            initFirebase();
+            
+            // Inicializar e rodar o relógio a cada segundo
+            function atualizarRelogio() {
+                const el = document.getElementById("relogioFloating");
+                if (!el) return;
 
-/* ============================================================
-   RENDER FINAL
-   ============================================================ */
-ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+                const agora = new Date();
+                const h = String(agora.getHours()).padStart(2, '0');
+                const m = String(agora.getMinutes()).padStart(2, '0');
+                const s = String(agora.getSeconds()).padStart(2, '0');
 
-/* Inicializa ícones Lucide */
-setTimeout(() => {
-    lucide.createIcons();
-}, 300);
+                el.textContent = `${h}:${m}:${s}`;
+            }
 
-</script> 
+            atualizarRelogio();
+            setInterval(atualizarRelogio, 1000);
+        };
 
-<script>
-function atualizarRelogio() {
-    const el = document.getElementById("relogioFloating");
-    if (!el) return;
-
-    const agora = new Date();
-    const h = String(agora.getHours()).padStart(2, '0');
-    const m = String(agora.getMinutes()).padStart(2, '0');
-    const s = String(agora.getSeconds()).padStart(2, '0');
-
-    el.textContent = `${h}:${m}:${s}`;
-}
-
-// Atualiza imediatamente
-atualizarRelogio();
-
-// Atualiza a cada segundo
-setInterval(atualizarRelogio, 1000);
-</script>
+    </script>
 </body>
 </html>
-
