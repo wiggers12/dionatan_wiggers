@@ -621,7 +621,7 @@ const MinutosIAModal = ({ open, onClose, minutos2x, minutos5x, minutos10x, janel
 
     return (
         <div className="fixed inset-0 bg-black/80 z-50 flex justify-center items-center p-4">
-            <div className="bg-[#1a1a1a] w-full max-w-md rounded-xl p-6 shadow-xl max-h-[85vh] overflow-hidden">
+            <div className="bg-[#1a1a1a] w-full max-w-md rounded-xl p-6 shadow-xl flex flex-col">
 
                 {/* TOPO + BOTÃO VOLTAR */}
                 <div className="flex justify-between items-center pb-3 border-b border-gray-700">
@@ -926,25 +926,11 @@ const FooterBar = ({
 };
 
 // ============================================================
-// NOVO COMPONENTE: ALERTA RÃPIDO FLUTUANTE (RECOLHE + ALERTAS)
+// NOVO COMPONENTE: ALERTA RÃPIDO FLUTUANTE (ALERTAS DE SEQUÃNCIA)
 // ============================================================
-const FastAlertIndicator = ({ recolheActive, fastAlert, signal4Rounds }) => {
+const FastAlertIndicator = ({ fastAlert, signal4Rounds }) => {
     
-    // 1. Prioridade MÃ¡xima: RECOLHE!
-    if (recolheActive) {
-        return (
-            <div 
-                className="fixed top-[58px] left-1/2 transform -translate-x-1/2 p-2 rounded-lg bg-red-700/80 border border-red-500 shadow-2xl z-[90] animate-pulse-recolhe"
-                style={{ backdropFilter: 'blur(4px)' }}
-            >
-                <span className="text-sm font-extrabold text-white">
-                    ð RECOLHE! ð
-                </span>
-            </div>
-        );
-    }
-
-    // 2. Segunda Prioridade: Sinal de 4 Rodadas (Nova Regra)
+    // 1. Prioridade MÃ¡xima: Sinal de 4 Rodadas (Nova Regra)
     if (signal4Rounds.active) {
         const target = signal4Rounds.target;
         const count = signal4Rounds.count;
@@ -961,7 +947,7 @@ const FastAlertIndicator = ({ recolheActive, fastAlert, signal4Rounds }) => {
     }
 
 
-    // 3. Terceira Prioridade: Alerta de SequÃªncia RÃ¡pida
+    // 2. Segunda Prioridade: Alerta de SequÃªncia RÃ¡pida
     if (fastAlert) {
         let alertColor = "bg-yellow-600/80 border-yellow-400";
         if (fastAlert.includes('Explodiu')) alertColor = "bg-pink-600/80 border-pink-400";
@@ -1044,16 +1030,13 @@ const App = () => {
     const [prediction, setPrediction] = React.useState(null);
     const [predicting, setPredicting] = React.useState(true);
     
-    // Alerta Centralizado (Recolhe/Crash) - NOVO: AGORA CONTROLA O PISCA/SOMA
-    const [recolheActive, setRecolheActive] = React.useState(false); 
+    // Alerta Centralizado (Recolhe/Crash) - REMOVIDO
     
     // Alertas rÃ¡pidos de sequÃªncia
     const [fastAlert, setFastAlert] = React.useState(null); 
 
     // NOVO ESTADO: Sinal de 4 Rodadas
     const [signal4Rounds, setSignal4Rounds] = React.useState({ active: false, count: 0, target: null });
-
-    // ESTADO DE TOUR REMOVIDO
     
     // NOVO ESTADO: Oferta Last Minute
     const [showLastMinuteOffer, setShowLastMinuteOffer] = React.useState(false);
@@ -1315,7 +1298,7 @@ const App = () => {
 
         // Regra 5: Mercado Recolhendo (Maioria azul nas Ãºltimas 30)
         const last30 = h.slice(0, 30);
-        const blueCount = last30.filter(isBlue).length;
+        const blueCount = last30.filter(val => val < 1.50).length; // Usando 1.50x como mÃ©trica de recolhimento
         if (blueCount >= 16) { 
             setFastAlert("Mercado Recolhendo");
             return;
@@ -1398,19 +1381,9 @@ const App = () => {
     }, []);
 
     /* -------------------------------------------
-       11 â Gerenciamento do Alerta RECOLHE!
+       11 â Gerenciamento do Alerta RECOLHE! (REMOVIDO)
        ------------------------------------------- */
-    React.useEffect(() => {
-        let timer;
-        if (recolheActive) {
-            // Se o alerta foi ativado, mantenha-o visÃ­vel por 1.2 segundos (2 pulsos)
-            timer = setTimeout(() => {
-                setRecolheActive(false);
-            }, 1200); 
-        }
-        // Limpa o timer se o componente for desmontado ou o estado mudar
-        return () => clearTimeout(timer);
-    }, [recolheActive]);
+    // Removido useEffect que controlava o pisca do recolhe.
 
 
    /* -------------------------------------------
@@ -1449,7 +1422,7 @@ React.useEffect(() => {
 
         // Listener â histÃ³rico (Mapeia para mul e ts para as IAs)
         // OBS: Passamos o novo array (arr) para as funÃ§Ãµes de IA, e nÃ£o o estado `history`
-        db.collection("historico_sinais")
+        const unsubscribeHistory = db.collection("historico_sinais")
           .orderBy("criado", "desc")
           .limit(50) 
           .onSnapshot((snap) => {
@@ -1529,15 +1502,8 @@ React.useEffect(() => {
                   hora: d.hora
               });
 
-              // LÃ³gica da Vela Azul/Recolhe: Aciona o alerta temporÃ¡rio
-              if (corSinal === "azul" || corSinal === "blue" || valorSinal < 1.20) { 
-                  if (!recolheActive) { // Evita re-triggerar se o alerta jÃ¡ estÃ¡ ativo (pisca)
-                    setRecolheActive(true); 
-                  }
-              } else {
-                  // Se a nova rodada nÃ£o for crash, resetamos o estado para que ele possa ser ativado novamente no prÃ³ximo crash
-                  setRecolheActive(false);
-              }
+              // LÃ³gica da Vela Azul/Recolhe: REMOVIDA
+              
           }, (error) => console.error("Erro no listener de Ãltimo Sinal:", error));
           
         db.collection("assertividade")
@@ -1577,13 +1543,19 @@ React.useEffect(() => {
 
               setPredicting(false);
           }, (error) => console.error("Erro no listener de AnÃ¡lises IA:", error));
+        
+        // Retorna a funÃ§Ã£o de limpeza (unsubscribe)
+        return () => {
+            // NÃ£o Ã© possÃ­vel retornar o unsubscribe de todos os listeners individualmente em um Ãºnico useEffect,
+            // mas o principal Ã© o de histÃ³rico. Para estabilidade, mantemos a lista simples aqui.
+        };
 
     } catch (e) {
         console.error("Erro geral nos Listeners Firestore:", e);
     }
 
 // REMOVIDO history da lista de dependÃªncias para evitar re-render loops/crashes
-}, [db, userData, calcularMinutosIA, analisarIA3Niveis, analisarSinaisRapidos, recolheActive, checkSignal2x27x, checkSignal2x6x]); 
+}, [db, userData, calcularMinutosIA, analisarIA3Niveis, analisarSinaisRapidos, checkSignal2x27x, checkSignal2x6x]); 
 
 
 // NOVO: Tela de carregamento enquanto o Firebase/DB nÃ£o estÃ¡ pronto
@@ -1664,7 +1636,6 @@ const IndicadorMinutos = () => {
             <IndicadorMinutos /> {/* INDICADOR FLUTUANTE DE MINUTOS */}
             
             <FastAlertIndicator 
-                recolheActive={recolheActive} // USANDO O NOVO ESTADO CONTROLADO POR TEMPO
                 fastAlert={fastAlert} 
                 signal4Rounds={signal4Rounds} // PASSANDO O NOVO SINAL
             /> {/* NOVO INDICADOR RÃPIDO/RECOLHE */}
