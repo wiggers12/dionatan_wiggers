@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <title>WiggersDev - Plataforma PRO</title>
+
+    <!-- Tailwind CSS (Estilos) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Lucide Icons (Ícones) -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <!-- Firebase SDKs (v8 Puro e Estável) -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+
+    <style>
+        /* Estilos base para a aplicação mobile-first */
+        body {
+            margin: 0;
+            background: #0a0a0a;
+            color: #fff;
+            overflow-x: hidden;
+            font-family: 'Poppins', sans-serif;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        /* Garantir que o jogo ocupe o máximo de altura disponível */
+        iframe {
+            width: 100%;
+            border: none;
+            /* Ajustado para compensar o cabeçalho (~48px) e o rodapé flutuante (~72px) */
+            height: calc(100vh - 120px);
+        }
+
+        /* Scroll invisível */
+        *::-webkit-scrollbar {
+            width: 0;
+            height: 0;
+        }
+        /* Garantir que o JS dos ícones seja executado */
+        [data-lucide] {
+            display: inline-block;
+        }
+        /* Estilo para simular o estado de indisponível do ícone IA */
+        .access-locked {
+            opacity: 0.5;
+            cursor: not-allowed;
+            filter: grayscale(100%);
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <!-- O conteúdo da aplicação é injetado aqui -->
+        <div class="w-full min-h-screen flex items-center justify-center bg-[#1a1a1a] text-white">
+            Aguardando verificação de acesso e carregamento de dados...
+        </div>
+    </div>
+
+    <script>
+        // --- Configuração e Mapeamento de Dados ---
+        const firebaseConfig = {
+            apiKey: "AIzaSyBod8YVf5pKWI98m9rRR8axokDkNMlXX-k", 
+            authDomain: "aviatordaniel100x.firebaseapp.com",
+            projectId: "aviatordaniel100x",
+            storageBucket: "aviatordaniel100x.firebasestorage.app",
+            messagingSenderId: "169015417803",
+            appId: "1:169015417803:web:ce4aa4f9b77d5ddb07344e"
+        };
+        
+        // Variáveis de Estado (Simulam o estado do React)
+        let db = null;
+        let auth = null;
+        let currentUserPhone = null; // A CHAVE PRINCIPAL AGORA É O TELEFONE
+        let hasIaAccess = false;    
+        
+        let history = [];
+        let nextSignal = null;
+        let iaPrediction = null;
+        let geminiSuggestion = null; 
+        let greens = 0;
+        let reds = 0;
+        let total = 0;
+        let predicting = true;
+        
+        // UI State (Controle de Modais)
+        let openHistory = false;
+        let openSignal = false;
+        let openRules = false;
+        let openLive = false;
+        let openGemini = false; 
+        let openAccessLock = false; 
+
+        const gameUrl = "https://rn72q.com/subscribeReward?pid=575973404"; 
+
+        /* ============================================================
+           FUNÇÕES DE UTILIDADE
+           ============================================================ */
+        const getColorFromMultiplier = (v) => {
+            const val = Number(v);
+            if (val >= 10) return "text-pink-500";
+            if (val >= 2) return "text-purple-400";
+            if (val < 1.20) return "text-red-500";
+            return "text-yellow-300";
+        };
+
+        const getPredictionColor = (prediction) => {
+            if (!prediction || !prediction.signals || prediction.signals.length === 0) return 'text-gray-400';
+            
+            const signalValues = prediction.signals.map(v => parseFloat(v.valor));
+            const hasRosa = signalValues.some(v => v >= 10.00);
+            const hasRoxa = signalValues.some(v => v >= 2.00);
+
+            if (hasRosa) return 'text-pink-500'; 
+            if (hasRoxa) return 'text-purple-400'; 
+            return 'text-gray-400';
+        };
+        
+        /* ============================================================
+           MODAL FUNCTIONS (JS Puro) - OMITIDO CÓDIGO POR EXTENSÃO
+           ============================================================ */
+        
+        const toggleModal = (modalName) => {
+            // Função para fechar/abrir todos os modais
+            openHistory = modalName === 'History' ? !openHistory : false;
+            openSignal = modalName === 'Signal' ? !openSignal : false;
+            openRules = modalName === 'Rules' ? !openRules : false;
+            openLive = modalName === 'Live' ? !openLive : false;
+            openGemini = modalName === 'Gemini' ? !openGemini : false; 
+            openAccessLock = modalName === 'AccessLock' ? !openAccessLock : false;
+            
+            renderApp();
+        };
+
+        // --- NOVO MODAL: Bloqueio de Acesso IA ---
+        const renderAccessLockModal = () => {
+            if (!openAccessLock) return '';
+            
+            return `
+                <div class="fixed inset-0 bg-black/70 z-50 flex justify-center items-center p-4">
+                    <div class="bg-red-900 w-full max-w-md p-6 rounded-xl shadow-xl border border-red-700">
+                        <div class="flex justify-between items-center pb-3 border-b border-red-600">
+                            <h2 class="text-xl font-bold flex items-center text-red-100">
+                                <i data-lucide="alert-triangle" class="w-5 h-5 mr-2"></i>
+                                ACESSO RESTRITO AO PAINEL IA
+                            </h2>
+                            <button onclick="toggleModal('AccessLock')">
+                                <i data-lucide="x" class="w-6 h-6 text-red-100"></i>
+                            </button>
+                        </div>
+                        <div class="space-y-4 mt-4 text-red-200 text-sm">
+                            <p>O Painel de Previsões IA Avançado requer um UPGRADE de acesso.</p>
+                            <p>Este recurso só é liberado para o nível PAINEL IA.</p>
+                            <a href="login_page.html" class="block mt-4 text-center text-sm font-bold bg-white text-red-900 py-2 rounded-lg hover:bg-gray-200 transition">
+                                Retornar para Upgrade
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            `;
+        };
+
+        const renderHistoryModal = () => { /* Código omitido */ return ''; };
+        const renderSignalModal = () => { /* Código omitido */ return ''; };
+        const renderRulesModal = () => { /* Código omitido */ return ''; };
+        const renderLiveModal = () => { /* Código omitido */ return ''; };
+        const renderGeminiModal = () => { /* Código omitido */ return ''; };
+
+        /* ============================================================
+           FUNÇÃO DE RE-RENDERIZAÇÃO (Substitui o React)
+           ============================================================ */
+        const renderApp = () => {
+            const appElement = document.getElementById('app');
+            if (!appElement) return;
+
+            const successRate = total > 0 ? ((greens / total) * 100).toFixed(2) : "0.00";
+            const iaSignalColor = getPredictionColor(iaPrediction);
+            const iaSignalValue = iaPrediction && iaPrediction.signals && iaPrediction.signals[0] ? parseFloat(iaPrediction.signals[0].valor) : null;
+            
+            const iaSignalText = iaSignalValue ? `${iaSignalValue.toFixed(2)}x` : 'AGUARDANDO...';
+            const predictingClass = predicting || !iaSignalValue ? 'animate-pulse' : '';
+            const loaderIcon = predicting || !iaSignalValue ? `<i data-lucide="loader" class="w-6 h-6 text-purple-400 animate-spin"></i>` : `<i data-lucide="trending-up" class="w-6 h-6" style="color: ${iaSignalColor.replace('text-', '')}"></i>`;
+
+            // Lógica para o botão de PREVISÕES IA (Bloqueio)
+            const handlePredictingClick = hasIaAccess ? "toggleModal('Signal')" : "toggleModal('AccessLock')";
+            const iaButtonClasses = hasIaAccess ? 'hover:bg-white/10' : 'access-locked';
+
+
+            const mainContent = `
+                <!-- NAVBAR (Topo) -->
+                <div class="bg-[#111] text-white p-3 flex justify-between items-center shadow-xl z-10">
+                    <div class="flex space-x-6 text-sm font-medium">
+                        <span class="text-green-400 font-bold">🎮 JOGO</span>
+                        <span class="text-gray-400 hover:text-white cursor-pointer transition" onclick="toggleModal('History')">
+                            📜 HISTÓRICO
+                        </span>
+                        <span class="text-gray-400 hover:text-red-500 cursor-pointer transition" onclick="firebase.auth().signOut(); window.location.href='login_page.html';">
+                            SAIR
+                        </span>
+                    </div>
+
+                    <!-- ÚLTIMO SINAL -->
+                    <div class="flex items-center bg-[#2a3b2f] p-2 rounded-full border border-green-500/40">
+                        <i data-lucide="zap" class="w-4 h-4 text-green-400 mr-1"></i>
+                        <span class="text-xs text-gray-400">Último:</span>
+
+                        <span class="ml-2 font-bold ${nextSignal ? getColorFromMultiplier(nextSignal.valor) : "text-gray-500"}">
+                            ${nextSignal ? `${Number(nextSignal.valor).toFixed(2)}x` : "--"}
+                        </span>
+                    </div>
+                </div>
+
+                <!-- ÁREA PRINCIPAL — JOGO -->
+                <div class="flex-1 overflow-hidden">
+                    <iframe
+                        src="${gameUrl}"
+                        allow="fullscreen"
+                        title="Jogo Integrado"
+                    ></iframe>
+                </div>
+
+                <!-- RODAPÉ FLUTUANTE -->
+                <div class="fixed bottom-0 left-0 right-0 p-4 flex justify-center z-20">
+                    <div class="flex w-full max-w-lg space-x-2">
+
+                        <!-- GEMINI SUGGESTION (NOVO) -->
+                        <button onclick="toggleModal('Gemini')" class="flex-1 bg-[#111]/60 backdrop-blur-sm border border-gray-700/50 rounded-xl p-3 flex flex-col items-center hover:bg-white/10 transition">
+                            <i data-lucide="message-square" class="w-6 h-6 text-indigo-400"></i>
+                            <span class="text-sm mt-1 font-bold">Sugestão IA</span>
+                            <span class="text-[10px] text-gray-400">${geminiSuggestion ? 'ATIVO' : 'OFF'}</span>
+                        </button>
+                        
+                        <!-- ASSERTIVIDADE -->
+                        <div class="flex-1 bg-[#111]/60 backdrop-blur-sm border border-gray-700/50 rounded-xl p-3 flex flex-col items-center">
+                            <i data-lucide="check-circle" class="w-6 h-6 text-cyan-400"></i>
+                            <span class="text-sm mt-1 font-bold">${successRate}%</span>
+                            <span class="text-[11px] text-gray-400">
+                                ${greens}G • ${reds}R
+                            </span>
+                        </div>
+
+                        <!-- PREVISÕES IA (Controle de Acesso) -->
+                        <button onclick="${handlePredictingClick}" class="flex-1 bg-[#111]/60 backdrop-blur-sm border border-gray-700/50 rounded-xl p-3 flex flex-col items-center hover:bg-white/10 transition ${iaButtonClasses}">
+                            ${loaderIcon}
+                            <span class="text-sm font-bold mt-1 ${iaSignalColor} ${predictingClass}">
+                                ${predicting ? 'AGUARDANDO...' : iaSignalText}
+                            </span>
+                            <span class="text-[10px] text-gray-400">Previsão IA</span>
+                        </button>
+
+                        <!-- REGRAS -->
+                        <button onclick="toggleModal('Rules')" class="flex-1 bg-[#111]/60 backdrop-blur-sm border border-gray-700/50 rounded-xl p-3 flex flex-col items-center hover:bg-white/10 transition">
+                            <i data-lucide="zap" class="w-6 h-6 text-yellow-500"></i>
+                            <span class="text-sm font-bold mt-1">Regras</span>
+                            <span class="text-[10px] text-gray-400">Estratégia</span>
+                        </button>
+                        
+                        <!-- LIVE -->
+                        <button onclick="toggleModal('Live')" class="flex-1 bg-[#111]/60 backdrop-blur-sm border border-gray-700/50 rounded-xl p-3 flex flex-col items-center hover:bg-white/10 transition">
+                            <i data-lucide="heart" class="w-6 h-6 text-red-500" fill="red"></i>
+                            <span class="text-sm font-bold mt-1">Live</span>
+                            <span class="text-[10px] text-gray-400">Analista</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- MODAIS -->
+                ${renderHistoryModal()}
+                ${renderSignalModal()}
+                ${renderRulesModal()}
+                ${renderLiveModal()}
+                ${renderGeminiModal()}
+                ${renderAccessLockModal()}
+            `;
+            appElement.innerHTML = mainContent;
+            
+            // Ativar Lucide Icons após injeção de HTML
+            if(window.lucide) {
+                window.lucide.createIcons();
+            }
+        };
+
+        /* ============================================================
+           FIREBASE INITIALIZATION & LISTENERS
+           ============================================================ */
+        const initFirebase = () => {
+            try {
+                // Inicialização da aplicação
+                const app = firebase.initializeApp(firebaseConfig);
+                db = firebase.firestore(app);
+                auth = firebase.auth(app); 
+                
+                // --- LEITURA DO TELEFONE DA URL ---
+                const urlParams = new URLSearchParams(window.location.search);
+                const phone = urlParams.get('userphone');
+                
+                if (!phone) {
+                    // Se não houver telefone na URL, redireciona para o login
+                    window.location.href = "login_page.html";
+                    return;
+                }
+
+                currentUserPhone = phone; // Define a chave do usuário logado
+                
+                // --- OBTÉM DADOS DO JOGADOR NO FIRESTORE USANDO O TELEFONE ---
+                db.collection('jogador').doc(phone).get().then(playerDoc => {
+                    if (playerDoc.exists) {
+                        const data = playerDoc.data();
+                        const now = new Date().getTime();
+
+                        // 1. Verifica se a conta está ativa e não expirou
+                        const isExpired = data.status === 'TESTE' && (data.data_inicio_teste.toDate().getTime() + 12 * 60 * 60 * 1000) < now;
+                        
+                        if (data.ativo === false || isExpired) {
+                            // Se desativado ou expirado, força redirecionamento
+                            auth.signOut();
+                            window.location.href = "login_page.html";
+                            return;
+                        }
+                        
+                        hasIaAccess = data.acesso_ia === true; // Define a flag de acesso IA
+                        
+                        // Após a verificação de acesso, inicia os Listeners
+                        startDataListeners();
+                        
+                    } else {
+                        // Se o documento não existe no Firestore, força redirecionamento
+                        auth.signOut();
+                        window.location.href = "login_page.html";
+                    }
+                }).catch(e => {
+                    console.error("Erro ao verificar jogador no Firestore:", e);
+                    window.location.href = "login_page.html"; // Falha de comunicação = volta para login
+                });
+                
+            } catch (e) {
+                console.error("Erro Fatal na Inicialização do Firebase:", e);
+                document.getElementById('app').innerHTML = `<div style="padding: 20px; color: red;">Erro ao carregar a plataforma. Verifique sua chave API e conexão de internet.</div>`;
+            }
+        };
+
+        // --- Inicia Listeners SOMENTE após o Login ser verificado ---
+        const startDataListeners = () => {
+             // 1. LISTENER: histórico_sinais
+            db.collection("historico_sinais").limit(40).onSnapshot((snap) => {
+                history = snap.docs.map((doc) => {
+                    const d = doc.data();
+                    let time = '';
+                    try { time = d.criado && d.criado.toDate ? d.criado.toDate().toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" }) : 'N/A'; } catch (e) { /* silent fail */ }
+                    return { id: doc.id, multiplier: Number(d.valor).toFixed(2), color: getColorFromMultiplier(d.valor), time: time };
+                });
+                renderApp();
+            });
+
+            // 2. LISTENER: ultimo_sinal/dados
+            db.collection("ultimo_sinal").doc("dados").onSnapshot((doc) => {
+                if (!doc.exists) return;
+                const d = doc.data();
+                nextSignal = { valor: Number(d.valor), cor: d.cor, hora: d.hora };
+                renderApp();
+            });
+
+            // 3. LISTENER: assertividade/dado
+            db.collection("assertividade").doc("dado").onSnapshot((doc) => {
+                if (!doc.exists) return;
+                const d = doc.data();
+                greens = d.greens || 0;
+                reds = d.reds || 0;
+                total = d.total || 0;
+                renderApp();
+            });
+
+            // 4. LISTENER: analises/sequencia_3_azuis/sinais
+            db.collection("analises").doc("sequencia_3_azuis").collection("sinais").onSnapshot((snap) => {
+                if (snap.empty) {
+                    iaPrediction = null;
+                    predicting = true;
+                    renderApp();
+                    return;
+                }
+
+                const sortedDocs = snap.docs.sort((a, b) => b.id.localeCompare(a.id));
+                const d = sortedDocs[0].data();
+
+                if (d.status !== "ATIVO" || !d.valores || d.valores.length < 2) {
+                    iaPrediction = null;
+                    predicting = true;
+                } else {
+                    iaPrediction = {
+                        status: d.status,
+                        signals: d.valores.map(v => ({ valor: Number(v).toFixed(2) }))
+                    };
+                    
+                    setTimeout(() => {
+                       predicting = false;
+                       renderApp();
+                    }, 500);
+                }
+                renderApp();
+            });
+            
+            // 5. LISTENER: setup/dashboard_metrics/ultima_sugestao_ia
+            db.collection("setup").doc("dashboard_metrics").onSnapshot((doc) => {
+                if (!doc.exists) return;
+                const d = doc.data();
+                if (d.ultima_sugestao_ia) {
+                    geminiSuggestion = {
+                        sugestao: d.ultima_sugestao_ia,
+                        updateTime: d.ultimo_update && d.ultimo_update.toDate ? d.ultimo_update.toDate().toLocaleTimeString("pt-BR", {hour: "2-digit", minute: "2-digit"}) : 'N/A'
+                    };
+                } else {
+                     geminiSuggestion = null;
+                }
+                renderApp();
+            });
+        };
+
+        // --- INICIALIZAÇÃO DA APLICAÇÃO ---
+        window.onload = function() {
+            initFirebase();
+        };
+
+    </script>
+</body>
+</html>
