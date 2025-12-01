@@ -73,6 +73,41 @@ const getColorFromMultiplier = (v) => {
     return "text-yellow-300";
 };
 
+/**
+ * Função que simula uma previsão IA com base em probabilidades.
+ * Gera 1 a 3 sinais, priorizando picos maiores.
+ * @returns {Array<string>} Lista de multiplicadores previstos.
+ */
+const generateSimulatedPrediction = () => {
+    const signals = [];
+    
+    // 50% de chance de gerar um sinal Roxo (2.0x a 9.9x)
+    if (Math.random() < 0.5) {
+        // Gera um valor entre 2.00 e 9.99
+        const roxo = (Math.random() * 7.99 + 2.00).toFixed(2);
+        signals.push(roxo);
+    }
+    
+    // 15% de chance de gerar um sinal Rosa (10x a 25x)
+    if (Math.random() < 0.15) {
+        // Gera um valor entre 10.00 e 25.00
+        const rosa = (Math.random() * 15.00 + 10.00).toFixed(2);
+        signals.push(rosa);
+    }
+    
+    // Se não houver sinais, garante pelo menos um baixo valor (1.5x a 2.5x)
+    if (signals.length === 0) {
+        const baixo = (Math.random() * 1.0 + 1.5).toFixed(2);
+        signals.push(baixo);
+    }
+    
+    // Ordena para que o maior sinal fique em primeiro (é o mais importante)
+    signals.sort((a, b) => Number(b) - Number(a));
+    
+    return signals;
+};
+
+
 /* ============================================================
    MODAL — ONBOARDING VISUAL (TOUR COMPLETO INTEGRADO)
    ============================================================ */
@@ -663,14 +698,18 @@ const HistoryModal = ({ open, onClose, history }) => {
 const SignalModal = ({ open, onClose, prediction }) => {
     if (!open) return null;
 
+    // A prediction agora vem da simulação e já está ordenada
     let roxa = null;
     let rosa = null;
 
     if (prediction && prediction.signals.length > 0) {
-        const sorted = [...prediction.signals].map(Number);
-
-        roxa = sorted.filter(v => v >= 2 && v < 10).sort((a, b) => b - a)[0];
-        rosa = sorted.filter(v => v >= 10).sort((a, b) => b - a)[0];
+        const signals = prediction.signals.map(Number);
+        
+        // Pega o maior roxo
+        roxo = signals.find(v => v >= 2 && v < 10);
+        
+        // Pega o maior rosa
+        rosa = signals.find(v => v >= 10);
     }
 
     return (
@@ -695,17 +734,17 @@ const SignalModal = ({ open, onClose, prediction }) => {
                 {/* CONTEÚDO */}
                 <div className="space-y-4 mt-4">
 
-                    {!roxa && !rosa && (
+                    {!roxo && !rosa && (
                         <p className="text-center text-gray-400 text-sm">
                             Nenhuma entrada ativa no momento.
                         </p>
                     )}
 
-                    {roxa && (
+                    {roxo && (
                         <div className="bg-[#262626] p-4 rounded-lg border-l-4 border-purple-400 flex justify-between items-center">
                             <span className="text-purple-400 font-bold">ENTRADA ROXA</span>
                             <span className="text-3xl font-extrabold text-purple-400">
-                                {roxa.toFixed(2)}x
+                                {roxo.toFixed(2)}x
                             </span>
                         </div>
                     )}
@@ -1173,7 +1212,7 @@ const App = () => {
     const [greens, setGreens] = React.useState(0);
     const [reds, setReds] = React.useState(0);
     const [total, setTotal] = React.useState(0);
-    const [prediction, setPrediction] = React.useState(null);
+    const [prediction, setPrediction] = React.useState(null); // Simulação de previsão
     const [predicting, setPredicting] = React.useState(true);
     
     // Alerta Centralizado (Recolhe/Crash) - REMOVIDO
@@ -1652,29 +1691,43 @@ React.useEffect(() => {
               calcularMinutosIA(arr); 
               analisarIA3Niveis(arr); 
               analisarSinaisRapidos(arr); 
+              
+              // ------------------------------------------------
+              // 🔥 CORREÇÃO: SINAIS ALEATÓRIOS E ATUALIZADOS (STEP 1)
+              // ------------------------------------------------
+              if (arr.length > 0) {
+                   // A. Atualiza o "Último Sinal" para o valor mais recente do histórico
+                  const latest = arr[0];
+                  setNextSignal({
+                      valor: Number(latest.mul),
+                      cor: latest.mul >= 2 ? 'roxo' : 'azul', // Usa a cor simples
+                      hora: latest.time
+                  });
+
+                  // B. Gera a Previsão IA aleatória a cada nova rodada
+                  if (isNewRound || previousHistoryId === null) {
+                       setPredicting(true);
+                       // Simula o tempo de análise (delay)
+                       setTimeout(() => {
+                            const newSignals = generateSimulatedPrediction();
+                            setPrediction({
+                                status: "ATIVO",
+                                signals: newSignals // Usando a nova função de simulação
+                            });
+                            setPredicting(false);
+                       }, 2000); // 2 segundos de delay para simular a análise
+                  }
+                  
+              }
+              
           }, (error) => console.error("Erro no listener de TipMiner:", error));
 
-        // ... Outros Listeners (Mantidos)
+        // Listener de ultimo_sinal REMOVIDO/SUBSTITUÍDO.
+        /*
         db.collection("ultimo_sinal")
           .doc("dados")
-          .onSnapshot((doc) => {
-              if (!doc.exists) {
-                  setNextSignal(null);
-                  return;
-              }
-              const d = doc.data();
-              const corSinal = d.cor ? d.cor.toLowerCase() : '';
-              const valorSinal = Number(d.valor);
-              
-              setNextSignal({
-                  valor: valorSinal,
-                  cor: corSinal,
-                  hora: d.hora
-              });
-
-              // Lógica da Vela Azul/Recolhe: REMOVIDA
-              
-          }, (error) => console.error("Erro no listener de Último Sinal:", error));
+          ...
+          */
           
         db.collection("assertividade")
           .doc("dado")
@@ -1686,38 +1739,16 @@ React.useEffect(() => {
               setTotal(d.total || 0);
           }, (error) => console.error("Erro no listener de Assertividade:", error));
 
+        // Listener de 'analises' REMOVIDO/SUBSTITUÍDO PELA GERAÇÃO ALEATÓRIA.
+        /*
         db.collection("analises")
           .doc("sequencia_3_azuis")
-          .collection("sinais")
-          .orderBy("criado", "desc")
-          .limit(1)
-          .onSnapshot((snap) => {
-              if (snap.empty) {
-                  setPrediction(null);
-                  setPredicting(true);
-                  return;
-              }
+          ...
+        */
 
-              const d = snap.docs[0].data();
-
-              if (d.status !== "ATIVO" || !d.valores || d.valores.length === 0) {
-                  setPrediction(null);
-                  setPredicting(true);
-                  return;
-              }
-
-              setPrediction({
-                  status: d.status,
-                  signals: d.valores
-              });
-
-              setPredicting(false);
-          }, (error) => console.error("Erro no listener de Análises IA:", error));
-        
         // Retorna a função de limpeza (unsubscribe)
         return () => {
-            // Não é possível retornar o unsubscribe de todos os listeners individualmente em um único useEffect,
-            // mas o principal é o de histórico. Para estabilidade, mantemos a lista simples aqui.
+            // O unsubscribe não foi alterado significativamente, mas a lógica de leitura sim.
         };
 
     } catch (e) {
