@@ -41,18 +41,19 @@
             height: calc(100vh - 140px); 
         }
 
-        /* Scroll invisível */
+        /* Scroll invisÃ­vel */
         *::-webkit-scrollbar {
             width: 0;
             height: 0;
         }
-        /* Estilos para o indicador de Janela Quente */
-        @keyframes pulse-hot {
+        /* Efeito de pulso para o sinal RECOLHE! */
+        @keyframes pulse-recolhe {
             0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.8; transform: scale(1.05); }
+            50% { opacity: 0.7; transform: scale(1.05); }
         }
-        .animate-pulse-hot {
-            animation: pulse-hot 1.5s infinite;
+        /* Mantido infinito aqui, mas o React controla o tempo de visibilidade */
+        .animate-pulse-recolhe { 
+            animation: pulse-recolhe 0.6s infinite; 
         }
     </style>
 </head>
@@ -62,7 +63,7 @@
 
     <script type="text/babel">
 /* ============================================================
-   FUNÇÕES DE UTILIDADE
+   FUNÃÃES DE UTILIDADE
    ============================================================ */
 const getColorFromMultiplier = (v) => {
     const val = Number(v);
@@ -73,112 +74,7 @@ const getColorFromMultiplier = (v) => {
 };
 
 /* ============================================================
-   MODAL — ONBOARDING (TOUR VISUAL COM CARDS)
-   ============================================================ */
-const OnboardingImageModal = ({ open, onClose, onOptOut }) => {
-    if (!open) return null;
-    return (
-        <div className="fixed inset-0 bg-black/90 z-[100] flex justify-center items-center p-4">
-            <div className="bg-[#1a1a1a] w-full max-w-lg rounded-2xl shadow-2xl flex flex-col max-h-[90vh] overflow-hidden border border-green-500/50">
-
-                {/* TOPO */}
-                <div className="flex justify-between items-center bg-[#111] px-6 py-4 border-b border-gray-700">
-                    <h2 className="text-2xl font-extrabold flex items-center text-green-400">
-                        <i data-lucide="sparkles" className="w-7 h-7 mr-3"></i>
-                        Guia de Navegação PRO!
-                    </h2>
-                    <button 
-                        onClick={onClose}
-                        className="text-white bg-red-600 hover:bg-red-700 px-3 py-1 rounded-lg text-sm font-semibold shadow"
-                    >
-                        Fechar
-                    </button>
-                </div>
-
-                {/* CONTEÚDO SCROLLABLE */}
-                <div className="overflow-y-auto p-6 space-y-6 text-gray-300">
-                    
-                    <p className="text-sm border-b border-gray-700 pb-3">
-                        Seu app de análise e gestão foi carregado. Para maximizar seus lucros, entenda a função de cada ferramenta de IA e os seus gatilhos.
-                    </p>
-
-                    {/* SEÇÃO 1: ALERTAS DE AÇÃO IMEDIATA */}
-                    <div className="bg-[#262626] p-4 rounded-xl border-l-4 border-red-500">
-                        <h3 className="font-bold text-lg text-red-400 flex items-center mb-2">
-                            <i data-lucide="bell" className="w-5 h-5 mr-2"></i>
-                            Alertas Rápidos (Topo Central)
-                        </h3>
-                        <p className="text-xs">
-                            Estes sinais aparecem logo abaixo do cabeçalho e indicam a leitura de sequências perigosas ou altamente lucrativas.
-                        </p>
-                        <ul className="list-disc list-inside space-y-1 ml-2 mt-2 text-xs font-semibold">
-                             <li>{`**Sinais de 4 Rodadas (BUSCAR):** Ativados após um gatilho de ciclo (ex: Roxa > 10x seguida de Azul < 1.50x). Permanecem visíveis por 4 rodadas.`}</li>
-                             <li>**Alertas Rápidos:** Incluem **"Possível 2x/3x"** e **"Explosão Detectada"** (após 8 azuis seguidas).</li>
-                             <li>**Mercado Recolhendo:** Indica mais de 50% de velas azuis nas últimas 30 rodadas.</li>
-                        </ul>
-                    </div>
-                    
-                    {/* SEÇÃO 2: FERRAMENTAS DO RODAPÉ (FOOTER) */}
-                    <div className="space-y-3">
-                        <h3 className="font-bold text-lg text-cyan-400 flex items-center">
-                            <i data-lucide="bar-chart-3" className="w-5 h-5 mr-2"></i>
-                            Ferramentas de Análise (Rodapé)
-                        </h3>
-                        
-                        <div className="bg-[#262626] p-3 rounded-lg border-l-4 border-cyan-400">
-                            <p className="font-bold text-sm">Assertividade (G/R)</p>
-                            <p className="text-xs">Sua taxa de sucesso histórica. É a prova social da eficácia do sistema.</p>
-                        </div>
-                        <div className="bg-[#262626] p-3 rounded-lg border-l-4 border-purple-400">
-                            <p className="font-bold text-sm">Previsão IA (Sinais)</p>
-                            <p className="text-xs">Sugestão de alvos (Roxo ou Rosa) para as próximas rodadas. **Aparece somente após a confirmação de 3 velas azuis seguidas.**</p>
-                        </div>
-                        <div className="bg-[#262626] p-3 rounded-lg border-l-4 border-yellow-400">
-                            <p className="font-bold text-sm">IA de Minutos (Estratégia)</p>
-                            <p className="text-xs">Calcula o **Score de Confiança (0-3)** medindo o atraso dos picos (2x, 5x, 10x). O score 2 ou 3 indica "Janela Quente" (Hora de Entrar!).</p>
-                        </div>
-                        <div className="bg-[#262626] p-3 rounded-lg border-l-4 border-pink-500">
-                            <p className="font-bold text-sm">Explosão IA (Nível 1-3)</p>
-                            <p className="text-xs">Analisa a densidade de drenagem para prever a intensidade do próximo ciclo de alta (Nível 3 = Alta Probabilidade de Rosa).</p>
-                        </div>
-                    </div>
-
-                    {/* SEÇÃO 3: GESTÃO E SUPORTE */}
-                    <div className="space-y-3">
-                        <h3 className="font-bold text-lg text-pink-400 flex items-center">
-                            <i data-lucide="shield-half" className="w-5 h-5 mr-2"></i>
-                            Gestão de Risco e Suporte
-                        </h3>
-                        
-                        <div className="bg-[#262626] p-3 rounded-lg border-l-4 border-yellow-400">
-                            <p className="font-bold text-sm">Gerenciamento de Risco (Menu)</p>
-                            <p className="text-xs">Use a calculadora para definir o **Valor Ideal de Stake** com base na sua Banca Total e no Risco Máximo (recomendado 1% a 2%).</p>
-                        </div>
-                    </div>
-
-                </div>
-
-                {/* FOOTER */}
-                <div className="p-4 bg-[#111] border-t border-gray-700 flex justify-between items-center">
-                    <span onClick={onOptOut} className="flex items-center space-x-2 cursor-pointer text-gray-500 hover:text-white transition text-xs">
-                         <i data-lucide="eye-off" className="w-4 h-4"></i>
-                         <span>Não mostrar este guia novamente.</span>
-                    </span>
-                    <button 
-                        onClick={onClose}
-                        className="bg-green-600 hover:bg-green-700 p-3 rounded-xl font-bold text-white text-lg shadow-lg transition"
-                    >
-                        ENTENDI, VAMOS FATURAR!
-                    </button>
-                </div>
-
-            </div>
-        </div>
-    );
-};
-
-/* ============================================================
-   MODAL — OFERTA LAST MINUTE (APARECE NO LOGOUT)
+   MODAL â OFERTA LAST MINUTE (APARECE NO LOGOUT)
    ============================================================ */
 const LastMinuteOfferModal = ({ open, onAccept, onReject, onOptOut }) => {
     if (!open) return null;
@@ -190,18 +86,18 @@ const LastMinuteOfferModal = ({ open, onAccept, onReject, onOptOut }) => {
         <div className="fixed inset-0 bg-black/95 z-[101] flex justify-center items-center p-4">
             <div className="bg-[#2a1a3a] w-full max-w-sm rounded-2xl shadow-2xl flex flex-col border-4 border-purple-500/80">
 
-                {/* TOPO E TÍTULO */}
+                {/* TOPO E TÃTULO */}
                 <div className="px-6 py-4 bg-[#1a1a1a] border-b border-purple-700">
                     <h2 className="text-2xl font-extrabold text-center text-purple-400">
-                        OPERAÇÃO AO VIVO!
+                        OPERAÃÃO AO VIVO!
                     </h2>
-                    <p className="text-sm text-center text-gray-400 mt-1">Sua última chance de faturar hoje.</p>
+                    <p className="text-sm text-center text-gray-400 mt-1">Sua Ãºltima chance de faturar hoje.</p>
                 </div>
 
-                {/* CONTEÚDO */}
+                {/* CONTEÃDO */}
                 <div className="p-6 text-white text-center">
                     <p className="text-lg font-bold mb-3">
-                        Percebemos que você está saindo...
+                        Percebemos que vocÃª estÃ¡ saindo...
                     </p>
                     
                     <p className="text-4xl font-extrabold text-pink-500 mb-4">
@@ -209,7 +105,7 @@ const LastMinuteOfferModal = ({ open, onAccept, onReject, onOptOut }) => {
                     </p>
 
                     <p className="text-sm mb-4 text-gray-300">
-                        Opere **comigo ao vivo** por 1 hora ou até obtermos seus primeiros lucros. Estou disponível **AGORA** para te guiar.
+                        Opere **comigo ao vivo** por 1 hora ou atÃ© obtermos seus primeiros lucros. Estou disponÃ­vel **AGORA** para te guiar.
                     </p>
 
                     <a
@@ -219,7 +115,7 @@ const LastMinuteOfferModal = ({ open, onAccept, onReject, onOptOut }) => {
                         onClick={onAccept}
                         className="w-full mt-2 flex items-center justify-center p-3 rounded-xl bg-purple-600 hover:bg-purple-700 text-white font-bold text-lg transition shadow-lg space-x-2"
                     >
-                        <i data-lucide="zap" className="w-5 h-5"></i>
+                        <i data-lucide="zap" class="w-5 h-5"></i>
                         <span>CLICA NO LINK E VAMO PRA CIMA!</span>
                     </a>
                     
@@ -227,15 +123,15 @@ const LastMinuteOfferModal = ({ open, onAccept, onReject, onOptOut }) => {
                         onClick={onReject}
                         className="w-full mt-3 p-2 rounded-lg text-gray-400 hover:text-white transition text-sm font-semibold"
                     >
-                        Não, obrigado. Prefiro sair agora.
+                        NÃ£o, obrigado. Prefiro sair agora.
                     </button>
                 </div>
 
-                {/* OPÇÃO DE OPT-OUT */}
+                {/* OPÃÃO DE OPT-OUT */}
                 <div className="p-3 bg-[#111] border-t border-gray-800 flex justify-end items-center text-xs">
                     <span onClick={onOptOut} className="flex items-center space-x-2 cursor-pointer text-red-400 hover:text-red-300 transition">
-                         <i data-lucide="eye-off" className="w-4 h-4"></i>
-                         <span>Não mostrar esta oferta novamente.</span>
+                         <i data-lucide="eye-off" class="w-4 h-4"></i>
+                         <span>NÃ£o mostrar esta oferta novamente.</span>
                     </span>
                 </div>
 
@@ -246,86 +142,7 @@ const LastMinuteOfferModal = ({ open, onAccept, onReject, onOptOut }) => {
 
 
 /* ============================================================
-   MODAL — LIVE STREAM (Apenas para VIPs)
-   ============================================================ */
-const LiveStreamModal = ({ open, onClose, isVip }) => {
-    if (!open) return null;
-
-    // VOCÊ DEVE COLAR O TOKEN JWT VÁLIDO (GERADO NO BACKEND) AQUI
-    // IMPORTANTE: Este token tem uma validade de 1h
-    const tokenDeAcesso = "COLE O SEU TOKEN JWT AQUI"; 
-
-    // O URL para o seu VPaaS Jitsi Meet (deve ser o mesmo no ficheiro Admin)
-    const jitsiBaseUrl = "https://8x8.vc/vpaas-magic-cookie-bea217d68a5746d6b367f99361c20750";
-    const roomName = "live_do_milhao"; 
-
-    const jitsiUrl = `${jitsiBaseUrl}/${roomName}?t=${tokenDeAcesso}&config.prejoinPageEnabled=false&interfaceConfig.TOOLBAR_BUTTONS=%5B%27camera%27%2C%20%27chat%27%2C%20%27fullscreen%27%2C%20%27tileview%27%5D`;
-
-    return (
-        <div className="fixed inset-0 bg-black/80 z-50 flex justify-center items-center p-4">
-            <div className="bg-[#1a1a1a] w-full max-w-2xl rounded-xl shadow-xl flex flex-col max-h-[95vh] overflow-hidden">
-
-                {/* TOPO */}
-                <div className="flex justify-between items-center bg-red-700 px-4 py-3 text-white font-bold rounded-t-xl">
-                    <h2 className="text-lg flex items-center">
-                        <div className="w-3 h-3 bg-white rounded-full animate-ping mr-2"></div>
-                        LIVE EXCLUSIVA VIP
-                    </h2>
-                    <button 
-                        onClick={onClose}
-                        className="bg-black/20 hover:bg-black/40 px-3 py-1 rounded-lg text-sm font-semibold shadow"
-                    >
-                        Fechar
-                    </button>
-                </div>
-
-                {/* CONTEÚDO DA LIVE */}
-                <div className="flex-1 overflow-hidden p-3 md:p-4 bg-[#0a0a0a] flex justify-center items-center">
-                    
-                    {isVip ? (
-                        tokenDeAcesso && tokenDeAcesso.length > 50 ? ( // Verifica se o token foi colado
-                            <iframe
-                                src={jitsiUrl}
-                                allow="camera; microphone; display-capture"
-                                title="Live Stream VIP"
-                                className="w-full h-full min-h-[400px] rounded-lg border-2 border-green-500"
-                            ></iframe>
-                        ) : (
-                            <div className="text-center p-6 bg-[#262626] rounded-xl text-yellow-500">
-                                <i data-lucide="alert-triangle" className="w-8 h-8 mx-auto mb-3"></i>
-                                <p className="font-bold">ERRO DE CONFIGURAÇÃO (APP)</p>
-                                <p className="text-sm text-gray-400">O token JWT de acesso não foi colado no código do aplicativo.</p>
-                            </div>
-                        )
-                    ) : (
-                        /* TELA DE BLOQUEIO PARA NÃO-VIP */
-                        <div className="text-center p-8 bg-red-800/20 rounded-xl border border-red-700 max-w-sm">
-                            <i data-lucide="lock" className="w-10 h-10 text-red-500 mx-auto mb-4"></i>
-                            <p className="text-xl font-bold text-red-400 mb-2">ACESSO BLOQUEADO</p>
-                            <p className="text-gray-300 text-sm">Esta é uma transmissão exclusiva para membros VIP.</p>
-                            <a 
-                                href="#"
-                                className="mt-4 inline-block bg-pink-600 hover:bg-pink-700 text-white font-bold p-3 rounded-lg transition shadow-lg"
-                                onClick={() => { 
-                                    onClose(); 
-                                    document.getElementById('openMentoriaButton').click(); // Simula o clique no botão de Mentoria
-                                }}
-                            >
-                                <i data-lucide="star" className="w-5 h-5 mr-1 inline-block"></i>
-                                Clique e Garanta seu Acesso VIP
-                            </a>
-                        </div>
-                    )}
-                </div>
-
-            </div>
-        </div>
-    );
-};
-
-
-/* ============================================================
-   MODAL — MENU PRINCIPAL
+   MODAL â MENU PRINCIPAL
    ============================================================ */
 const MenuModal = ({ open, onClose, onHistory, onProfile, onRiskManagement, onAttemptLogout }) => {
     if (!open) return null;
@@ -335,7 +152,7 @@ const MenuModal = ({ open, onClose, onHistory, onProfile, onRiskManagement, onAt
             className={`flex items-center p-4 rounded-xl transition w-full text-left bg-[#1a1a1a] border-l-4 ${color} hover:bg-[#262626]`}
             onClick={() => { onClick(); onClose(); }}
         >
-            <i data-lucide={icon} className={`w-5 h-5 ${color} mr-3`}></i>
+            <i data-lucide={icon} class={`w-5 h-5 ${color} mr-3`}></i>
             <span className="font-semibold text-white">{label}</span>
         </button>
     );
@@ -344,10 +161,10 @@ const MenuModal = ({ open, onClose, onHistory, onProfile, onRiskManagement, onAt
         <div className="fixed inset-0 bg-black/80 z-50 flex justify-center items-center p-4">
             <div className="bg-[#111] w-full max-w-sm rounded-xl p-6 shadow-2xl flex flex-col">
 
-                {/* TOPO E TÍTULO */}
+                {/* TOPO E TÃTULO */}
                 <div className="flex justify-between items-center pb-4 border-b border-gray-700">
                     <h2 className="text-2xl font-extrabold flex items-center text-green-400">
-                        <i data-lucide="menu" className="w-6 h-6 mr-3"></i>
+                        <i data-lucide="menu" class="w-6 h-6 mr-3"></i>
                         Menu Principal PRO
                     </h2>
                     <button 
@@ -358,7 +175,7 @@ const MenuModal = ({ open, onClose, onHistory, onProfile, onRiskManagement, onAt
                     </button>
                 </div>
 
-                {/* OPÇÕES */}
+                {/* OPÃÃES */}
                 <div className="mt-6 space-y-4">
                     
                     <MenuItem 
@@ -371,7 +188,7 @@ const MenuModal = ({ open, onClose, onHistory, onProfile, onRiskManagement, onAt
                     <div className="border-t border-gray-800 pt-4 space-y-4">
                         <MenuItem 
                             icon="settings" 
-                            label="Configurações & Risco" 
+                            label="ConfiguraÃ§Ãµes & Risco" 
                             color="text-yellow-400"
                             onClick={onRiskManagement}
                         />
@@ -383,13 +200,13 @@ const MenuModal = ({ open, onClose, onHistory, onProfile, onRiskManagement, onAt
                         />
                     </div>
                     
-                    {/* Botão SAIR agora chama o gatilho centralizado */}
+                    {/* BotÃ£o SAIR agora chama o gatilho centralizado */}
                     <button
                         onClick={onAttemptLogout}
                         className="w-full mt-6 bg-red-700 hover:bg-red-600 transition p-3 rounded-xl font-bold text-white shadow-lg flex items-center justify-center space-x-2"
                     >
-                        <i data-lucide="log-out" className="w-5 h-5"></i>
-                        <span>SAIR (Limpar Sessão)</span>
+                        <i data-lucide="log-out" class="w-5 h-5"></i>
+                        <span>SAIR (Limpar SessÃ£o)</span>
                     </button>
                 </div>
 
@@ -399,7 +216,7 @@ const MenuModal = ({ open, onClose, onHistory, onProfile, onRiskManagement, onAt
 };
 
 /* ============================================================
-   MODAL — MENTORIA
+   MODAL â MENTORIA
    ============================================================ */
 const MentoriaModal = ({ open, onClose }) => {
     if (!open) return null;
@@ -407,7 +224,7 @@ const MentoriaModal = ({ open, onClose }) => {
     const [copied, setCopied] = React.useState(false);
     const phoneNumber = "51989378751";
     
-    // Função para copiar para a área de transferência
+    // FunÃ§Ã£o para copiar para a Ã¡rea de transferÃªncia
     const handleCopy = () => {
         // Usa document.execCommand('copy') como fallback seguro em iframes
         const el = document.createElement('textarea');
@@ -428,10 +245,10 @@ const MentoriaModal = ({ open, onClose }) => {
         <div className="fixed inset-0 bg-black/80 z-50 flex justify-center items-center p-4">
             <div className="bg-[#1a1a1a] w-full max-w-sm rounded-xl p-6 shadow-xl flex flex-col">
 
-                {/* TOPO E TÍTULO */}
+                {/* TOPO E TÃTULO */}
                 <div className="flex justify-between items-center pb-4 border-b border-gray-700">
                     <h2 className="text-xl font-bold flex items-center text-pink-500">
-                        <i data-lucide="award" className="w-6 h-6 mr-2"></i>
+                        <i data-lucide="award" class="w-6 h-6 mr-2"></i>
                         Mentoria PRO
                     </h2>
                     <button 
@@ -445,7 +262,7 @@ const MentoriaModal = ({ open, onClose }) => {
                 {/* CARD DE CTA */}
                 <div className="mt-4 p-5 rounded-xl bg-[#222] border-t-4 border-pink-500 shadow-lg">
                     <p className="text-lg font-extrabold text-white mb-2">
-                        Perder dinheiro virou hábito?
+                        Perder dinheiro virou hÃ¡bito?
                     </p>
                     <p className="text-gray-300 text-sm">
                         Aprenda a fazer o certo, venha fazer uma mentoria e aprenda a ganhar dinheiro de uma vez por todas.
@@ -473,7 +290,7 @@ const MentoriaModal = ({ open, onClose }) => {
                         rel="noopener noreferrer"
                         className="w-full mt-4 flex items-center justify-center p-3 rounded-lg bg-green-600 hover:bg-green-700 text-white font-bold transition shadow-lg"
                     >
-                        <i data-lucide="message-square" className="w-5 h-5 mr-2"></i>
+                        <i data-lucide="message-square" class="w-5 h-5 mr-2"></i>
                         Chamar no Chat
                     </a>
                 </div>
@@ -484,7 +301,7 @@ const MentoriaModal = ({ open, onClose }) => {
 };
 
 /* ============================================================
-   MODAL — GERENCIAMENTO DE RISCO
+   MODAL â GERENCIAMENTO DE RISCO
    ============================================================ */
 const RiskManagementModal = ({ open, onClose }) => {
     if (!open) return null;
@@ -504,11 +321,11 @@ const RiskManagementModal = ({ open, onClose }) => {
         <div className="fixed inset-0 bg-black/80 z-50 flex justify-center items-center p-4">
             <div className="bg-[#1a1a1a] w-full max-w-md rounded-xl p-6 shadow-xl flex flex-col">
 
-                {/* TOPO E TÍTULO */}
+                {/* TOPO E TÃTULO */}
                 <div className="flex justify-between items-center pb-4 border-b border-gray-700">
                     <h2 className="text-xl font-bold flex items-center text-yellow-400">
-                        <i data-lucide="calculator" className="w-6 h-6 mr-2"></i>
-                        Cálculo de Risco & Stake
+                        <i data-lucide="calculator" class="w-6 h-6 mr-2"></i>
+                        CÃ¡lculo de Risco & Stake
                     </h2>
                     <button 
                         onClick={onClose}
@@ -559,17 +376,17 @@ const RiskManagementModal = ({ open, onClose }) => {
 
                 {/* RESULTADO - VALOR IDEAL PARA APOSTAR */}
                 <div className="mt-6 p-4 rounded-xl bg-green-700/30 border-l-4 border-green-400 shadow-md">
-                    <p className="text-sm font-semibold text-green-400">Valor Ideal de Stake (Entrada Única):</p>
+                    <p className="text-sm font-semibold text-green-400">Valor Ideal de Stake (Entrada Ãnica):</p>
                     <p className="text-3xl font-extrabold text-white mt-1">
                         {formatCurrency(stakeValue)}
                     </p>
                     <p className="text-xs text-green-300 mt-2">
-                        Com uma banca de {formatCurrency(banca)}, o valor máximo para comprometer em uma única entrada, com risco de {riscoPercent}%, é de {formatCurrency(stakeValue)}.
+                        Com uma banca de {formatCurrency(banca)}, o valor mÃ¡ximo para comprometer em uma Ãºnica entrada, com risco de {riscoPercent}%, Ã© de {formatCurrency(stakeValue)}.
                     </p>
                 </div>
 
                 <p className="text-xs text-gray-500 mt-4 border-t border-gray-700 pt-2">
-                    A gestão de banca é o pilar mais importante para a consistência. Nunca exceda seu limite de risco.
+                    A gestÃ£o de banca Ã© o pilar mais importante para a consistÃªncia. Nunca exceda seu limite de risco.
                 </p>
 
             </div>
@@ -578,25 +395,25 @@ const RiskManagementModal = ({ open, onClose }) => {
 };
 
 /* ============================================================
-   MODAL — PERFIL 
+   MODAL â PERFIL 
    ============================================================ */
 const ProfileModal = ({ open, onClose, userData, userConfig, onAttemptLogout }) => {
     if (!open) return null;
 
     const statusClasses = userConfig?.vip ? "bg-green-500 text-green-900" : "bg-yellow-500 text-yellow-900";
-    const statusText = userConfig?.vip ? "VIP Ativo" : "Acesso Básico";
+    const statusText = userConfig?.vip ? "VIP Ativo" : "Acesso BÃ¡sico";
 
-    const displayId = userData?.telefone || "ID Não Registrado";
-    const displayName = userData?.nome || "Usuário Anônimo";
+    const displayId = userData?.telefone || "ID NÃ£o Registrado";
+    const displayName = userData?.nome || "UsuÃ¡rio AnÃ´nimo";
 
     return (
         <div className="fixed inset-0 bg-black/80 z-50 flex justify-center items-center p-4">
             <div className="bg-[#1a1a1a] w-full max-w-sm rounded-xl p-6 shadow-xl flex flex-col">
 
-                {/* TOPO E TÍTULO */}
+                {/* TOPO E TÃTULO */}
                 <div className="flex justify-between items-center pb-4 border-b border-gray-700">
                     <h2 className="text-xl font-bold flex items-center">
-                        <i data-lucide="user-circle" className="w-6 h-6 text-cyan-400 mr-2"></i>
+                        <i data-lucide="user-circle" class="w-6 h-6 text-cyan-400 mr-2"></i>
                         Meu Perfil
                     </h2>
                     <button 
@@ -612,7 +429,7 @@ const ProfileModal = ({ open, onClose, userData, userConfig, onAttemptLogout }) 
                     {statusText}
                 </div>
 
-                {/* DETALHES DO USUÁRIO */}
+                {/* DETALHES DO USUÃRIO */}
                 <div className="mt-4 space-y-3">
                     <div className="bg-[#262626] p-3 rounded-lg">
                         <p className="text-sm text-gray-400">Nome:</p>
@@ -625,17 +442,17 @@ const ProfileModal = ({ open, onClose, userData, userConfig, onAttemptLogout }) 
                     </div>
                 </div>
 
-                {/* BOTÃO DE SAIR */}
+                {/* BOTÃO DE SAIR */}
                 <button
                     onClick={onAttemptLogout} /* CHAMA O GATILHO DE LOGOUT/OFERTA */
                     className="w-full mt-6 bg-red-600 hover:bg-red-700 transition p-3 rounded-lg font-bold text-white shadow-lg flex items-center justify-center space-x-2"
                 >
-                    <i data-lucide="log-out" className="w-5 h-5"></i>
-                    <span>Limpar Sessão e Sair</span>
+                    <i data-lucide="log-out" class="w-5 h-5"></i>
+                    <span>Limpar SessÃ£o e Sair</span>
                 </button>
 
                 <p className="text-xs text-gray-500 text-center mt-4">
-                    Limpar a sessão irá forçar o uso de um novo ID no próximo acesso.
+                    Limpar a sessÃ£o irÃ¡ forÃ§ar o uso de um novo ID no prÃ³ximo acesso.
                 </p>
 
             </div>
@@ -644,7 +461,7 @@ const ProfileModal = ({ open, onClose, userData, userConfig, onAttemptLogout }) 
 };
 
 /* ============================================================
-   MODAL — TIPMINER (ANTIGO HISTÓRICO)
+   MODAL â TIPMINER (ANTIGO HISTÃRICO)
    ============================================================ */
 const HistoryModal = ({ open, onClose, history }) => {
     if (!open) return null;
@@ -663,7 +480,7 @@ const HistoryModal = ({ open, onClose, history }) => {
                 {/* TOPO */}
                 <div className="flex justify-between items-center bg-[#111] px-4 py-3 border-b border-gray-800">
                     <h2 className="text-lg font-bold flex items-center">
-                        <i data-lucide="clock" className="w-5 h-5 text-green-400 mr-2"></i>
+                        <i data-lucide="clock" class="w-5 h-5 text-green-400 mr-2"></i>
                         TipMiner (Multiplicadores)
                     </h2>
 
@@ -695,7 +512,7 @@ const HistoryModal = ({ open, onClose, history }) => {
 };
 
 /* ============================================================
-   MODAL — SINAIS IA
+   MODAL â SINAIS IA
    ============================================================ */
 const SignalModal = ({ open, onClose, prediction }) => {
     if (!open) return null;
@@ -714,11 +531,11 @@ const SignalModal = ({ open, onClose, prediction }) => {
         <div className="fixed inset-0 bg-black/70 z-50 flex justify-center items-center p-4">
             <div className="bg-[#1a1a1a] w-full max-w-md rounded-xl p-6 shadow-xl max-h-[85vh] overflow-hidden">
 
-                {/* TOPO + BOTÃO VOLTAR */}
+                {/* TOPO + BOTÃO VOLTAR */}
                 <div className="flex justify-between items-center pb-3 border-b border-gray-700">
                     <h2 className="text-xl font-bold flex items-center">
-                        <i data-lucide="brain" className="w-5 h-5 text-purple-400 mr-2"></i>
-                        Próximas Entradas IA
+                        <i data-lucide="brain" class="w-5 h-5 text-purple-400 mr-2"></i>
+                        PrÃ³ximas Entradas IA
                     </h2>
 
                     <button 
@@ -729,7 +546,7 @@ const SignalModal = ({ open, onClose, prediction }) => {
                     </button>
                 </div>
 
-                {/* CONTEÚDO */}
+                {/* CONTEÃDO */}
                 <div className="space-y-4 mt-4">
 
                     {!roxa && !rosa && (
@@ -759,7 +576,7 @@ const SignalModal = ({ open, onClose, prediction }) => {
                 </div>
 
                 <p className="text-xs text-gray-500 mt-4 border-t border-gray-700 pt-2">
-                    A IA monitora as próximas 3 velas após o sinal.  
+                    A IA monitora as prÃ³ximas 3 velas apÃ³s o sinal.  
                     Green confirmado se qualquer uma delas atingir o alvo.
                 </p>
             </div>
@@ -768,31 +585,30 @@ const SignalModal = ({ open, onClose, prediction }) => {
 };
 
 /* ============================================================
-   MODAL — IA MINUTOS (AGORA COM SCORE)
+   MODAL â IA MINUTOS (AGORA COM SCORE)
    ============================================================ */
 const MinutosIAModal = ({ open, onClose, minutos2x, minutos5x, minutos10x, janelaQuenteScore, sugestaoMinutos }) => {
     if (!open) return null;
 
-    const getStatus = (min, minMin, minMax) => {
+    const getStatus = (min, minMin, minMax, maxMax) => {
         if (min < minMin) {
             return { text: "Normal", color: "text-green-400", bg: "bg-green-700/20", border: "border-green-400" };
         }
         if (min >= minMin && min <= minMax) {
-            return { text: "QUENTE 🔥", color: "text-pink-500", bg: "bg-pink-700/20", border: "border-pink-500" };
+            return { text: "QUENTE ð¥", color: "text-pink-500", bg: "bg-pink-700/20", border: "border-pink-500" };
         }
         if (min > minMax) {
             return { text: "Atraso Extremo", color: "text-red-400", bg: "bg-red-700/20", border: "border-red-400" };
         }
-        return { text: "Normal", color: "text-green-400", bg: "bg-green-700/20", border: "border-green-400" };
     };
 
-    const status2x = getStatus(minutos2x, 3, 5);
-    const status5x = getStatus(minutos5x, 7, 10);
-    const status10x = getStatus(minutos10x, 10, 15);
+    const status2x = getStatus(minutos2x, 3, 5, 8);
+    const status5x = getStatus(minutos5x, 7, 10, 15);
+    const status10x = getStatus(minutos10x, 10, 15, 20);
 
     let scoreText;
     if (janelaQuenteScore >= 3) {
-        scoreText = "SINAL MÁXIMO (3/3)";
+        scoreText = "SINAL MÃXIMO (3/3)";
     } else if (janelaQuenteScore === 2) {
         scoreText = "SINAL FORTE (2/3)";
     } else if (janelaQuenteScore === 1) {
@@ -805,13 +621,13 @@ const MinutosIAModal = ({ open, onClose, minutos2x, minutos5x, minutos10x, janel
 
     return (
         <div className="fixed inset-0 bg-black/80 z-50 flex justify-center items-center p-4">
-            <div className="bg-[#1a1a1a] w-full max-w-md rounded-xl p-6 shadow-xl max-h-[85vh] overflow-hidden">
+            <div className="bg-[#1a1a1a] w-full max-w-md rounded-xl p-6 shadow-xl flex flex-col">
 
-                {/* TOPO + BOTÃO VOLTAR */}
+                {/* TOPO + BOTÃO VOLTAR */}
                 <div className="flex justify-between items-center pb-3 border-b border-gray-700">
                     <h2 className="text-xl font-bold flex items-center">
-                        <i data-lucide="clock" className="w-5 h-5 text-yellow-500 mr-2"></i>
-                        IA de Minutos - Score de Confiança
+                        <i data-lucide="clock" class="w-5 h-5 text-yellow-500 mr-2"></i>
+                        IA de Minutos - Score de ConfianÃ§a
                     </h2>
 
                     <button
@@ -822,25 +638,25 @@ const MinutosIAModal = ({ open, onClose, minutos2x, minutos5x, minutos10x, janel
                     </button>
                 </div>
 
-                {/* SUGESTÃO RÁPIDA NO TOPO DO MODAL */}
+                {/* SUGESTÃO RÃPIDA NO TOPO DO MODAL */}
                 {sugestaoMinutos ? (
                     <div className="mt-4 p-3 rounded-lg text-center font-extrabold text-lg bg-green-700/50 text-green-400 border border-green-400">
                         {sugestaoMinutos} AGORA!
                     </div>
                 ) : null}
 
-                {/* SCORE DE CONFIANÇA */}
+                {/* SCORE DE CONFIANÃA */}
                 <div className={`mt-4 p-4 rounded-lg text-center font-extrabold text-lg ${scoreBg}`}>
                     {scoreText}
                 </div>
 
-                {/* CONTEÚDO - TEMPO DESDE O ÚLTIMO X */}
+                {/* CONTEÃDO - TEMPO DESDE O ÃLTIMO X */}
                 <div className="space-y-3 mt-4 text-gray-300 text-sm">
 
                     {/* CARD 2X */}
                     <div className={`p-3 rounded-lg border-l-4 ${status2x.border} flex justify-between items-center ${status2x.bg}`}>
                         <div className="flex flex-col">
-                            <span className="font-bold text-purple-400">Último 2.0x (Roxo):</span>
+                            <span className="font-bold text-purple-400">Ãltimo 2.0x (Roxo):</span>
                             <span className={`text-xs font-semibold ${status2x.color}`}>{status2x.text}</span>
                         </div>
                         <span className="text-xl font-extrabold text-white">
@@ -851,7 +667,7 @@ const MinutosIAModal = ({ open, onClose, minutos2x, minutos5x, minutos10x, janel
                     {/* CARD 5X */}
                     <div className={`p-3 rounded-lg border-l-4 ${status5x.border} flex justify-between items-center ${status5x.bg}`}>
                         <div className="flex flex-col">
-                            <span className="font-bold text-yellow-400">Último 5.0x:</span>
+                            <span className="font-bold text-yellow-400">Ãltimo 5.0x:</span>
                             <span className={`text-xs font-semibold ${status5x.color}`}>{status5x.text}</span>
                         </div>
                         <span className="text-xl font-extrabold text-white">
@@ -862,7 +678,7 @@ const MinutosIAModal = ({ open, onClose, minutos2x, minutos5x, minutos10x, janel
                     {/* CARD 10X */}
                     <div className={`p-3 rounded-lg border-l-4 ${status10x.border} flex justify-between items-center ${status10x.bg}`}>
                         <div className="flex flex-col">
-                            <span className="font-bold text-pink-500">Último 10.0x (Rosa):</span>
+                            <span className="font-bold text-pink-500">Ãltimo 10.0x (Rosa):</span>
                             <span className={`text-xs font-semibold ${status10x.color}`}>{status10x.text}</span>
                         </div>
                         <span className="text-xl font-extrabold text-white">
@@ -873,7 +689,7 @@ const MinutosIAModal = ({ open, onClose, minutos2x, minutos5x, minutos10x, janel
                 </div>
 
                 <p className="text-xs text-gray-500 mt-4 border-t border-gray-700 pt-2">
-                    O Score de Confiança indica quantos multiplicadores estão na "Janela Quente" (2x: 3-5min, 5x: 7-10min, 10x: 10-15min). Quanto maior o score, mais provável é o ciclo de alta.
+                    O Score de ConfianÃ§a indica quantos multiplicadores estÃ£o na "Janela Quente" (2x: 3-5min, 5x: 7-10min, 10x: 10-15min). Quanto maior o score, mais provÃ¡vel Ã© o ciclo de alta.
                 </p>
             </div>
         </div>
@@ -881,7 +697,7 @@ const MinutosIAModal = ({ open, onClose, minutos2x, minutos5x, minutos10x, janel
 };
 
 /* ============================================================
-   MODAL — IA DE 3 NÍVEIS DE EXPLOSÃO (PainelIA)
+   MODAL â IA DE 3 NÃVEIS DE EXPLOSÃO (PainelIA)
    ============================================================ */
 const ExplosionPanelModal = ({ open, onClose, nivelAtual, proximaExplosao, min2xExp, min5xExp, min10xExp, densidadeBaixa, tendencia }) => {
     if (!open || !proximaExplosao) return null;
@@ -892,9 +708,9 @@ const ExplosionPanelModal = ({ open, onClose, nivelAtual, proximaExplosao, min2x
         3: "bg-pink-600 border-pink-400"
     };
     
-    // Fallback se a análise ainda não rodou
+    // Fallback se a anÃ¡lise ainda nÃ£o rodou
     if (!proximaExplosao.tipo) {
-        proximaExplosao.tipo = "Análise Indisponível";
+        proximaExplosao.tipo = "Analisando Ciclo...";
         proximaExplosao.faixa = "--";
         proximaExplosao.prob = "--";
         proximaExplosao.motivo = "--";
@@ -904,11 +720,11 @@ const ExplosionPanelModal = ({ open, onClose, nivelAtual, proximaExplosao, min2x
         <div className="fixed inset-0 bg-black/80 z-50 flex justify-center items-center p-4">
             <div className="bg-[#1a1a1a] w-full max-w-sm rounded-xl p-6 shadow-xl flex flex-col">
 
-                {/* TOPO E TÍTULO */}
+                {/* TOPO E TÃTULO */}
                 <div className="flex justify-between items-center pb-4 border-b border-gray-700">
                     <h2 className="text-xl font-bold flex items-center text-pink-500">
-                        <i data-lucide="bomb" className="w-6 h-6 mr-2"></i>
-                        IA - Ciclo de Explosão
+                        <i data-lucide="bomb" class="w-6 h-6 mr-2"></i>
+                        IA - Ciclo de ExplosÃ£o
                     </h2>
                     <button 
                         onClick={onClose}
@@ -918,10 +734,10 @@ const ExplosionPanelModal = ({ open, onClose, nivelAtual, proximaExplosao, min2x
                     </button>
                 </div>
 
-                <h3 className="font-bold text-lg mt-4 mb-2 text-white">Classificação do Nível</h3>
+                <h3 className="font-bold text-lg mt-4 mb-2 text-white">ClassificaÃ§Ã£o do NÃ­vel</h3>
 
                 <div className={`p-4 rounded-xl text-center font-extrabold text-2xl mb-4 text-white border-l-4 ${cores[nivelAtual]}`}>
-                    NÍVEL {nivelAtual}: {proximaExplosao.tipo.toUpperCase()}
+                    NÃVEL {nivelAtual}: {proximaExplosao.tipo.toUpperCase()}
                 </div>
 
                 <div className="space-y-2 text-sm">
@@ -936,15 +752,15 @@ const ExplosionPanelModal = ({ open, onClose, nivelAtual, proximaExplosao, min2x
                     </div>
                 </div>
 
-                {/* DETALHES TÉCNICOS */}
+                {/* DETALHES TÃCNICOS */}
                 <p className="mt-4 text-xs text-gray-400 border-t border-gray-700 pt-3">
                     ** Indicadores Chave **
                     <br/>
-                    ⏳ Último 2x: <span className="font-semibold text-purple-400">{min2xExp} min</span> | 5x: <span className="font-semibold text-yellow-400">{min5xExp} min</span> | 10x: <span className="font-semibold text-pink-500">{min10xExp} min</span>
+                    â³ Ãltimo 2x: <span className="font-semibold text-purple-400">{min2xExp} min</span> | 5x: <span className="font-semibold text-yellow-400">{min5xExp} min</span> | 10x: <span className="font-semibold text-pink-500">{min10xExp} min</span>
                     <br/>
-                    📉 Densidade Baixa (últimas 300): <span className="font-semibold">{densidadeBaixa}</span>
+                    ð Densidade Baixa (Ãºltimas 50): <span className="font-semibold">{densidadeBaixa}</span>
                     <br/>
-                    📈 Tendência Atual (5 velas): <span className={`font-semibold ${tendencia === 'alta' ? 'text-green-400' : tendencia === 'queda' ? 'text-red-400' : 'text-gray-400'}`}>{tendencia.toUpperCase()}</span>
+                    ð TendÃªncia Atual (5 velas): <span className={`font-semibold ${tendencia === 'alta' ? 'text-green-400' : tendencia === 'queda' ? 'text-red-400' : 'text-gray-400'}`}>{tendencia.toUpperCase()}</span>
                 </p>
             </div>
         </div>
@@ -957,7 +773,7 @@ const ExplosionPanelModal = ({ open, onClose, nivelAtual, proximaExplosao, min2x
    ============================================================ */
 const NavigationBar = ({ onMenu, onHistory, onMentoria, currentTime, firstName }) => { 
     return (
-        // Reduzido o padding para p-2 para ocupar menos espaço
+        // Reduzido o padding para p-2 para ocupar menos espaÃ§o
         <div className="bg-[#111] text-white p-2 flex justify-between items-center shadow-xl z-10 relative"> 
             
             {/* 1. GRUPO ESQUERDO (MENU + TIPMINER ICON + NOME) */}
@@ -966,7 +782,7 @@ const NavigationBar = ({ onMenu, onHistory, onMentoria, currentTime, firstName }
                     onClick={onMenu}
                     className="p-1.5 rounded-lg hover:bg-[#222] transition"
                 >
-                    <i data-lucide="menu" className="w-6 h-6 text-green-400"></i>
+                    <i data-lucide="menu" class="w-6 h-6 text-green-400"></i>
                 </button>
                 
                 {/* TIPMINER ICON (Maior) */}
@@ -975,31 +791,30 @@ const NavigationBar = ({ onMenu, onHistory, onMentoria, currentTime, firstName }
                     className="flex items-center p-1.5 text-sm font-medium text-cyan-400 hover:bg-[#222] transition rounded-lg"
                 >
                     {/* Tamanho w-6 h-6 para ser um pouco maior, p-1.5 mantido */}
-                    <i data-lucide="line-chart" className="w-6 h-6"></i>
+                    <i data-lucide="line-chart" class="w-6 h-6"></i>
                 </button>
 
-                {/* NOME DO USUÁRIO (NOVO LOCAL) */}
+                {/* NOME DO USUÃRIO (NOVO LOCAL) */}
                 <span className="text-sm font-bold text-yellow-300 truncate max-w-[100px] sm:max-w-none">
-                    Olá, {firstName || 'JOGADOR'}
+                    OlÃ¡, {firstName || 'JOGADOR'}
                 </span>
             </div>
 
 
-            {/* 3. GRUPO DIREITO (RELÓGIO + MENTORIA) */}
+            {/* 3. GRUPO DIREITO (RELÃGIO + MENTORIA) */}
             <div className="flex items-center space-x-3">
-                {/* RELÓGIO ATUAL */}
+                {/* RELÃGIO ATUAL */}
                 <div className="flex items-center bg-[#1a1a1a] p-2 rounded-full border border-green-500/40 font-mono">
-                    <i data-lucide="clock-4" className="w-4 h-4 text-green-400 mr-2"></i>
+                    <i data-lucide="clock-4" class="w-4 h-4 text-green-400 mr-2"></i>
                     <span className="text-sm font-bold text-green-400">{currentTime}</span>
                 </div>
                 
-                 {/* MENTORIA VISÍVEL */}
+                 {/* MENTORIA VISÃVEL */}
                  <button
-                    id="openMentoriaButton"
                     onClick={onMentoria}
                     className="p-2 rounded-lg hover:bg-[#222] transition"
                  >
-                    <i data-lucide="award" className="w-6 h-6 text-pink-500"></i>
+                    <i data-lucide="award" class="w-6 h-6 text-pink-500"></i>
                 </button>
             </div>
         </div>
@@ -1020,8 +835,7 @@ const FooterBar = ({
     janelaQuenteScore,
     openExplosionIA, 
     nivelAtual,
-    sugestaoMinutos,
-    openLive
+    sugestaoMinutos 
 }) => {
     const percent = total > 0 ? ((greens / total) * 100).toFixed(1) : "0.0";
 
@@ -1032,46 +846,36 @@ const FooterBar = ({
     const isHot = janelaQuenteScore > 0;
     
     const minutosMainText = sugestaoMinutos && isHot ? sugestaoMinutos : `Score ${janelaQuenteScore}/3`;
-    const minutosSubText = sugestaoMinutos && isHot ? 'Estratégia' : 'Minutos';
+    const minutosSubText = sugestaoMinutos && isHot ? 'EstratÃ©gia' : 'Minutos';
 
-    const explosionText = `Nível ${nivelAtual}`;
+    const explosionText = `NÃ­vel ${nivelAtual}`;
 
-    // AQUI ESTÁ O AJUSTE PRINCIPAL:
+    // AQUI ESTÃ O AJUSTE PRINCIPAL:
     // Reduzimos o padding vertical dos cards de p-3 para p-2 e ajustamos o texto.
-    // O p-4 do container foi mantido, mas o space-x-2 e max-w-full garantem melhor distribuição.
+    // O p-4 do container foi mantido, mas o space-x-2 e max-w-full garantem melhor distribuiÃ§Ã£o.
     return (
         <div className="fixed bottom-0 left-0 right-0 px-2 pb-3 pt-1 flex justify-center z-20"> 
-            {/* px-2 e pb-3 para margem lateral e inferior. pt-1 para um toque de espaço superior. */}
+            {/* px-2 e pb-3 para margem lateral e inferior. pt-1 para um toque de espaÃ§o superior. */}
             <div className="flex w-full max-w-lg space-x-2"> 
                 
-                {/* 1. LIVE EXCLUSIVA */}
-                <button
-                    onClick={openLive}
-                    className="flex-1 bg-red-700/60 backdrop-blur-sm border border-red-500/50 rounded-xl p-2 flex flex-col items-center hover:bg-red-600/60 transition"
-                >
-                    <i data-lucide="video" className="w-5 h-5 text-white" fill="white"></i>
-                    <span className="text-xs mt-0.5 font-bold text-white">LIVE VIP</span>
-                    <span className="text-[10px] text-red-200">Exclusiva</span>
-                </button>
-
-                {/* 2. ASSERTIVIDADE */}
+                {/* 1. ASSERTIVIDADE */}
                 <div className="flex-1 bg-[#111]/60 backdrop-blur-sm border border-gray-700/50 rounded-xl p-2 flex flex-col items-center">
-                    <i data-lucide="check-circle" className="w-5 h-5 text-cyan-400"></i>
+                    <i data-lucide="check-circle" class="w-5 h-5 text-cyan-400"></i>
                     <span className="text-xs mt-0.5 font-bold">{percent}%</span>
                     <span className="text-[10px] text-gray-400">
-                        {greens}G • {reds}R
+                        {greens}G â¢ {reds}R
                     </span>
                 </div>
 
-                {/* 3. IA DE SINAIS */}
+                {/* 2. IA DE SINAIS */}
                 <button
                     onClick={openSignal}
                     className="flex-1 bg-[#111]/60 backdrop-blur-sm border border-gray-700/50 rounded-xl p-2 flex flex-col items-center hover:bg-white/10 transition"
                 >
                     {predicting || !mainValue ? (
-                        <i data-lucide="loader" className="w-5 h-5 text-purple-400 animate-spin"></i>
+                        <i data-lucide="loader" class="w-5 h-5 text-purple-400 animate-spin"></i>
                     ) : (
-                        <i data-lucide="brain" className="w-5 h-5 text-purple-400"></i>
+                        <i data-lucide="brain" class="w-5 h-5 text-purple-400"></i>
                     )}
 
                     <span className={`text-xs font-bold mt-0.5 ${
@@ -1080,19 +884,19 @@ const FooterBar = ({
                         {predicting ? "Analisando..." : `${mainValue.toFixed(2)}x`}
                     </span>
 
-                    <span className="text-[10px] text-gray-400">Previsão IA</span>
+                    <span className="text-[10px] text-gray-400">PrevisÃ£o IA</span>
                 </button>
 
-                {/* 4. IA DE MINUTOS (COM SUGESTÃO DE ENTRADA) */}
+                {/* 3. IA DE MINUTOS (COM SUGESTÃO DE ENTRADA) */}
                 <button
                     onClick={openMinutosIA}
                     className={`flex-1 backdrop-blur-sm rounded-xl p-2 flex flex-col items-center hover:bg-white/10 transition ${
                         janelaQuenteScore >= 2
-                            ? 'bg-pink-600/80 border border-pink-500 shadow-xl animate-pulse-hot'
+                            ? 'bg-pink-600/80 border border-pink-500 shadow-xl animate-pulse'
                             : 'bg-[#111]/60 border border-gray-700/50'
                     }`}
                 >
-                    <i data-lucide="clock-4" className={`w-5 h-5 ${isHot ? 'text-white' : 'text-yellow-500'}`}></i>
+                    <i data-lucide="clock-4" class={`w-5 h-5 ${isHot ? 'text-white' : 'text-yellow-500'}`}></i>
                     <span className={`text-xs font-bold mt-0.5 ${isHot ? 'text-white' : 'text-yellow-500'}`}>
                         {minutosMainText}
                     </span>
@@ -1101,20 +905,20 @@ const FooterBar = ({
                     </span>
                 </button>
                 
-                {/* 5. EXPLOSÃO IA */}
+                {/* 4. EXPLOSÃO IA */}
                 <button
                     onClick={openExplosionIA}
                     className={`flex-1 backdrop-blur-sm rounded-xl p-2 flex flex-col items-center hover:bg-white/10 transition ${
                         nivelAtual >= 3 
-                            ? 'bg-orange-600/80 border border-orange-400 shadow-xl animate-pulse-hot'
+                            ? 'bg-orange-600/80 border border-orange-400 shadow-xl animate-pulse'
                             : 'bg-[#111]/60 border border-gray-700/50'
                     }`}
                 >
-                    <i data-lucide="bomb" className={`w-5 h-5 ${nivelAtual >= 3 ? 'text-white' : 'text-orange-400'}`}></i>
+                    <i data-lucide="bomb" class={`w-5 h-5 ${nivelAtual >= 3 ? 'text-white' : 'text-orange-400'}`}></i>
                     <span className={`text-xs font-bold mt-0.5 ${nivelAtual >= 3 ? 'text-white' : 'text-orange-400'}`}>
                         {explosionText}
                     </span>
-                    <span className="text-[10px] text-gray-400">Explosão IA</span>
+                    <span className={`text-[10px] ${nivelAtual >= 3 ? 'text-orange-200' : 'text-gray-400'}`}>ExplosÃ£o IA</span>
                 </button>
             </div>
         </div>
@@ -1122,17 +926,17 @@ const FooterBar = ({
 };
 
 // ============================================================
-// NOVO COMPONENTE: ALERTA RÁPIDO FLUTUANTE (ALERTAS)
+// NOVO COMPONENTE: ALERTA RÃPIDO FLUTUANTE (ALERTAS DE SEQUÃNCIA)
 // ============================================================
 const FastAlertIndicator = ({ fastAlert, signal4Rounds }) => {
     
-    // 1. Prioridade Máxima: Sinal de 4 Rodadas (Nova Regra)
+    // 1. Prioridade MÃ¡xima: Sinal de 4 Rodadas (Nova Regra)
     if (signal4Rounds.active) {
         const target = signal4Rounds.target;
         const count = signal4Rounds.count;
         return (
              <div 
-                className="fixed top-[58px] left-1/2 transform -translate-x-1/2 p-2 rounded-lg bg-green-700/80 border border-green-400 shadow-2xl z-[90] animate-pulse-hot"
+                className="fixed top-[58px] left-1/2 transform -translate-x-1/2 p-2 rounded-lg bg-green-700/80 border border-green-400 shadow-2xl z-[90] animate-pulse"
                 style={{ backdropFilter: 'blur(4px)' }}
             >
                 <span className="text-sm font-bold text-white">
@@ -1143,16 +947,15 @@ const FastAlertIndicator = ({ fastAlert, signal4Rounds }) => {
     }
 
 
-    // 2. Segunda Prioridade: Alerta de Sequência Rápida
+    // 2. Segunda Prioridade: Alerta de SequÃªncia RÃ¡pida
     if (fastAlert) {
         let alertColor = "bg-yellow-600/80 border-yellow-400";
         if (fastAlert.includes('Explodiu')) alertColor = "bg-pink-600/80 border-pink-400";
         if (fastAlert.includes('Recolhendo')) alertColor = "bg-red-700/80 border-red-500";
-        if (fastAlert.includes('Explosão Detectada')) alertColor = "bg-purple-600/80 border-purple-400";
-
+        
         return (
             <div 
-                className={`fixed top-[58px] left-1/2 transform -translate-x-1/2 p-2 rounded-lg ${alertColor} shadow-2xl z-[90] animate-pulse-hot`}
+                className={`fixed top-[58px] left-1/2 transform -translate-x-1/2 p-2 rounded-lg ${alertColor} shadow-2xl z-[90] animate-pulse`}
                 style={{ backdropFilter: 'blur(4px)' }}
             >
                 <span className="text-sm font-bold text-white">
@@ -1171,25 +974,23 @@ const FastAlertIndicator = ({ fastAlert, signal4Rounds }) => {
    COMPONENTE PRINCIPAL
    ============================================================ */
 const App = () => {
-    /* Atenção: O ID de usuário é gerado anonimamente e persistido no localStorage. */
+    /* AtenÃ§Ã£o: O ID de usuÃ¡rio Ã© gerado anonimamente e persistido no localStorage. */
     const [userData, setUserData] = React.useState(
         () => JSON.parse(localStorage.getItem("userData")) || { 
-            // ID Padrão para evitar a tela de cadastro
+            // ID PadrÃ£o para evitar a tela de cadastro
             telefone: "ANONIMO_" + (localStorage.getItem("anon_id") || new Date().getTime()),
-            nome: "Anônimo",
+            nome: "AnÃ´nimo",
         }
     );
 
-    const [userConfig, setUserConfig] = React.useState(
-        () => JSON.parse(localStorage.getItem("userConfig")) || {
-            vip: false,
-            ativo: true,
-            bloqueado: false
-        }
-    ); 
+    const [userConfig, setUserConfig] = React.useState({
+        vip: false,
+        ativo: true,
+        bloqueado: false
+    }); 
 
     /* -------------------------------------------
-       1 — Config Firebase (somente leitura)
+       1 â Config Firebase (somente leitura)
        ------------------------------------------- */
     const firebaseConfig = {
         apiKey: "AIzaSyBod8YVf5pKWI98m9rRR8axokDkNMlXX-k",
@@ -1208,35 +1009,39 @@ const App = () => {
             const app = firebase.initializeApp(firebaseConfig);
             const _db = firebase.firestore(app);
             setDb(_db);
-            // Salva um ID anônimo no localStorage se ainda não existir
+            // Salva um ID anÃ´nimo no localStorage se ainda nÃ£o existir
             if (!localStorage.getItem("anon_id")) {
                 localStorage.setItem("anon_id", new Date().getTime());
             }
         } catch (error) {
+            // Se falhar, registra, mas o estado `db` permanece `null`
             console.error("Erro ao inicializar Firebase:", error);
         }
     }, []);
 
     /* -------------------------------------------
-       2 — Estados
+       2 â Estados
        ------------------------------------------- */
     const [history, setHistory] = React.useState([]);
+    const [nextSignal, setNextSignal] = React.useState(null); 
     const [greens, setGreens] = React.useState(0);
     const [reds, setReds] = React.useState(0);
     const [total, setTotal] = React.useState(0);
     const [prediction, setPrediction] = React.useState(null);
     const [predicting, setPredicting] = React.useState(true);
     
-    // Alertas rápidos de sequência
+    // Alerta Centralizado (Recolhe/Crash) - REMOVIDO
+    
+    // Alertas rÃ¡pidos de sequÃªncia
     const [fastAlert, setFastAlert] = React.useState(null); 
 
     // NOVO ESTADO: Sinal de 4 Rodadas
     const [signal4Rounds, setSignal4Rounds] = React.useState({ active: false, count: 0, target: null });
-
+    
     // NOVO ESTADO: Oferta Last Minute
     const [showLastMinuteOffer, setShowLastMinuteOffer] = React.useState(false);
     
-    // NOVO ESTADO: Persistência de Opt-Out da Oferta
+    // NOVO ESTADO: PersistÃªncia de Opt-Out da Oferta
     const [doNotShowOffer, setDoNotShowOffer] = React.useState(
         () => localStorage.getItem('doNotShowOffer') === 'true'
     );
@@ -1249,16 +1054,16 @@ const App = () => {
     const [janelaQuenteScore, setJanelaQuenteScore] = React.useState(0); 
     const [sugestaoMinutos, setSugestaoMinutos] = React.useState(null); 
     
-    /* Estados da IA de 3 Níveis */
+    /* Estados da IA de 3 NÃ­veis */
     const [nivelAtual, setNivelAtual] = React.useState(1);
     const [proximaExplosao, setProximaExplosao] = React.useState(null);
     const [min2xExp, setMin2xExp] = React.useState(0); 
     const [min5xExp, setMin5xExp] = React.useState(0); 
     const [min10xExp, setMin10xExp] = React.useState(0); 
     const [densidadeBaixa, setDensidadeBaixa] = React.useState(0);
-    const [tendencia, setTendencia] = React.useState("estável");
+    const [tendencia, setTendencia] = React.useState("estÃ¡vel");
     
-    /* Estado do Relógio */
+    /* Estado do RelÃ³gio */
     const [currentTime, setCurrentTime] = React.useState(''); 
     
     // Primeiro nome do jogador
@@ -1273,21 +1078,24 @@ const App = () => {
     const [openMentoria, setOpenMentoria] = React.useState(false); 
     const [openRiskManagement, setOpenRiskManagement] = React.useState(false); 
     const [openExplosionIA, setOpenExplosionIA] = React.useState(false); 
-    const [openLive, setOpenLive] = React.useState(false);
-
 
     /* -------------------------------------------
-       3 — Lógica do Logout/Oferta (Gatilho)
+       3 â LÃ³gica do Tour de Boas-vindas (REMOVIDA)
+       ------------------------------------------- */
+    // FunÃ§Ãµes de Tour vazias, mas mantidas para compatibilidade se necessÃ¡rio
+    const handleTourComplete = () => {};
+
+    /* -------------------------------------------
+       4 â LÃ³gica do Logout/Oferta (Gatilho)
        ------------------------------------------- */
     const performLogout = () => {
         localStorage.removeItem("userData");
         localStorage.removeItem("anon_id");
-        localStorage.removeItem("userConfig");
         window.location.href = window.location.pathname; 
     };
 
     const handleAttemptLogout = () => {
-        // Fecha qualquer modal de navegação aberto
+        // Fecha qualquer modal de navegaÃ§Ã£o aberto
         setOpenMenu(false);
         setOpenProfile(false);
 
@@ -1295,7 +1103,7 @@ const App = () => {
         if (doNotShowOffer) {
             performLogout();
         } else {
-            // Se não fez opt-out, mostra a oferta
+            // Se nÃ£o fez opt-out, mostra a oferta
             setShowLastMinuteOffer(true);
         }
     };
@@ -1303,22 +1111,23 @@ const App = () => {
     const handleOptOut = () => {
         localStorage.setItem('doNotShowOffer', 'true');
         setDoNotShowOffer(true);
-        performLogout(); // Sai após optar por não ver
+        performLogout(); // Sai apÃ³s optar por nÃ£o ver
     };
 
     const handleRejectOffer = () => {
         setShowLastMinuteOffer(false);
-        performLogout(); // Sai sem optar por não ver
+        performLogout(); // Sai sem optar por nÃ£o ver
     };
 
     const handleAcceptOffer = () => {
         setShowLastMinuteOffer(false);
-        // O link do WhatsApp já é clicado, então apenas fechamos o modal.
+        // O link do WhatsApp jÃ¡ Ã© clicado, entÃ£o apenas fechamos o modal.
+        // O usuÃ¡rio pode voltar e continuar navegando, ou o navegador pode fechar.
     };
 
 
     /* -------------------------------------------
-       4 — Lógica do Relógio
+       5 â LÃ³gica do RelÃ³gio
        ------------------------------------------- */
     React.useEffect(() => {
         const updateTime = () => {
@@ -1337,18 +1146,18 @@ const App = () => {
 
 
     /* -------------------------------------------
-       5 — Lógica da IA de 3 Níveis
+       6 â LÃ³gica da IA de 3 NÃ­veis
        ------------------------------------------- */
     const analisarIA3Niveis = React.useCallback((lista) => {
         if (!lista || lista.length < 5) {
             setNivelAtual(1);
-            setProximaExplosao({ tipo: "Análise Indisponível", faixa: "--", prob: "Baixa", motivo: "Histórico insuficiente" });
+            setProximaExplosao({ tipo: "AnÃ¡lise IndisponÃ­vel", faixa: "--", prob: "Baixa", motivo: "HistÃ³rico insuficiente" });
             return;
         }
 
         const agora = Date.now();
 
-        // Últimos picos (usando a estrutura da lista: mul e ts)
+        // Ãltimos picos (usando a estrutura da lista: mul e ts)
         const last2x = lista.find(v => Number(v.mul) >= 2);
         const last5x = lista.find(v => Number(v.mul) >= 4); 
         const last10x = lista.find(v => Number(v.mul) >= 10);
@@ -1365,60 +1174,60 @@ const App = () => {
         const baixas = lista.filter(v => Number(v.mul) <= 1.40).length;
         setDensidadeBaixa(baixas);
 
-        // === TENDÊNCIA ===
+        // === TENDÃNCIA ===
         const ultimas = lista.slice(0, 5).map(v => Number(v.mul));
-        let tendenciaAtual = "estável";
+        let tendenciaAtual = "estÃ¡vel";
 
-        // Lógica: se o último é maior que o 5º anterior, há uma tendência de ALTA no ciclo.
+        // LÃ³gica: se o Ãºltimo Ã© maior que o 5Âº anterior, hÃ¡ uma tendÃªncia de ALTA no ciclo.
         if (ultimas[0] > ultimas[4]) tendenciaAtual = "alta"; 
         if (ultimas[0] < ultimas[4]) tendenciaAtual = "queda";
         
         setTendencia(tendenciaAtual);
 
-        // === CLASSIFICAÇÃO DOS NÍVEIS ===
+        // === CLASSIFICAÃÃO DOS NÃVEIS ===
         let nivel = 1;
         let previsao = {};
 
-        // NÍVEL 3 — ALTA EXPLOSÃO
+        // NÃVEL 3 â ALTA EXPLOSÃO
         if (m10 >= 10 || (baixas >= 7 && m5 >= 8)) {
             nivel = 3;
             previsao = {
-                tipo: "Explosão Alta",
+                tipo: "ExplosÃ£o Alta",
                 faixa: "10x a 50x",
-                prob: m10 >= 10 ? "Alta" : "Média",
-                motivo: "Último 10x distante e/ou drenagem longa"
+                prob: m10 >= 10 ? "Alta" : "MÃ©dia",
+                motivo: "Ãltimo 10x distante e/ou drenagem longa"
             };
         }
 
-        // NÍVEL 2 — MÉDIA EXPLOSÃO
+        // NÃVEL 2 â MÃDIA EXPLOSÃO
         else if (m5 >= 5 || baixas >= 5) {
             nivel = 2;
             previsao = {
-                tipo: "Explosão Média",
+                tipo: "ExplosÃ£o MÃ©dia",
                 faixa: "4x a 9x",
-                prob: "Média",
-                motivo: "Acúmulo de velas baixas e pico médio atrasado"
+                prob: "MÃ©dia",
+                motivo: "AcÃºmulo de velas baixas e pico mÃ©dio atrasado"
             };
         }
 
-        // NÍVEL 1 — PEQUENA EXPLOSÃO
+        // NÃVEL 1 â PEQUENA EXPLOSÃO
         else if (m2 >= 2 || tendenciaAtual === "alta") {
             nivel = 1;
             previsao = {
-                tipo: "Explosão Pequena",
+                tipo: "ExplosÃ£o Pequena",
                 faixa: "2x a 3x",
-                prob: "Média",
-                motivo: "Tendência crescente ou pico atrasado"
+                prob: "MÃ©dia",
+                motivo: "TendÃªncia crescente ou pico atrasado"
             };
         }
         
         setNivelAtual(nivel);
         setProximaExplosao(previsao);
-    }, [setMin2xExp, setMin5xExp, setMin10xExp, setDensidadeBaixa, setTendencia, setNivelAtual, setProximaExplosao]);
+    }, []);
 
 
     /* -------------------------------------------
-       6 — Lógica da IA de Minutos (ATUALIZADA)
+       7 â LÃ³gica da IA de Minutos (ATUALIZADA)
        ------------------------------------------- */
     const calcularMinutosIA = React.useCallback((lista) => {
         if (!lista || lista.length === 0) return;
@@ -1449,7 +1258,7 @@ const App = () => {
         if (is5xHot) score++;
         if (is10xHot) score++;
         
-        // Determinar a sugestão de entrada (priorizando o maior multiplicador quente)
+        // Determinar a sugestÃ£o de entrada (priorizando o maior multiplicador quente)
         if (score > 0) {
             if (is10xHot) {
                 sugestao = "Entrar @ 10x";
@@ -1461,12 +1270,12 @@ const App = () => {
         }
 
 
-        setSugestaoMinutos(sugestao); // SALVA A SUGESTÃO NO ESTADO
+        setSugestaoMinutos(sugestao); // SALVA A SUGESTÃO NO ESTADO
         setJanelaQuenteScore(score);
-    }, [setMinutos2x, setMinutos5x, setMinutos10x, setSugestaoMinutos, setJanelaQuenteScore]);
+    }, []);
     
     /* -------------------------------------------
-       7 — Lógica de Sinais Rápidos (Regras de Sequência)
+       8 â LÃ³gica de Sinais RÃ¡pidos (Regras de SequÃªncia)
        ------------------------------------------- */
     const analisarSinaisRapidos = React.useCallback((history) => {
         if (!history || history.length < 3) {
@@ -1477,58 +1286,57 @@ const App = () => {
         const h = history.map(v => Number(v.mul));
         
         // Helpers
-        const isBlueLow = val => val > 0 && val < 1.20;
-        const isBlueMed = val => val > 0 && val < 1.50; // Para regras de ciclo
+        const isBlue = val => val < 1.20;
         const isPurple = val => val >= 2.00 && val < 10.00;
         const isPinkExplosion = val => val >= 20;
 
-        // Regra 4: Explodiu (Vela Rosa > 20x) - Monitora apenas a última rodada
+        // Regra 4: Explodiu (Vela Rosa > 20x) - Monitora apenas a Ãºltima rodada
         if (isPinkExplosion(h[0])) {
             setFastAlert("Explodiu! (Vela 20x+)");
             return;
         }
 
-        // Regra 5: Mercado Recolhendo (Maioria azul nas últimas 30)
+        // Regra 5: Mercado Recolhendo (Maioria azul nas Ãºltimas 30)
         const last30 = h.slice(0, 30);
-        const blueCount = last30.filter(isBlueMed).length;
+        const blueCount = last30.filter(val => val < 1.50).length; // Usando 1.50x como mÃ©trica de recolhimento
         if (blueCount >= 16) { 
             setFastAlert("Mercado Recolhendo");
             return;
         }
 
-        // Regra 3: Possível Explosão (8 azuis seguidas)
+        // Regra 3: PossÃ­vel ExplosÃ£o (8 azuis seguidas)
         const last8 = h.slice(0, 8);
-        const is8Blue = last8.length === 8 && last8.every(isBlueLow);
+        const is8Blue = last8.length === 8 && last8.every(isBlue);
         if (is8Blue) {
-            setFastAlert("Possível Explosão Detectada (8 Azuis)");
+            setFastAlert("PossÃ­vel ExplosÃ£o Detectada (8 Azuis)");
             return;
         }
 
-        // Regra 2: Sequência (Azul + Roxa + Azul) -> Possível 3x
+        // Regra 2: SequÃªncia (Azul + Roxa + Azul) -> PossÃ­vel 3x
         if (h.length >= 3) {
              // Ordem de leitura: h[2] (mais antiga) -> h[1] (meio) -> h[0] (mais nova)
-            if (isBlueLow(h[2]) && isPurple(h[1]) && isBlueLow(h[0])) {
-                setFastAlert("Possível 3x nas próximas 3 rodadas");
+            if (isBlue(h[2]) && isPurple(h[1]) && isBlue(h[0])) {
+                setFastAlert("PossÃ­vel 3x nas prÃ³ximas 3 rodadas");
                 return;
             }
         }
 
-        // Regra 1: Sequência (Roxa + Azul) -> Possível 2x
+        // Regra 1: SequÃªncia (Roxa + Azul) -> PossÃ­vel 2x
         if (h.length >= 2) {
             // Ordem de leitura: h[1] (mais antiga) -> h[0] (mais nova)
-            if (isPurple(h[1]) && isBlueLow(h[0])) {
-                setFastAlert("Possível 2x nas 2 rodadas seguintes");
+            if (isPurple(h[1]) && isBlue(h[0])) {
+                setFastAlert("PossÃ­vel 2x nas 2 rodadas seguintes");
                 return;
             }
         }
         
-        // Se nenhuma regra for acionada, limpa o alerta rápido.
+        // Se nenhuma regra for acionada, limpa o alerta rÃ¡pido.
         setFastAlert(null);
 
-    }, [setFastAlert]);
+    }, []);
 
     /* -------------------------------------------
-       8 — Lógica de SINAL DE 4 RODADAS - TIPO 1 (2x a 27x)
+       9 â LÃ³gica de SINAL DE 4 RODADAS - TIPO 1 (2x a 27x)
        ------------------------------------------- */
     // Gatilho: [1-3x Azul < 1.50] seguido por [P/Pi >= 3.0x]
     const checkSignal2x27x = React.useCallback((h) => {
@@ -1536,7 +1344,7 @@ const App = () => {
 
         const h0 = Number(h[0].mul); // Latest (Trigger)
         const h1 = Number(h[1].mul); 
-        const h2 = Number(h[2]?.mul || 0); 
+        const h2 = Number(h[2].mul); 
         const h3 = Number(h[3]?.mul || 0); 
 
         const isBlueLow = val => val > 0 && val < 1.50;
@@ -1554,7 +1362,7 @@ const App = () => {
 
 
     /* -------------------------------------------
-       9 — Lógica de SINAL DE 4 RODADAS - TIPO 2 (2x a 6x)
+       10 â LÃ³gica de SINAL DE 4 RODADAS - TIPO 2 (2x a 6x)
        ------------------------------------------- */
     // Gatilho: [Roxa/Rosa > 10x] seguido por [Azul < 1.50x]
     const checkSignal2x6x = React.useCallback((h) => {
@@ -1571,35 +1379,24 @@ const App = () => {
 
         return false;
     }, []);
-    
+
     /* -------------------------------------------
-       10 — Lógica de 3 Azuis (Estratégia de Previsão)
+       11 â Gerenciamento do Alerta RECOLHE! (REMOVIDO)
        ------------------------------------------- */
-   const check3Azuis = React.useCallback((h) => {
-    if (h.length < 3) return false;
-
-    const h0 = Number(h[0].mul);
-    const h1 = Number(h[1].mul);
-    const h2 = Number(h[2].mul);
-
-    // AGORA: qualquer valor azul do Aviator (< 2.0x)
-    const isBlue = val => val > 0 && val < 2.00;
-
-    return isBlue(h0) && isBlue(h1) && isBlue(h2);
-}, []);
-
+    // Removido useEffect que controlava o pisca do recolhe.
 
 
    /* -------------------------------------------
-   11 — Firestore Listeners
+   12 â Firestore Listeners
    ------------------------------------------- */
 React.useEffect(() => {
+    // ESSENCIAL: SÃ³ inicia os listeners se o DB estiver pronto
     if (!db) return;
 
     const userId = userData.telefone;
 
     try {
-        // NOVO LISTENER: Busca o primeiro nome do jogador na coleção 'usuarios'
+        // NOVO LISTENER: Busca o primeiro nome do jogador na coleÃ§Ã£o 'usuarios'
         db.collection("usuarios")
           .doc(userId)
           .onSnapshot((doc) => {
@@ -1607,11 +1404,11 @@ React.useEffect(() => {
                   const fullName = doc.data().nome;
                   setFirstName(fullName.split(' ')[0]); // Pega apenas o primeiro nome
               } else {
-                  setFirstName(userData.nome.split(' ')[0]); // "Anônimo"
+                  setFirstName(userData.nome.split(' ')[0]); // "AnÃ´nimo"
               }
           }, (error) => console.error("Erro ao buscar nome:", error));
 
-        // Listener: Config do usuário 
+        // Listener: Config do usuÃ¡rio 
         db.collection("usuarios")
           .doc(userId)
           .collection("apps")
@@ -1620,14 +1417,14 @@ React.useEffect(() => {
               if (doc.exists) {
                   const cfg = doc.data();
                   setUserConfig(cfg);
-                  localStorage.setItem("userConfig", JSON.stringify(cfg));
               }
-          }, (error) => console.log("Config do usuário não encontrada (OK para anônimo)."));
+          }, (error) => console.log("Config do usuÃ¡rio nÃ£o encontrada (OK para anÃ´nimo)."));
 
-        // Listener — histórico (Mapeia para mul e ts para as IAs)
-        db.collection("historico_sinais")
+        // Listener â histÃ³rico (Mapeia para mul e ts para as IAs)
+        // OBS: Passamos o novo array (arr) para as funÃ§Ãµes de IA, e nÃ£o o estado `history`
+        const unsubscribeHistory = db.collection("historico_sinais")
           .orderBy("criado", "desc")
-          .limit(300) // BUSCA OS ÚLTIMOS 300 MULTIPLICADORES
+          .limit(50) 
           .onSnapshot((snap) => {
               const arr = snap.docs.map((doc) => {
                   const d = doc.data();
@@ -1647,9 +1444,11 @@ React.useEffect(() => {
                   };
               });
               
-              const isNewRound = history.length > 0 && arr.length > 0 && arr[0].id !== history[0].id;
+              // Usamos o snapshot anterior para verificar se a rodada mudou (mais estÃ¡vel)
+              const previousHistoryId = history.length > 0 ? history[0].id : null;
+              const isNewRound = arr.length > 0 && arr[0].id !== previousHistoryId;
               
-              // --- Lógica de Contador e Persistência do Sinal de 4 Rodadas ---
+              // --- LÃ³gica de Contador e PersistÃªncia do Sinal de 4 Rodadas ---
               setSignal4Rounds(prev => {
                   
                   // 1. Check for expiration
@@ -1660,7 +1459,7 @@ React.useEffect(() => {
                   // 2. Check for a NEW trigger (only if signal is NOT active or just expired)
                   if (!prev.active || prev.count === 0) { 
                       
-                      // Check TIPO 2: 2x a 6x (Prioridade Máxima)
+                      // Check TIPO 2: 2x a 6x (Prioridade MÃ¡xima)
                       if (checkSignal2x6x(arr)) { 
                           return { active: true, count: 1, target: "BUSCAR 2.0x a 6x" };
                       }
@@ -1685,7 +1484,28 @@ React.useEffect(() => {
               analisarSinaisRapidos(arr); 
           }, (error) => console.error("Erro no listener de TipMiner:", error));
 
-        // Listener — assertividade
+        // ... Outros Listeners (Mantidos)
+        db.collection("ultimo_sinal")
+          .doc("dados")
+          .onSnapshot((doc) => {
+              if (!doc.exists) {
+                  setNextSignal(null);
+                  return;
+              }
+              const d = doc.data();
+              const corSinal = d.cor ? d.cor.toLowerCase() : '';
+              const valorSinal = Number(d.valor);
+              
+              setNextSignal({
+                  valor: valorSinal,
+                  cor: corSinal,
+                  hora: d.hora
+              });
+
+              // LÃ³gica da Vela Azul/Recolhe: REMOVIDA
+              
+          }, (error) => console.error("Erro no listener de Ãltimo Sinal:", error));
+          
         db.collection("assertividade")
           .doc("dado")
           .onSnapshot((doc) => {
@@ -1696,44 +1516,60 @@ React.useEffect(() => {
               setTotal(d.total || 0);
           }, (error) => console.error("Erro no listener de Assertividade:", error));
 
-        // Listener — análises IA (SINAIS FIXOS)
         db.collection("analises")
           .doc("sequencia_3_azuis")
           .collection("sinais")
           .orderBy("criado", "desc")
           .limit(1)
           .onSnapshot((snap) => {
-              
-              const has3Azuis = check3Azuis(history); // Verifica as 3 Azuis
-
-              if (!snap.empty && has3Azuis) {
-                  // O sinal existe E a condição de 3 Azuis é verdadeira: ATIVAR
-                  const d = snap.docs[0].data();
-                  
-                  if (d.status === "ATIVO" && d.valores && d.valores.length > 0) {
-                      setPrediction({
-                          status: d.status,
-                          signals: d.valores
-                      });
-                      setPredicting(false);
-                      return;
-                  }
+              if (snap.empty) {
+                  setPrediction(null);
+                  setPredicting(true);
+                  return;
               }
 
-              // Se não houver 3 Azuis ou se o sinal não estiver ATIVO: DESATIVAR
-              setPrediction(null);
-              setPredicting(true);
+              const d = snap.docs[0].data();
 
-          }, (error) => console.error("Erro no listener de Análises IA:", error));
+              if (d.status !== "ATIVO" || !d.valores || d.valores.length === 0) {
+                  setPrediction(null);
+                  setPredicting(true);
+                  return;
+              }
+
+              setPrediction({
+                  status: d.status,
+                  signals: d.valores
+              });
+
+              setPredicting(false);
+          }, (error) => console.error("Erro no listener de AnÃ¡lises IA:", error));
+        
+        // Retorna a funÃ§Ã£o de limpeza (unsubscribe)
+        return () => {
+            // NÃ£o Ã© possÃ­vel retornar o unsubscribe de todos os listeners individualmente em um Ãºnico useEffect,
+            // mas o principal Ã© o de histÃ³rico. Para estabilidade, mantemos a lista simples aqui.
+        };
 
     } catch (e) {
         console.error("Erro geral nos Listeners Firestore:", e);
     }
 
-}, [db]);  
+// REMOVIDO history da lista de dependÃªncias para evitar re-render loops/crashes
+}, [db, userData, calcularMinutosIA, analisarIA3Niveis, analisarSinaisRapidos, checkSignal2x27x, checkSignal2x6x]); 
 
 
-// 🚫 Usuário bloqueado
+// NOVO: Tela de carregamento enquanto o Firebase/DB nÃ£o estÃ¡ pronto
+if (!db) {
+    return (
+        <div className="flex flex-col justify-center items-center h-screen text-xl text-green-400 bg-black">
+            <i data-lucide="loader" className="w-8 h-8 mr-3 animate-spin"></i>
+            <p className="mt-4">Carregando Plataforma PRO...</p>
+        </div>
+    );
+}
+
+
+// ð« UsuÃ¡rio bloqueado
 if (userConfig?.bloqueado === true) {
     return (
         <div className="text-center text-red-500 p-6 text-xl">
@@ -1743,38 +1579,66 @@ if (userConfig?.bloqueado === true) {
     );
 }
 
-// 🚫 Usuário inativo
+// ð« UsuÃ¡rio inativo
 if (userConfig?.ativo === false) {
     return (
         <div className="text-center text-yellow-400 p-6 text-xl">
-            Seu acesso está desativado temporariamente.
+            Seu acesso estÃ¡ desativado temporariamente.
         </div>
     );
 }
 
-// Exibe a tela de carregamento até que o DB seja inicializado
-if (!db) {
-     return (
-        <div className="fixed inset-0 bg-black flex justify-center items-center">
-            <div className="text-center text-green-400">
-                <i data-lucide="loader-circle" className="w-10 h-10 animate-spin mb-4 mx-auto"></i>
-                <p className="text-lg">Carregando Plataforma PRO...</p>
-            </div>
+// ============================================================
+// COMPONENTE FLUTUANTE JANELA QUENTE
+// ============================================================
+const IndicadorMinutos = () => {
+    // Agora usa o Score de ConfianÃ§a
+    if (janelaQuenteScore === 0) return null;
+
+    const text = janelaQuenteScore >= 2 ? 'â¡ SINAL FORTE' : 'â ï¸ Janela Quente';
+    const bgColor = janelaQuenteScore >= 2 ? '#ff0066' : '#ffc107'; // Rosa Forte ou Amarelo
+
+    return (
+        <div
+            style={{
+                position: "fixed",
+                top: "120px",
+                right: "15px",
+                background: bgColor,
+                padding: "8px 12px", // Reduzido o padding
+                borderRadius: "10px",
+                color: "#fff",
+                fontSize: "14px", // Reduzido o tamanho da fonte
+                fontWeight: "700",
+                zIndex: 9999,
+                boxShadow: `0 0 12px ${bgColor}80`,
+                animation: 'pulse 1.5s infinite'
+            }}
+        >
+            {text}
+            <style jsx>{`
+                @keyframes pulse {
+                    0%, 100% { opacity: 1; transform: scale(1); }
+                    50% { opacity: 0.8; transform: scale(1.05); }
+                }
+            `}</style>
         </div>
     );
-}
+};
 
 
     /* -------------------------------------------
-       11 — Renderização
+       13 â RenderizaÃ§Ã£o
        ------------------------------------------- */
     return (
         <div className="min-h-screen flex flex-col bg-[#0a0a0a]">
             
+            <IndicadorMinutos /> {/* INDICADOR FLUTUANTE DE MINUTOS */}
+            
             <FastAlertIndicator 
                 fastAlert={fastAlert} 
-                signal4Rounds={signal4Rounds}
-            /> {/* INDICADOR RÁPIDO/ALERTAS */}
+                signal4Rounds={signal4Rounds} // PASSANDO O NOVO SINAL
+            /> {/* NOVO INDICADOR RÃPIDO/RECOLHE */}
 
             {/* NAVBAR */}
             <NavigationBar
@@ -1785,7 +1649,7 @@ if (!db) {
                 firstName={firstName}
             />
 
-            {/* ÁREA PRINCIPAL — JOGO */}
+            {/* ÃREA PRINCIPAL â JOGO */}
             <div className="flex-1 overflow-hidden">
                 <iframe
                     src="https://rn72q.com/subscribeReward?pid=575973404"
@@ -1794,7 +1658,7 @@ if (!db) {
                 ></iframe>
             </div>
 
-            {/* RODAPÉ (5 BOTÕES) */}
+            {/* RODAPÃ (4 BOTÃES) */}
             <FooterBar
                 greens={greens}
                 reds={reds}
@@ -1807,7 +1671,6 @@ if (!db) {
                 openExplosionIA={() => setOpenExplosionIA(true)} 
                 nivelAtual={nivelAtual} 
                 sugestaoMinutos={sugestaoMinutos}
-                openLive={() => setOpenLive(true)}
             />
 
             {/* MODAIS */}
@@ -1817,7 +1680,7 @@ if (!db) {
                 onHistory={() => setOpenHistory(true)}
                 onProfile={() => setOpenProfile(true)}
                 onRiskManagement={() => setOpenRiskManagement(true)} 
-                onAttemptLogout={handleAttemptLogout} /* PASSANDO A FUNÇÃO DE SAÍDA */
+                onAttemptLogout={handleAttemptLogout} /* PASSANDO A FUNÃÃO DE SAÃDA */
             />
 
             <RiskManagementModal
@@ -1837,6 +1700,7 @@ if (!db) {
                 onReject={handleRejectOffer}
                 onOptOut={handleOptOut}
             />
+
 
             <HistoryModal
                 open={openHistory}
@@ -1877,13 +1741,7 @@ if (!db) {
                 onClose={() => setOpenProfile(false)}
                 userData={userData}
                 userConfig={userConfig}
-                onAttemptLogout={handleAttemptLogout} /* PASSANDO A FUNÇÃO DE SAÍDA */
-            />
-            
-            <LiveStreamModal
-                open={openLive}
-                onClose={() => setOpenLive(false)}
-                isVip={userConfig?.vip}
+                onAttemptLogout={handleAttemptLogout} /* PASSANDO A FUNÃÃO DE SAÃDA */
             />
         </div>
     );
@@ -1894,13 +1752,13 @@ if (!db) {
    ============================================================ */
 ReactDOM.createRoot(document.getElementById("root")).render(<App />);
 
-/* Inicializa ícones Lucide */
+/* Inicializa Ã­cones Lucide */
 setTimeout(() => {
     lucide.createIcons();
 }, 300);
 
 </script> 
 
-<!-- O CÓDIGO DO RELÓGIO FLUTUANTE ANTIGO FOI REMOVIDO DAQUI -->
+<!-- O CÃDIGO DO RELÃGIO FLUTUANTE ANTIGO FOI REMOVIDO DAQUI -->
 </body>
 </html>
