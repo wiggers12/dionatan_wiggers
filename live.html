@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>🔴 Live ao Vivo</title>
+<style>
+body { margin: 0; background: #000; }
+#jitsi-container { width: 100vw; height: 100vh; }
+</style>
+<script src="https://8x8.vc/vpaas-magic-cookie-bea217d68a5746d6b367f99361c20750/external_api.js"></script>
+</head>
+<body>
+
+<div id="jitsi-container"></div>
+
+<script>
+// TOKEN vindo pela URL
+const urlParams = new URLSearchParams(window.location.search);
+const token = urlParams.get("t");
+
+// Bloqueia sem token
+if (!token) {
+    document.body.innerHTML = `
+        <div style="color:white;text-align:center;margin-top:40vh;font-size:22px;">
+            ❌ Acesso restrito<br><br>Somente VIP podem assistir
+        </div>`;
+    throw new Error("Token ausente");
+}
+
+// DOMAIN JITSI
+const domain = "8x8.vc";
+
+const options = {
+    jwt: token,
+    roomName: "vpaas-magic-cookie-bea217d68a5746d6b367f99361c20750/live_do_milhao",
+    parentNode: document.querySelector('#jitsi-container'),
+    configOverwrite: {
+        prejoinConfig: { enabled: false }
+    },
+    interfaceConfigOverwrite: {}
+};
+
+const api = new JitsiMeetExternalAPI(domain, options);
+</script>
+
+</body>
+</html>
+
