@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>WiggersDev - Acesso à Plataforma</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <!-- Firebase SDKs (v8 Puro e Estável para Auth e Firestore) -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+
+    <style>
+        body {
+            margin: 0;
+            background: #0a0a0a;
+            color: #fff;
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="w-full max-w-md p-4 sm:p-8 bg-[#111] rounded-xl shadow-2xl border border-green-500/30">
+        <h1 class="text-3xl font-extrabold text-white text-center mb-2 flex items-center justify-center">
+            <i data-lucide="lock" class="w-7 h-7 text-green-500 mr-3"></i> ACESSO EXCLUSIVO
+        </h1>
+        <p class="text-sm text-gray-400 text-center mb-6">Acesse com seu número e inicie o teste de 12h.</p>
+
+        <!-- NOVO: Container Flex Responsivo para Botões de Pagamento -->
+        <div class="flex flex-col sm:flex-row sm:space-x-3 mb-6">
+            
+            <!-- Botão de Pagamento VIP (PADRÃO) - Ocupa 50% no SM+ -->
+            <a href="https://www.mercadopago.com.br/checkout/v1/payment/redirect/f8d4f7a9-eb4e-49af-9215-01aba2821fbf/review/?preference-id=2668676373-99c75d7f-9139-44c5-8d69-7122dec4577b&router-request-id=164df468-f77d-4ba3-a813-8d7f55d3d022" target="_blank" class="block w-full sm:flex-1 bg-yellow-500 hover:bg-yellow-600 text-black font-bold py-3 rounded-lg text-center transition duration-200 shadow-lg shadow-yellow-500/50 mb-3 sm:mb-0 text-sm">
+                <i data-lucide="credit-card" class="w-4 h-4 mr-1 inline-block"></i> TORNE-SE VIP
+            </a>
+            
+            <!-- NOVO: Botão de Pagamento PAINEL IA (EXTRA) - Ocupa 50% no SM+ -->
+            <a href="https://www.mercadopago.com.br/checkout/v1/payment/redirect/f8d4f7a9-eb4e-49af-9215-01aba2821fbf/review/?preference-id=2668676373-99c75d7f-9139-44c5-8d69-7122dec4577b&router-request-id=164df468-f77d-4ba3-a813-8d7f55d3d022" target="_blank" class="block w-full sm:flex-1 bg-pink-600 hover:bg-pink-700 text-white font-bold py-3 rounded-lg text-center transition duration-200 shadow-lg shadow-pink-600/50 text-sm">
+                <i data-lucide="gauge" class="w-4 h-4 mr-1 inline-block"></i> COMPRAR PAINEL IA
+            </a>
+        </div>
+        
+        <!-- COMPARAÇÃO DE ACESSO -->
+        <div class="mb-6 p-4 bg-[#1e1e1e] rounded-lg border border-gray-700">
+            <p class="text-sm font-bold text-white mb-2 flex items-center">
+                <i data-lucide="info" class="w-4 h-4 text-cyan-400 mr-2"></i> O que cada acesso libera:
+            </p>
+            <ul class="text-xs text-gray-300 space-y-1">
+                <li class="flex items-center">
+                    <span class="font-bold w-16 text-indigo-400">TESTE:</span>
+                    Acesso à Plataforma de Sinais (12h).
+                </li>
+                <li class="flex items-center">
+                    <span class="font-bold w-16 text-yellow-400">VIP:</span>
+                    Acesso Ilimitado à Plataforma de Sinais.
+                </li>
+                <li class="flex items-center">
+                    <span class="font-bold w-16 text-pink-400">PAINEL IA:</span>
+                    Acesso Total (Plataforma + Painel Avançado).
+                </li>
+            </ul>
+        </div>
+        <!-- FIM DA COMPARAÇÃO -->
+        
+        <div class="flex items-center my-6">
+            <div class="flex-grow border-t border-gray-700"></div>
+            <span class="flex-shrink mx-4 text-gray-500 text-sm">ACESSO TESTE GRÁTIS</span>
+            <div class="flex-grow border-t border-gray-700"></div>
+        </div>
+
+        <!-- Formulário de Registro/Login Simplificado -->
+        <form id="access-form" onsubmit="handleGuestAccess(event)">
+            
+            <div class="mb-4">
+                <label for="name" class="block text-sm font-medium text-gray-400 mb-1">Seu Nome (Ex: João)</label>
+                <input type="text" id="name" required class="w-full p-3 rounded-lg bg-[#222] border border-gray-700 focus:border-indigo-500 focus:ring-indigo-500 text-white transition">
+            </div>
+
+            <div class="mb-4">
+                <label for="phone" class="block text-sm font-medium text-gray-400 mb-1">Telefone (Ex: 5511987654321)</label>
+                <div class="flex">
+                    <span class="p-3 bg-[#222] border border-gray-700 rounded-l-lg text-gray-400 font-bold hidden sm:inline">+55</span>
+                    <input type="tel" id="phone" required class="w-full p-3 rounded-lg sm:rounded-l-none bg-[#222] border border-gray-700 focus:border-indigo-500 focus:ring-indigo-500 text-white transition">
+                </div>
+            </div>
+            
+            <!-- Mensagem de Status -->
+            <div id="status-message" class="mb-4 p-3 rounded-lg text-center font-medium hidden"></div>
+
+            <!-- Botão de Teste Grátis -->
+            <button type="submit" id="guest-btn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-lg transition duration-200 shadow-lg shadow-indigo-700/30">
+                <i data-lucide="play" class="w-4 h-4 mr-2 inline-block"></i> INICIAR TESTE GRÁTIS (12h)
+            </button>
+        </form>
+    </div>
+
+    <!-- Script de Autenticação e Lógica -->
+    <script>
+        // --- VARIÁVEIS GLOBAIS DE REDIRECIONAMENTO ---
+        const TARGET_PLATFORM_URL = "platforma_sinais.html"; 
+        const TARGET_IA_PANEL_URL = "https://wiggers.dev.br/painelia.html";
+        const MILLISECONDS_IN_12_HOURS = 12 * 60 * 60 * 1000;
+        
+        // --- INICIALIZAÇÃO DO FIREBASE ---
+        const firebaseConfig = {
+            apiKey: "AIzaSyBod8YVf5pKWI98m9rRR8axokDkNMlXX-k", 
+            authDomain: "aviatordaniel100x.firebaseapp.com",
+            projectId: "aviatordaniel100x",
+        };
+        
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        // --- Funções utilitárias ---
+        const showStatus = (message, isError = false) => {
+            const msgElement = document.getElementById('status-message');
+            msgElement.textContent = message;
+            msgElement.className = `mb-4 p-3 rounded-lg text-center font-medium ${isError ? 'bg-red-900 text-red-300' : 'bg-green-900 text-green-300'}`;
+            msgElement.style.display = 'block';
+        };
+
+        // Função segura para Redirecionar
+        const secureRedirect = (url) => {
+            // Atraso de segurança e uso do método mais fiável em JS
+            setTimeout(() => {
+                 window.location.href = url;
+            }, 1000); 
+        }
+
+        // Função para verificar se o utilizador tem acesso ativo (Usa o telefone como ID)
+        const checkAccess = async (phone) => {
+            const userRef = db.collection('jogador').doc(phone); 
+            const doc = await userRef.get();
+
+            if (!doc.exists) {
+                showStatus("Erro: Dados de acesso incompletos. Tente recarregar.", true);
+                return false;
+            }
+
+            const data = doc.data();
+            
+            // 0. Verificação de status de ativo/desativo
+            if (data.ativo === false) {
+                showStatus("Sua conta está desativada. Entre em contato com o administrador.", true);
+                return false;
+            }
+
+            const now = new Date().getTime();
+
+            // 1. Acesso VIP/Pago
+            if (data.status === 'VIP' && data.data_expiracao && data.data_expiracao.toDate().getTime() > now) {
+                if (data.acesso_ia === true) { 
+                    showStatus("Acesso VIP Master IA concedido. Redirecionando para o painel avançado...", false);
+                    secureRedirect(TARGET_IA_PANEL_URL);
+                } else {
+                    showStatus("Acesso VIP concedido. Redirecionando...", false);
+                    secureRedirect(TARGET_PLATFORM_URL);
+                }
+                return true;
+            }
+
+            // 2. Acesso Teste Grátis (verificar se expirou)
+            if (data.status === 'TESTE' && data.data_inicio_teste) {
+                const startTime = data.data_inicio_teste.toDate().getTime();
+                const expiryTime = startTime + MILLISECONDS_IN_12_HOURS;
+                const timeLeft = expiryTime - now;
+
+                if (timeLeft > 0) {
+                    const hoursLeft = Math.ceil(timeLeft / (60 * 60 * 1000));
+                    showStatus(`Acesso de Teste ativo. Restam ${hoursLeft} horas. Redirecionando...`, false);
+                    secureRedirect(TARGET_PLATFORM_URL);
+                    return true;
+                } else {
+                    showStatus("Seu período de teste de 12h expirou. Por favor, torne-se VIP.", true);
+                    userRef.update({ status: 'TESTE_EXPIRADO' });
+                    return false;
+                }
+            }
+
+            // 3. Status Desconhecido ou Expirado
+            showStatus("Seu acesso expirou ou não está ativo. Por favor, assine.", true);
+            return false;
+        };
+
+        // =========================================================
+        // Lógica de Acesso Teste Grátis (Sem Senha)
+        // =========================================================
+        const handleGuestAccess = async (event) => {
+            event.preventDefault();
+            
+            const name = document.getElementById('name').value.trim();
+            const phoneRaw = document.getElementById('phone').value.trim();
+            const phone = '55' + phoneRaw.replace(/[^0-9]/g, ''); // Telefone completo usado como UID
+            
+            if (phone.length < 10 || name.length < 2) {
+                showStatus("Por favor, insira um nome válido e um número de telefone com DDD.", true);
+                return;
+            }
+            
+            showStatus("Verificando seu acesso...", false);
+
+            try {
+                // 1. Autenticação Anônima (necessário para cumprir regras de segurança do Firestore)
+                await auth.signInAnonymously();
+                
+                // 2. Tenta ler o documento do jogador usando o telefone como ID
+                const userRef = db.collection('jogador').doc(phone); 
+                const doc = await userRef.get();
+                const now = new Date();
+
+                // 3. Trata o Acesso Teste
+                if (!doc.exists || doc.data().status === 'TESTE_EXPIRADO' || doc.data().status === 'TESTE_EXCLUIDO') {
+                    // Novo usuário ou teste expirado -> Inicia novo teste
+                    const userData = {
+                        status: 'TESTE',
+                        data_inicio_teste: firebase.firestore.Timestamp.fromDate(now),
+                        nome: name,
+                        telefone: phone,
+                        data_expiracao: null,
+                        ativo: true, // Novo campo: Ativo por padrão
+                        acesso_ia: false // Novo campo: Sem acesso IA por padrão
+                    };
+                    await userRef.set(userData, { merge: true });
+                    showStatus("Teste de 12h iniciado com sucesso! Redirecionando...", false);
+                    secureRedirect(TARGET_PLATFORM_URL);
+                } else {
+                    // Usuário existente (TESTE ativo ou VIP) -> Verifica o acesso
+                    await checkAccess(phone);
+                }
+
+            } catch (error) {
+                console.error("Erro no acesso:", error);
+                showStatus(`Erro Fatal: Não foi possível conectar ao serviço. Verifique o console.`, true);
+            }
+        };
+
+
+        // =========================================================
+        // Inicialização UI (Garante que os ícones são carregados)
+        // =========================================================
+        document.addEventListener('DOMContentLoaded', (event) => {
+            if (window.lucide) {
+                window.lucide.createIcons();
+            }
+        });
+    </script>
+</body>
+</html>
