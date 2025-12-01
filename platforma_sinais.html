@@ -46,14 +46,6 @@
             width: 0;
             height: 0;
         }
-        /* Efeito de pulso para o sinal RECOLHE! */
-        @keyframes pulse-recolhe {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.7; transform: scale(1.05); }
-        }
-        .animate-pulse-recolhe { 
-            animation: pulse-recolhe 0.6s 2; /* Pisca 2 vezes */
-        }
         /* Estilos para o indicador de Janela Quente */
         @keyframes pulse-hot {
             0%, 100% { opacity: 1; transform: scale(1); }
@@ -950,7 +942,7 @@ const ExplosionPanelModal = ({ open, onClose, nivelAtual, proximaExplosao, min2x
                     <br/>
                     ⏳ Último 2x: <span className="font-semibold text-purple-400">{min2xExp} min</span> | 5x: <span className="font-semibold text-yellow-400">{min5xExp} min</span> | 10x: <span className="font-semibold text-pink-500">{min10xExp} min</span>
                     <br/>
-                    📉 Densidade Baixa (últimas 50): <span className="font-semibold">{densidadeBaixa}</span>
+                    📉 Densidade Baixa (últimas 300): <span className="font-semibold">{densidadeBaixa}</span>
                     <br/>
                     📈 Tendência Atual (5 velas): <span className={`font-semibold ${tendencia === 'alta' ? 'text-green-400' : tendencia === 'queda' ? 'text-red-400' : 'text-gray-400'}`}>{tendencia.toUpperCase()}</span>
                 </p>
@@ -1635,7 +1627,7 @@ React.useEffect(() => {
         // Listener — histórico (Mapeia para mul e ts para as IAs)
         db.collection("historico_sinais")
           .orderBy("criado", "desc")
-          .limit(50) 
+          .limit(300) // BUSCA OS ÚLTIMOS 300 MULTIPLICADORES
           .onSnapshot((snap) => {
               const arr = snap.docs.map((doc) => {
                   const d = doc.data();
