@@ -1477,7 +1477,7 @@ const App = () => {
         const h = history.map(v => Number(v.mul));
         
         // Helpers
-        const isBlueLow = val => val > 0 && val < 1.20;
+        const isBlue = val => val > 0 && val < 2.00;
         const isBlueMed = val => val > 0 && val < 1.50; // Para regras de ciclo
         const isPurple = val => val >= 2.00 && val < 10.00;
         const isPinkExplosion = val => val >= 20;
