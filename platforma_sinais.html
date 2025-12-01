@@ -611,7 +611,7 @@ const RiskManagementModal = ({ open, onClose }) => {
 /* ============================================================
    MODAL â PERFIL 
    ============================================================ */
-const ProfileModal = ({ open, onClose, userData, userConfig, onAttemptLogout }) => {
+const ProfileModal = ({ open, onClose, userData, userConfig }) => {
     if (!open) return null;
     React.useEffect(() => {
         if (typeof lucide !== 'undefined' && open) {
@@ -934,7 +934,9 @@ const MinutosIAModal = ({ open, onClose, minutos2x, minutos5x, minutos10x, janel
    MODAL â IA DE 3 NÃVEIS DE EXPLOSÃO (PainelIA)
    ============================================================ */
 const ExplosionPanelModal = ({ open, onClose, nivelAtual, proximaExplosao, min2xExp, min5xExp, min10xExp, densidadeBaixa, tendencia }) => {
-    if (!open || !proximaExplosao) return null;
+    // CORREÃÃO CRÃTICA: Depende apenas do estado 'open' para abrir.
+    if (!open) return null; 
+
     React.useEffect(() => {
         if (typeof lucide !== 'undefined' && open) {
             lucide.createIcons();
@@ -947,13 +949,17 @@ const ExplosionPanelModal = ({ open, onClose, nivelAtual, proximaExplosao, min2x
         3: "bg-pink-600 border-pink-400"
     };
     
-    // Fallback se a anÃ¡lise ainda nÃ£o rodou
-    if (!proximaExplosao.tipo) {
-        proximaExplosao.tipo = "AnÃ¡lise IndisponÃ­vel";
-        proximaExplosao.faixa = "--";
-        proximaExplosao.prob = "--";
-        proximaExplosao.motivo = "--";
+    // Fallback: Usa o estado, que jÃ¡ Ã© garantido ser um objeto em App
+    const currentExplosion = proximaExplosao;
+    
+    // Trata o caso de dados incompletos ou "AnÃ¡lise IndisponÃ­vel"
+    if (!currentExplosion || !currentExplosion.tipo || currentExplosion.tipo === 'AnÃ¡lise IndisponÃ­vel') {
+        currentExplosion.tipo = "AnÃ¡lise IndisponÃ­vel";
+        currentExplosion.faixa = "--";
+        currentExplosion.prob = "Baixa";
+        currentExplosion.motivo = "Dados insuficientes ou falha na leitura.";
     }
+
 
     return (
         <div className="fixed inset-0 bg-black/80 z-50 flex justify-center items-center p-4">
@@ -976,18 +982,18 @@ const ExplosionPanelModal = ({ open, onClose, nivelAtual, proximaExplosao, min2x
                 <h3 className="font-bold text-lg mt-4 mb-2 text-white">ClassificaÃ§Ã£o do NÃ­vel</h3>
 
                 <div className={`p-4 rounded-xl text-center font-extrabold text-2xl mb-4 text-white border-l-4 ${cores[nivelAtual]}`}>
-                    NÃVEL {nivelAtual}: {proximaExplosao.tipo.toUpperCase()}
+                    NÃVEL {nivelAtual}: {currentExplosion.tipo.toUpperCase()}
                 </div>
 
                 <div className="space-y-2 text-sm">
                     <div className="bg-[#262626] p-3 rounded-lg">
-                        <strong>Faixa de Alvo:</strong> <span className="float-right font-semibold">{proximaExplosao.faixa}</span>
+                        <strong>Faixa de Alvo:</strong> <span className="float-right font-semibold">{currentExplosion.faixa}</span>
                     </div>
                     <div className="bg-[#262626] p-3 rounded-lg">
-                        <strong>Probabilidade:</strong> <span className="float-right font-semibold text-yellow-400">{proximaExplosao.prob}</span>
+                        <strong>Probabilidade:</strong> <span className="float-right font-semibold text-yellow-400">{currentExplosion.prob}</span>
                     </div>
                     <div className="bg-[#262626] p-3 rounded-lg">
-                        <strong>Motivo:</strong> <span className="float-right text-right">{proximaExplosao.motivo}</span>
+                        <strong>Motivo:</strong> <span className="float-right text-right">{currentExplosion.motivo}</span>
                     </div>
                 </div>
 
@@ -1205,7 +1211,12 @@ const FastAlertIndicator = ({ fastAlert, signal4Rounds }) => {
     if (fastAlert) {
         let alertColor = "bg-yellow-600/80 border-yellow-400";
         if (fastAlert.includes('Explodiu')) alertColor = "bg-pink-600/80 border-pink-400";
-        if (fastAlert.includes('ExplosÃ£o Detectada')) alertColor = "bg-purple-600/80 border-purple-400";
+        if (fastAlert.includes('Detectada')) alertColor = "bg-purple-600/80 border-purple-400";
+        // Novas cores baseadas na mensagem
+        if (fastAlert.includes('surfar')) alertColor = "bg-purple-600/80 border-purple-400";
+        if (fastAlert.includes('Mercado saturado')) alertColor = "bg-cyan-600/80 border-cyan-400";
+        if (fastAlert.includes('Gatilho de Alta')) alertColor = "bg-green-600/80 border-green-400";
+
 
         return (
             <div 
@@ -1244,6 +1255,10 @@ const App = () => {
             bloqueado: false
         }
     ); 
+    
+    // Estado de controle para garantir que os dados de login/config foram checados
+    const [isConfigLoaded, setIsConfigLoaded] = React.useState(false);
+
 
     /* -------------------------------------------
        1 â Config Firebase (somente leitura)
@@ -1270,7 +1285,13 @@ const App = () => {
                 localStorage.setItem("anon_id", new Date().getTime());
             }
         } catch (error) {
+            // Se o Firebase falhar na inicializaÃ§Ã£o, setDb pode nÃ£o ser chamado, 
+            // mas o App tentarÃ¡ carregar o cÃ³digo para evitar um travamento total.
             console.error("Erro ao inicializar Firebase:", error);
+            // Podemos forÃ§ar o carregamento apÃ³s um timeout se o db for null
+            setTimeout(() => {
+                 if (!db) setIsConfigLoaded(true); 
+            }, 5000);
         }
     }, []);
 
@@ -1303,6 +1324,11 @@ const App = () => {
     const [hasShownOnboarding, setHasShownOnboarding] = React.useState(
         () => localStorage.getItem('hasShownOnboarding') === 'true'
     );
+    
+    /* Estados de Controle de ExpiraÃ§Ã£o de Teste */
+    const [trialStartTime, setTrialStartTime] = React.useState(null);
+    const [trialExpirationTime, setTrialExpirationTime] = React.useState(null);
+    const [isTrialExpired, setIsTrialExpired] = React.useState(false);
 
 
     /* Estados da IA de Minutos */
@@ -1314,7 +1340,8 @@ const App = () => {
     
     /* Estados da IA de 3 NÃ­veis */
     const [nivelAtual, setNivelAtual] = React.useState(1);
-    const [proximaExplosao, setProximaExplosao] = React.useState(null);
+    // CORREÃÃO: Garante inicializaÃ§Ã£o com objeto, corrigindo o problema de travamento do modal.
+    const [proximaExplosao, setProximaExplosao] = React.useState({ tipo: "AnÃ¡lise IndisponÃ­vel", faixa: "--", prob: "--", motivo: "--" }); 
     const [min2xExp, setMin2xExp] = React.useState(0); 
     const [min5xExp, setMin5xExp] = React.useState(0); 
     const [min10xExp, setMin10xExp] = React.useState(0); 
@@ -1399,7 +1426,7 @@ const App = () => {
 
 
     /* -------------------------------------------
-       5 â LÃ³gica do RelÃ³gio
+       5 â LÃ³gica do RelÃ³gio (Usado para atualizar o status de expiraÃ§Ã£o)
        ------------------------------------------- */
     React.useEffect(() => {
         const updateTime = () => {
@@ -1426,10 +1453,24 @@ const App = () => {
             lucide.createIcons();
         }
     }, [openMenu, openHistory, openSignal, openProfile, openMinutosIA, openMentoria, openRiskManagement, openExplosionIA, openLive]);
+    
+    /* -------------------------------------------
+       7 â EFEITO CRÃTICO: Checa a ExpiraÃ§Ã£o do Teste
+       ------------------------------------------- */
+    React.useEffect(() => {
+        // Roda a cada segundo (via mudanÃ§a no `currentTime` - o relÃ³gio) ou quando a data de expiraÃ§Ã£o Ã© carregada
+        if (trialExpirationTime) {
+            const now = Date.now();
+            // Define o estado isTrialExpired se o tempo atual for maior que o tempo de expiraÃ§Ã£o
+            setIsTrialExpired(now > trialExpirationTime.getTime());
+        } else {
+            setIsTrialExpired(false);
+        }
+    }, [currentTime, trialExpirationTime]);
 
 
     /* -------------------------------------------
-       7 â LÃ³gica da IA de 3 NÃ­veis
+       8 â LÃ³gica da IA de 3 NÃ­veis
        ------------------------------------------- */
     const analisarIA3Niveis = React.useCallback((lista) => {
         if (!lista || lista.length < 5) {
@@ -1510,7 +1551,7 @@ const App = () => {
 
 
     /* -------------------------------------------
-       8 â LÃ³gica da IA de Minutos (ATUALIZADA)
+       9 â LÃ³gica da IA de Minutos (ATUALIZADA)
        ------------------------------------------- */
     const calcularMinutosIA = React.useCallback((lista) => {
         if (!lista || lista.length === 0) return;
@@ -1558,7 +1599,7 @@ const App = () => {
     }, [setMinutos2x, setMinutos5x, setMinutos10x, setSugestaoMinutos, setJanelaQuenteScore]);
     
     /* -------------------------------------------
-       9 â LÃ³gica de Sinais RÃ¡pidos (Regras de SequÃªncia)
+       10 â LÃ³gica de Sinais RÃ¡pidos (Regras de SequÃªncia)
        ------------------------------------------- */
     const analisarSinaisRapidos = React.useCallback((history) => {
         if (!history || history.length < 3) {
@@ -1569,25 +1610,46 @@ const App = () => {
         const h = history.map(v => Number(v.mul));
         
         // Helpers
-        const isBlueLow = val => val > 0 && val < 1.20;
-        const isPurple = val => val >= 2.00 && val < 10.00;
-        const isPinkExplosion = val => val >= 20;
+        const isBlueLow = val => val > 0 && val < 1.20; // Azul Fraco (Regras antigas)
+        const isPurple = val => val >= 2.00 && val < 10.00; // Roxa (Regras antigas)
+        const isPinkExplosion = val => val >= 20; // ExplosÃ£o > 20x (Regras antigas)
+        
+        // NOVOS HELPERS:
+        const isPurpleOrPink = val => val >= 2.00; // Qualquer Roxa ou Rosa
+        const isHighPurple = val => val >= 3.00; // Acima de 3x (para as novas regras 1 e 5)
+        const isLowMultiplier = val => val > 0 && val < 2.00; // Qualquer Azul (para as novas regras)
 
-        // Regra 4: Explodiu (Vela Rosa > 20x) - Monitora apenas a Ãºltima rodada
-        if (isPinkExplosion(h[0])) {
+        // ==========================================================
+        // === REGRAS DE ALERTA IMEDIATO (FastAlert)
+        // ==========================================================
+
+        // 4. Regra: Explodiu (Vela Rosa > 20x) - Mantida com alta prioridade
+        if (h.length >= 1 && isPinkExplosion(h[0])) {
             setFastAlert("Explodiu! (Vela 20x+)");
             return;
         }
 
-        // Regra 3: PossÃ­vel ExplosÃ£o (8 azuis seguidas)
+        // NOVO 5. Regra: ApÃ³s sequÃªncia de duas roxas acima de 3x, alta identificada
+        if (h.length >= 2 && isHighPurple(h[0]) && isHighPurple(h[1])) {
+            setFastAlert("Alta identificada e hora de surfar! (2x > 3x)");
+            return;
+        }
+        
+        // NOVO 4. Regra: ApÃ³s sequÃªncia de 8 velas azuis (Mensagem atualizada)
         const last8 = h.slice(0, 8);
         const is8Blue = last8.length === 8 && last8.every(isBlueLow);
         if (is8Blue) {
-            setFastAlert("PossÃ­vel ExplosÃ£o Detectada (8 Azuis)");
+            setFastAlert("Mercado saturado, possÃ­vel onda de alta!");
+            return;
+        }
+        
+        // NOVO 1. Regra: ApÃ³s duas roxas acima de 3x e a prÃ³xima ser azul, gatilho de alta
+        if (h.length >= 3 && isLowMultiplier(h[0]) && isHighPurple(h[1]) && isHighPurple(h[2])) {
+            setFastAlert("Gatilho de Alta, possÃ­vel 2x na sequÃªncia.");
             return;
         }
 
-        // Regra 2: SequÃªncia (Azul + Roxa + Azul) -> PossÃ­vel 3x
+        // Antiga Regra 3: SequÃªncia (Azul + Roxa + Azul) -> PossÃ­vel 3x
         if (h.length >= 3) {
              // Ordem de leitura: h[2] (mais antiga) -> h[1] (meio) -> h[0] (mais nova)
             if (isBlueLow(h[2]) && isPurple(h[1]) && isBlueLow(h[0])) {
@@ -1596,9 +1658,8 @@ const App = () => {
             }
         }
 
-        // Regra 1: SequÃªncia (Roxa + Azul) -> PossÃ­vel 2x
+        // Antiga Regra 1: SequÃªncia (Roxa + Azul) -> PossÃ­vel 2x
         if (h.length >= 2) {
-            // Ordem de leitura: h[1] (mais antiga) -> h[0] (mais nova)
             if (isPurple(h[1]) && isBlueLow(h[0])) {
                 setFastAlert("PossÃ­vel 2x nas 2 rodadas seguintes");
                 return;
@@ -1611,7 +1672,7 @@ const App = () => {
     }, [setFastAlert]);
 
     /* -------------------------------------------
-       10 â LÃ³gica de SINAL DE 4 RODADAS - TIPO 1 (2x a 27x)
+       11 â LÃ³gica de SINAL DE 4 RODADAS - TIPO 1 (2x a 27x)
        ------------------------------------------- */
     // Gatilho: [1-3x Azul < 1.50] seguido por [P/Pi >= 3.0x]
     const checkSignal2x27x = React.useCallback((h) => {
@@ -1629,15 +1690,15 @@ const App = () => {
 
         // Check 1 to 3 preceding blue low
         if (isBlueLow(h1)) return true; // [B] [P/Pi]
-        if (isBlueLow(h1) && isBlueLow(h2)) return true; // [B] [B] [P/Pi]
-        if (isBlueLow(h1) && isBlueLow(h2) && isBlueLow(h3)) return true; // [B] [B] [B] [P/Pi]
+        if (h.length >= 3 && isBlueLow(h1) && isBlueLow(h2)) return true; // [B] [B] [P/Pi]
+        if (h.length >= 4 && isBlueLow(h1) && isBlueLow(h2) && isBlueLow(h3)) return true; // [B] [B] [B] [P/Pi]
 
         return false;
     }, []);
 
 
     /* -------------------------------------------
-       11 â LÃ³gica de SINAL DE 4 RODADAS - TIPO 2 (2x a 6x)
+       12 â LÃ³gica de SINAL DE 4 RODADAS - TIPO 2 (2x a 6x)
        ------------------------------------------- */
     // Gatilho: [Roxa/Rosa > 10x] seguido por [Azul < 1.50x]
     const checkSignal2x6x = React.useCallback((h) => {
@@ -1656,7 +1717,7 @@ const App = () => {
     }, []);
     
     /* -------------------------------------------
-       12 â LÃ³gica de 3 Azuis (EstratÃ©gia de PrevisÃ£o) - NÃ£o mais usado para filtrar o Listener 5.
+       13 â LÃ³gica de 3 Azuis (EstratÃ©gia de PrevisÃ£o)
        ------------------------------------------- */
    const check3Azuis = React.useCallback((h) => {
     if (h.length < 3) return false;
@@ -1674,27 +1735,56 @@ const App = () => {
 
 
    /* -------------------------------------------
-   13 â Firestore Listeners (CRÃTICO: RemoÃ§Ã£o de 'history' da dependÃªncia)
+   14 â Firestore Listeners (CRÃTICO: InclusÃ£o da LÃ³gica de ExpiraÃ§Ã£o)
    ------------------------------------------- */
 React.useEffect(() => {
+    // CRÃTICO: Se o DB nÃ£o estiver inicializado, nÃ£o tente criar listeners.
     if (!db) return () => {}; 
 
     const userId = userData.telefone;
     const unsubscribes = []; 
 
     try {
-        // Listener 1: Nome
+        // Listener 1: Nome, Data de InÃ­cio e ExpiraÃ§Ã£o
+        // Mesmo que a regra de seguranÃ§a do Firestore bloqueie, a checagem serÃ¡ feita
+        // e o estado `isConfigLoaded` serÃ¡ setado.
         const unsubscribeName = db.collection("usuarios")
           .doc(userId)
           .onSnapshot((doc) => {
-              if (doc.exists && doc.data().nome) {
-                  const fullName = doc.data().nome;
-                  setFirstName(fullName.split(' ')[0]); 
-              } else {
-                  setFirstName(userData.nome.split(' ')[0]); 
+              // Verifica a existÃªncia e lÃª os dados de configuraÃ§Ã£o/teste
+              if (doc.exists) {
+                  const d = doc.data();
+                  
+                  if (d.nome) {
+                    const fullName = d.nome;
+                    setFirstName(fullName.split(' ')[0]); 
+                  } else {
+                    setFirstName(userData.nome.split(' ')[0]);
+                  }
+                  
+                  let expiration = null;
+                  const start = d.data_inicio_teste && d.data_inicio_teste.toDate ? d.data_inicio_teste.toDate() : null;
+                  
+                  if (d.data_expiracao && d.data_expiracao.toDate) {
+                      expiration = d.data_expiracao.toDate(); 
+                  } else if (start) {
+                      expiration = new Date(start.getTime() + 12 * 60 * 60 * 1000); 
+                  }
+                  
+                  setTrialStartTime(start);
+                  setTrialExpirationTime(expiration);
               }
-          }, (error) => console.error("Erro ao buscar nome:", error));
+              // CRÃTICO: Marca o carregamento da configuraÃ§Ã£o, mesmo que o documento nÃ£o exista
+              // Isso permite que a tela de carregamento seja liberada.
+              setIsConfigLoaded(true);
+
+          }, (error) => {
+              // Se houver erro de permissÃ£o (seguranÃ§a), o app deve continuar, mas sem dados do usuÃ¡rio.
+              console.error("Erro ao buscar nome/teste (Regra de SeguranÃ§a?):", error);
+              setIsConfigLoaded(true); 
+          });
         unsubscribes.push(unsubscribeName);
+
 
         // Listener 2: Config do usuÃ¡rio 
         const unsubscribeConfig = db.collection("usuarios")
@@ -1707,14 +1797,21 @@ React.useEffect(() => {
                   setUserConfig(cfg);
                   localStorage.setItem("userConfig", JSON.stringify(cfg));
               }
-          }, (error) => console.log("Config do usuÃ¡rio nÃ£o encontrada (OK para anÃ´nimo)."));
+              // CRÃTICO: Mesmo se o documento nÃ£o existir, a tela de bloqueio do teste serÃ¡ checada no Listener 1.
+          }, (error) => console.log("Config do usuÃ¡rio nÃ£o encontrada (OK para anÃ´nimo ou erro de regra de seguranÃ§a)."));
         unsubscribes.push(unsubscribeConfig);
 
         // Listener 3: HistÃ³rico (Mapeia para mul e ts para as IAs)
+        // ESSENCIAL: Tenta se conectar independentemente do status do Listener 1 (se a regra permitir leitura pÃºblica).
         const unsubscribeHistory = db.collection("historico_sinais")
           .orderBy("criado", "desc")
           .limit(300) 
           .onSnapshot((snap) => {
+              
+              if (snap.empty) {
+                  console.warn("Firestore: ColeÃ§Ã£o 'historico_sinais' estÃ¡ vazia.");
+              }
+              
               const arr = snap.docs.map((doc) => {
                   const d = doc.data();
                   const timestamp = d.criado;
@@ -1734,7 +1831,6 @@ React.useEffect(() => {
               });
               
               // DETECTOR DE NOVA RODADA
-              // Compara o ID do item mais recente no snapshot (arr[0]) com o ID do estado anterior (history[0])
               const currentLatestId = arr.length > 0 ? arr[0].id : null;
               const previousLatestId = history.length > 0 ? history[0].id : null;
               const isNewRound = currentLatestId !== previousLatestId;
@@ -1742,13 +1838,17 @@ React.useEffect(() => {
               // --- LÃ³gica de Contador e PersistÃªncia do Sinal de 4 Rodadas ---
               setSignal4Rounds(prev => {
                   
+                  // Helpers locais para os novos gatilhos de BUSCAR
+                  const h = arr.map(v => Number(v.mul));
+                  const isPurpleOrPink = val => val >= 2.00; // Qualquer Roxa ou Rosa
+                  const isLowMultiplier = val => val > 0 && val < 2.00; // Qualquer Azul
+
                   // 1. EXPIRE: Se ativo, a contagem chegou a 4 e uma nova rodada (a 5Âª) chegou, desativar.
                   if (prev.active && prev.count >= 4 && isNewRound) {
                       return { active: false, count: 0, target: null };
                   }
                   
                   // 2. INCREMENT: Se ativo e um novo dado real (nova rodada) chegou, incrementa.
-                  // Note: count 1, 2, 3 will become 2, 3, 4 here.
                   if (prev.active && isNewRound) {
                       return { ...prev, count: prev.count + 1 };
                   }
@@ -1756,16 +1856,25 @@ React.useEffect(() => {
                   // 3. NEW TRIGGER: Se inativo (ou recÃ©m-expirado, count=0)
                   if (!prev.active || prev.count === 0) { 
                       
-                      // Check TIPO 2: 2x a 6x (Prioridade MÃ¡xima)
+                      // Check TIPO 2: 2x a 6x (Existing, based on >10x then <1.50)
                       if (checkSignal2x6x(arr)) { 
-                          // Inicia contagem em 1 se o gatilho foi detectado no dado mais recente (arr[0])
                           return { active: true, count: 1, target: "BUSCAR 2.0x a 6x" };
                       }
                       
-                      // Check TIPO 1: 2x a 27x
+                      // Check TIPO 1: 2x a 27x (Existing, based on B B B then >3.0)
                       if (checkSignal2x27x(arr)) {
-                          // Inicia contagem em 1 se o gatilho foi detectado no dado mais recente (arr[0])
                           return { active: true, count: 1, target: "BUSCAR 2.0x a 27x" };
+                      }
+                      
+                      // NOVO 3. Regra: ApÃ³s 1 Azul, 1 Roxa, 1 Azul -> Probabilidade de 3x nas prÃ³ximas 3 rodadas
+                      if (h.length >= 3 && isLowMultiplier(h[0]) && isPurpleOrPink(h[1]) && isLowMultiplier(h[2])) {
+                          return { active: true, count: 1, target: "BUSCAR 3x (3 Rodadas)" };
+                      }
+                      
+                      // NOVO 2. Regra (Simplificado): ApÃ³s 3 Roxas/Rosas seguidas -> Buscar 2x nas prÃ³ximas 3 rodadas
+                      // A lÃ³gica de 'aguardar duas azuis' Ã© tratada pelo contador.
+                      if (h.length >= 3 && isPurpleOrPink(h[0]) && isPurpleOrPink(h[1]) && isPurpleOrPink(h[2])) {
+                          return { active: true, count: 1, target: "BUSCAR 2x (3 Rodadas)" };
                       }
                   }
                   
@@ -1777,7 +1886,7 @@ React.useEffect(() => {
               calcularMinutosIA(arr); 
               analisarIA3Niveis(arr); 
               analisarSinaisRapidos(arr); 
-          }, (error) => console.error("Erro no listener de TipMiner:", error));
+          }, (error) => console.error("Erro no listener de TipMiner (Sem histÃ³rico):", error));
         unsubscribes.push(unsubscribeHistory);
 
         // Listener 4: Assertividade
@@ -1789,7 +1898,7 @@ React.useEffect(() => {
               setGreens(d.greens || 0);
               setReds(d.reds || 0);
               setTotal(d.total || 0);
-          }, (error) => console.error("Erro no listener de Assertividade:", error));
+          }, (error) => console.error("Erro no listener de Assertividade (Sem G/R):", error));
         unsubscribes.push(unsubscribeAssertividade);
 
         // Listener 5: AnÃ¡lises IA (SINAIS FIXOS)
@@ -1818,7 +1927,7 @@ React.useEffect(() => {
               setPrediction(null);
               setPredicting(true);
 
-          }, (error) => console.error("Erro no listener de AnÃ¡lises IA:", error));
+          }, (error) => console.error("Erro no listener de AnÃ¡lises IA (Sem PrevisÃ£o):", error));
         unsubscribes.push(unsubscribeAnalises);
 
     } catch (e) {
@@ -1841,8 +1950,47 @@ React.useEffect(() => {
     checkSignal2x6x
 ]);
 
+// ð« UsuÃ¡rio Expirado no Teste (NOVA CHECAGEM CRÃTICA)
+if (isTrialExpired && isConfigLoaded) { // SÃ³ checa a expiraÃ§Ã£o apÃ³s o Listener 1 carregar
+    // Calcula o tempo desde a expiraÃ§Ã£o (apenas para exibiÃ§Ã£o)
+    const timeSinceExpiration = trialExpirationTime
+        ? new Date(Date.now() - trialExpirationTime.getTime()) 
+        : null;
+        
+    const expirationTimeStr = trialExpirationTime 
+        ? trialExpirationTime.toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'medium' })
+        : 'IndisponÃ­vel';
+        
+    return (
+        <div className="fixed inset-0 bg-[#111] flex justify-center items-center p-6 text-center">
+            <div className="max-w-md bg-[#1a1a1a] p-8 rounded-xl shadow-2xl border-4 border-red-500/70">
+                <i data-lucide="clock-off" className="w-12 h-12 text-red-500 mx-auto mb-4"></i>
+                <h1 className="text-2xl font-extrabold text-red-400 mb-2">ACESSO EXPIRADO</h1>
+                <p className="text-white mb-4">
+                    Seu perÃ­odo de teste gratuito de 12 horas expirou. 
+                    O acesso foi bloqueado automaticamente.
+                </p>
+                <p className="text-sm text-gray-400 mb-4">
+                    (InÃ­cio do teste: {trialStartTime ? trialStartTime.toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'medium' }) : 'N/A'} - ExpiraÃ§Ã£o: {expirationTimeStr})
+                </p>
+                
+                <a 
+                    href={`https://wa.me/5551989378751?text=Ol%C3%A1%2C%20meu%20acesso%20expirou%20e%20quero%20ativar%20minha%20conta%20VIP!%20(ID%3A%20${userData.telefone})`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full mt-4 inline-block bg-green-600 hover:bg-green-700 text-white font-bold p-3 rounded-xl transition shadow-lg"
+                >
+                    <i data-lucide="zap" className="w-5 h-5 mr-1 inline-block"></i>
+                    Ativar Conta VIP Agora!
+                </a>
+                
+            </div>
+        </div>
+    );
+}
+
 // ð« UsuÃ¡rio bloqueado
-if (userConfig?.bloqueado === true) {
+if (isConfigLoaded && userConfig?.bloqueado === true) { // SÃ³ checa apÃ³s o Listener 1 carregar
     return (
         <div className="text-center text-red-500 p-6 text-xl">
             Seu acesso foi bloqueado.  
@@ -1852,7 +2000,7 @@ if (userConfig?.bloqueado === true) {
 }
 
 // ð« UsuÃ¡rio inativo
-if (userConfig?.ativo === false) {
+if (isConfigLoaded && userConfig?.ativo === false) { // SÃ³ checa apÃ³s o Listener 1 carregar
     return (
         <div className="text-center text-yellow-400 p-6 text-xl">
             Seu acesso estÃ¡ desativado temporariamente.
@@ -1860,14 +2008,15 @@ if (userConfig?.ativo === false) {
     );
 }
 
-// Exibe a tela de carregamento atÃ© que o DB seja inicializado
-if (!db) {
+// Exibe a tela de carregamento atÃ© que o DB seja inicializado e a configuraÃ§Ã£o (Listener 1) carregue.
+if (!db || !isConfigLoaded) {
      return (
         /* CORRIGIDO: O fundo da tela de carregamento foi alterado para ser claramente visÃ­vel */
         <div className="fixed inset-0 bg-[#1a1a1a] flex justify-center items-center">
             <div className="text-center text-green-400">
                 <i data-lucide="loader-circle" className="w-10 h-10 animate-spin mb-4 mx-auto"></i>
                 <p className="text-lg">Carregando Plataforma PRO...</p>
+                <p className="text-sm text-gray-400 mt-2">Verificando regras de acesso e histÃ³rico...</p>
             </div>
         </div>
     );
@@ -1875,7 +2024,7 @@ if (!db) {
 
 
     /* -------------------------------------------
-       14 â RenderizaÃ§Ã£o
+       15 â RenderizaÃ§Ã£o
        ------------------------------------------- */
     return (
         <div className="min-h-screen flex flex-col bg-[#0a0a0a]">
