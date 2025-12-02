@@ -999,15 +999,16 @@ const FloatingLivePlayer = ({ isLiveActive, roomName, isMinimized, toggleMinimiz
     if (!isLiveActive) return null;
     
     // Configurações do Player
-    const jitsiUrl = `https://meet.jit.si/${roomName}#config.prejoinPageEnabled=false&interfaceConfig.TOOLBAR_BUTTONS=%5B%27camera%27%2C%20%27microphone%27%2C%20%27display-capture%27%2C%20%27fullscreen%27%2C%20%27tileview%27%5D`;
+    // CRÍTICO: Removi o hash e os parâmetros redundantes para evitar problemas de URL malformado no iframe.
+    const jitsiUrl = `https://meet.jit.si/${roomName}?config.prejoinPageEnabled=false&interfaceConfig.TOOLBAR_BUTTONS=%5B%27camera%27%2C%20%27microphone%27%2C%20%27display-capture%27%2C%20%27fullscreen%27%2C%20%27tileview%27%5D`;
     const senhaLive = "VIP123"; // A senha definida no live.html do host
     
-    // Dimensões: Pequeno no mobile, um pouco maior no desktop
+    // Dimensões: REDUZIDAS PELA METADE
     const playerClasses = isMinimized 
         ? "w-[60px] h-[60px] rounded-full overflow-hidden" 
-        : "w-full max-w-[300px] h-[200px] sm:w-[350px] sm:h-[250px] rounded-xl";
+        // W-full max-w-[150px] para mobile, h-[100px]. Desktop sm:w-[175px] sm:h-[150px]
+        : "w-full max-w-[150px] h-[100px] sm:max-w-[175px] sm:h-[150px] rounded-xl";
         
-    const hostInfoClasses = isMinimized ? "hidden" : "absolute top-2 left-1/2 transform -translate-x-1/2 bg-yellow-900/80 p-1 rounded-lg text-[10px] text-white z-50 border border-yellow-400";
     
     // Posição: 10px acima do FooterBar para evitar cobrir os botões
     const containerPosition = "fixed left-3 bottom-[110px] z-[99] transition-all duration-300 shadow-2xl";
@@ -1016,17 +1017,11 @@ const FloatingLivePlayer = ({ isLiveActive, roomName, isMinimized, toggleMinimiz
         <div className={containerPosition}>
             <div className={`bg-[#1a1a1a] border-4 border-red-500/80 flex flex-col ${playerClasses}`}>
                 
-                {/* HOST INFO (SÓ VISÍVEL SE NÃO MINIMIZADO) */}
-                {!isMinimized && (
-                    <div className={hostInfoClasses}>
-                        <p className="font-bold">INFORMAÇÃO DO HOST: Senha é {senhaLive}</p>
-                    </div>
-                )}
-                
-                {/* IFRAME DO JITSI */}
+                {/* IFRAME DO JITSI - SÓ É RENDERIZADO QUANDO NÃO ESTÁ MINIMIZADO */}
                 {!isMinimized && (
                     <iframe
                         src={jitsiUrl}
+                        // CRÍTICO: Reforço as permissões aqui para garantir o acesso à mídia
                         allow="camera; microphone; display-capture; fullscreen" 
                         title="Live Stream Player"
                         className="w-full h-full"
