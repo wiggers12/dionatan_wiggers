@@ -6,19 +6,15 @@
 
     <title>WiggersDev - Plataforma PRO</title>
 
-    <!-- Tailwind -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Tailwind --><script src="https://cdn.tailwindcss.com"></script>
 
-    <!-- React / ReactDOM / Babel -->
-    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <!-- React / ReactDOM / Babel --><script src="https://unpkg.com/react@18/umd/react.development.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
-    <!-- Lucide Icons -->
-    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Lucide Icons --><script src="https://unpkg.com/lucide@latest"></script>
 
-    <!-- Firebase v9 compat (somente leitura) -->
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <!-- Firebase v9 compat (somente leitura) --><script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 
     <style>
@@ -39,6 +35,20 @@
             border: none;
             /* Ajustado para tela cheia menos o navbar e o footer */
             height: calc(100vh - 140px); 
+        }
+        
+        /* O iframe do jogo principal agora tem uma altura dinâmica baseada no offset do live player */
+        .game-iframe {
+            /* 140px é a altura combinada de Navbar e FooterBar */
+            height: calc(100vh - 140px);
+            transition: height 0.3s ease;
+        }
+        .game-iframe-live {
+            /* Quando a live estiver ativa, o player flutuante irá cobrir parte do iframe, 
+               mas se necessário forçar o ajuste de altura, faríamos aqui. 
+               Por enquanto, deixaremos o iframe cobrir o máximo possível,
+               e o player flutuante fica por cima.
+            */
         }
 
         /* Scroll invisível */
@@ -238,7 +248,7 @@ const LastMinuteOfferModal = ({ open, onAccept, onReject, onOptOut }) => {
                         onClick={onReject}
                         className="w-full mt-3 p-2 rounded-lg text-gray-400 hover:text-white transition text-sm font-semibold"
                     >
-                        Não, obrigado. Prefiro sair agora.
+                        Não, obrigado. Preferir sair agora.
                     </button>
                 </div>
 
@@ -254,91 +264,6 @@ const LastMinuteOfferModal = ({ open, onAccept, onReject, onOptOut }) => {
         </div>
     );
 };
-
-
-/* ============================================================
-   MODAL — LIVE STREAM (Apenas para VIPs)
-   ============================================================ */
-const LiveStreamModal = ({ open, onClose, isVip }) => {
-    if (!open) return null;
-    React.useEffect(() => {
-        if (typeof lucide !== 'undefined' && open) {
-            lucide.createIcons();
-        }
-    }, [open]);
-
-    // O NOME DA SALA Jitsi usado no live.html do usuário
-    const roomName = "LIVEVIP_DIONATAN_100X_PRO";
-    
-    // URL direto para o Jitsi Meet público. Os parâmetros configuram a interface.
-    const jitsiUrl = `https://meet.jit.si/${roomName}#config.prejoinPageEnabled=false&interfaceConfig.TOOLBAR_BUTTONS=%5B%27camera%27%2C%20%27chat%27%2C%20%27fullscreen%2C%20%27tileview%27%5D`;
-    
-    // A senha para a live (definida no live.html do usuário, mas deve ser inserida manualmente pelo host)
-    const senhaLive = "VIP123";
-
-    return (
-        <div className="fixed inset-0 bg-black/80 z-50 flex justify-center items-center p-4">
-            <div className="bg-[#1a1a1a] w-full max-w-2xl rounded-xl shadow-xl flex flex-col max-h-[95vh] overflow-hidden">
-
-                {/* TOPO */}
-                <div className="flex justify-between items-center bg-red-700 px-4 py-3 text-white font-bold rounded-t-xl">
-                    <h2 className="text-lg flex items-center">
-                        <div className="w-3 h-3 bg-white rounded-full animate-ping mr-2"></div>
-                        LIVE EXCLUSIVA VIP
-                    </h2>
-                    <button 
-                        onClick={onClose}
-                        className="bg-black/20 hover:bg-black/40 px-3 py-1 rounded-lg text-sm font-semibold shadow"
-                    >
-                        Fechar
-                    </button>
-                </div>
-
-                {/* CONTEÚDO DA LIVE */}
-                <div className="flex-1 overflow-hidden p-3 md:p-4 bg-[#0a0a0a] flex justify-center items-center">
-                    
-                    {isVip ? (
-                        <>
-                            {/* INFORMAÇÃO CRÍTICA PARA O HOST (WiggersDev) */}
-                            <div className="absolute top-24 left-1/2 transform -translate-x-1/2 bg-yellow-900/80 p-2 rounded-lg text-xs text-white z-50 border border-yellow-400">
-                                <p className="font-bold">INFORMAÇÃO DO HOST:</p>
-                                <p>A senha da sala é: **{senhaLive}**. Você deve inseri-la manualmente no Jitsi para hospedar a live.</p>
-                            </div>
-
-                            <iframe
-                                src={jitsiUrl}
-                                // Permissões para microfone, câmera e captura de tela (necessário para live)
-                                allow="camera; microphone; display-capture; fullscreen" 
-                                title="Live Stream VIP"
-                                className="w-full h-full min-h-[400px] rounded-lg border-2 border-green-500"
-                            ></iframe>
-                        </>
-                    ) : (
-                        /* TELA DE BLOQUEIO PARA NÃO-VIP */
-                        <div className="text-center p-8 bg-red-800/20 rounded-xl border border-red-700 max-w-sm">
-                            <i data-lucide="lock" className="w-10 h-10 text-red-500 mx-auto mb-4"></i>
-                            <p className="text-xl font-bold text-red-400 mb-2">ACESSO BLOQUEADO</p>
-                            <p className="text-gray-300 text-sm">Esta é uma transmissão exclusiva para membros VIP.</p>
-                            <a 
-                                href="#"
-                                className="mt-4 inline-block bg-pink-600 hover:bg-pink-700 text-white font-bold p-3 rounded-lg transition shadow-lg"
-                                onClick={() => { 
-                                    onClose(); 
-                                    document.getElementById('openMentoriaButton').click(); // Simula o clique no botão de Mentoria
-                                }}
-                            >
-                                <i data-lucide="star" className="w-5 h-5 mr-1 inline-block"></i>
-                                Clique e Garanta seu Acesso VIP
-                            </a>
-                        </div>
-                    )}
-                </div>
-
-            </div>
-        </div>
-    );
-};
-
 
 /* ============================================================
    MODAL — MENU PRINCIPAL
@@ -718,7 +643,7 @@ const HistoryModal = ({ open, onClose, history }) => {
 
                 {/* LISTA DE CARDS */}
                 <div className="overflow-y-auto p-4 grid grid-cols-3 gap-3">
-
+                    
                     {history.map((item) => (
                         <div
                             key={item.id}
@@ -1068,6 +993,69 @@ const NavigationBar = ({ onMenu, onHistory, onMentoria, currentTime, firstName }
 };
 
 /* ============================================================
+   FLOATING LIVE PLAYER (SUBSTITUI O MODAL GRANDE)
+   ============================================================ */
+const FloatingLivePlayer = ({ isLiveActive, roomName, isMinimized, toggleMinimize, isVip }) => {
+    if (!isLiveActive) return null;
+    
+    // Configurações do Player
+    const jitsiUrl = `https://meet.jit.si/${roomName}#config.prejoinPageEnabled=false&interfaceConfig.TOOLBAR_BUTTONS=%5B%27camera%27%2C%20%27microphone%27%2C%20%27display-capture%27%2C%20%27fullscreen%27%2C%20%27tileview%27%5D`;
+    const senhaLive = "VIP123"; // A senha definida no live.html do host
+    
+    // Dimensões: Pequeno no mobile, um pouco maior no desktop
+    const playerClasses = isMinimized 
+        ? "w-[60px] h-[60px] rounded-full overflow-hidden" 
+        : "w-full max-w-[300px] h-[200px] sm:w-[350px] sm:h-[250px] rounded-xl";
+        
+    const hostInfoClasses = isMinimized ? "hidden" : "absolute top-2 left-1/2 transform -translate-x-1/2 bg-yellow-900/80 p-1 rounded-lg text-[10px] text-white z-50 border border-yellow-400";
+    
+    // Posição: 10px acima do FooterBar para evitar cobrir os botões
+    const containerPosition = "fixed left-3 bottom-[110px] z-[99] transition-all duration-300 shadow-2xl";
+
+    return (
+        <div className={containerPosition}>
+            <div className={`bg-[#1a1a1a] border-4 border-red-500/80 flex flex-col ${playerClasses}`}>
+                
+                {/* HOST INFO (SÓ VISÍVEL SE NÃO MINIMIZADO) */}
+                {!isMinimized && (
+                    <div className={hostInfoClasses}>
+                        <p className="font-bold">INFORMAÇÃO DO HOST: Senha é {senhaLive}</p>
+                    </div>
+                )}
+                
+                {/* IFRAME DO JITSI */}
+                {!isMinimized && (
+                    <iframe
+                        src={jitsiUrl}
+                        allow="camera; microphone; display-capture; fullscreen" 
+                        title="Live Stream Player"
+                        className="w-full h-full"
+                    ></iframe>
+                )}
+
+                {/* BOTÃO DE CONTROLE (FLUTUANTE NO CANTO) */}
+                <button
+                    onClick={toggleMinimize}
+                    className={`absolute ${isMinimized ? 'inset-0' : 'top-0 right-0 m-1'} ${isMinimized ? 'p-0' : 'p-1'} bg-red-800/90 hover:bg-red-700/90 transition rounded-full shadow-lg flex items-center justify-center`}
+                    style={isMinimized ? { width: '100%', height: '100%' } : {}}
+                >
+                    <i 
+                        data-lucide={isMinimized ? "video" : "minimize"} 
+                        className={`text-white ${isMinimized ? 'w-8 h-8' : 'w-4 h-4'}`}
+                        // Se estiver minimizado, mostra o status "Ao Vivo"
+                        fill={isMinimized ? "red" : "white"} 
+                    ></i>
+                    {isMinimized && (
+                        <span className="absolute bottom-1 text-[10px] font-bold text-white">AO VIVO</span>
+                    )}
+                </button>
+            </div>
+        </div>
+    );
+};
+
+
+/* ============================================================
    FOOTER FLUTUANTE (AJUSTADO PARA SER MAIS COMPACTO)
    ============================================================ */
 const FooterBar = ({
@@ -1082,7 +1070,8 @@ const FooterBar = ({
     openExplosionIA, 
     nivelAtual,
     sugestaoMinutos,
-    openLive
+    openLive,
+    isLiveActive // Usado para determinar a função do botão
 }) => {
     const percent = total > 0 ? ((greens / total) * 100).toFixed(1) : "0.0";
 
@@ -1097,18 +1086,14 @@ const FooterBar = ({
 
     const explosionText = `Nível ${nivelAtual}`;
 
-    // AQUI ESTÁ O AJUSTE PRINCIPAL:
-    // Reduzimos o padding vertical dos cards de p-3 para p-2 e ajustamos o texto.
-    // O p-4 do container foi mantido, mas o space-x-2 e max-w-full garantem melhor distribuição.
     return (
         <div className="fixed bottom-0 left-0 right-0 px-2 pb-3 pt-1 flex justify-center z-20"> 
-            {/* px-2 e pb-3 para margem lateral e inferior. pt-1 para um toque de espaço superior. */}
             <div className="flex w-full max-w-lg space-x-2"> 
                 
-                {/* 1. LIVE EXCLUSIVA */}
+                {/* 1. LIVE EXCLUSIVA (BOTÃO AGORA SÓ ABRE O PLAYER, SE NÃO ESTIVER ATIVO) */}
                 <button
-                    onClick={openLive}
-                    className="flex-1 bg-red-700/60 backdrop-blur-sm border border-red-500/50 rounded-xl p-2 flex flex-col items-center hover:bg-red-600/60 transition"
+                    onClick={openLive} /* Abre/Maximiza o player flutuante */
+                    className={`flex-1 bg-red-700/60 backdrop-blur-sm border border-red-500/50 rounded-xl p-2 flex flex-col items-center transition ${isLiveActive ? 'animate-pulse-hot' : ''}`}
                 >
                     <i data-lucide="video" className="w-5 h-5 text-white" fill="white"></i>
                     <span className="text-xs mt-0.5 font-bold text-white">LIVE VIP</span>
@@ -1184,26 +1169,8 @@ const FooterBar = ({
 
 // ============================================================
 // NOVO COMPONENTE: NOTIFICAÇÃO DE LIVE (Banner)
+// [REMOVIDO PARA NÃO COBRIR A TELA DO JOGO]
 // ============================================================
-const LiveNotification = ({ isLiveActive, liveTitle, onClick }) => {
-    if (!isLiveActive) return null;
-
-    return (
-        <div 
-            className="fixed top-0 left-0 right-0 bg-red-700/90 backdrop-blur-sm shadow-xl z-[100] cursor-pointer animate-pulse-hot"
-            onClick={onClick}
-        >
-            <div className="flex items-center justify-center p-2 space-x-3">
-                <i data-lucide="video" className="w-6 h-6 text-white animate-pulse"></i>
-                <span className="text-lg font-extrabold text-white uppercase">
-                    {liveTitle}
-                </span>
-                <i data-lucide="chevrons-right" className="w-5 h-5 text-white"></i>
-            </div>
-            <p className="text-center text-xs text-red-100 pb-1">Clique para entrar na sala exclusiva VIP.</p>
-        </div>
-    );
-};
 
 
 // ============================================================
@@ -1213,7 +1180,7 @@ const FastAlertIndicator = ({ fastAlert, signal4Rounds, isLiveActive }) => {
     
     // Posição ajustada para o canto superior esquerdo (abaixo do Menu)
     // Se a Live estiver ativa, empurra para baixo. Caso contrário, fica abaixo do Navbar (58px).
-    const topPosition = isLiveActive ? "top-[100px]" : "top-[58px]"; 
+    const topPosition = "top-[58px]"; // Simplificado, já que o banner foi removido.
     const baseClasses = `fixed ${topPosition} left-2 p-2 rounded-lg shadow-2xl z-[90] animate-pulse-hot`;
 
     // 1. Prioridade Máxima: Sinal de 4 Rodadas (Nova Regra)
@@ -1359,6 +1326,7 @@ const App = () => {
     /* Estados da Live */
     const [isLiveActive, setIsLiveActive] = React.useState(false);
     const [liveTitle, setLiveTitle] = React.useState('Live Ativa!');
+    const [isLiveMinimized, setIsLiveMinimized] = React.useState(true); /* NOVO: Controla a visibilidade do player flutuante */
 
 
     /* Estados da IA de Minutos */
@@ -1393,7 +1361,6 @@ const App = () => {
     const [openMentoria, setOpenMentoria] = React.useState(false); 
     const [openRiskManagement, setOpenRiskManagement] = React.useState(false); 
     const [openExplosionIA, setOpenExplosionIA] = React.useState(false); 
-    const [openLive, setOpenLive] = React.useState(false);
 
 
     /* -------------------------------------------
@@ -1479,10 +1446,10 @@ const App = () => {
     React.useEffect(() => {
         // Chama lucide.createIcons() sempre que qualquer modal de navegação abre
         // para garantir que os ícones dentro dos modais recém-renderizados sejam transformados.
-        if (typeof lucide !== 'undefined' && (openMenu || openHistory || openSignal || openProfile || openMinutosIA || openMentoria || openRiskManagement || openExplosionIA || openLive)) {
+        if (typeof lucide !== 'undefined' && (openMenu || openHistory || openSignal || openProfile || openMinutosIA || openMentoria || openRiskManagement || openExplosionIA)) {
             lucide.createIcons();
         }
-    }, [openMenu, openHistory, openSignal, openProfile, openMinutosIA, openMentoria, openRiskManagement, openExplosionIA, openLive]);
+    }, [openMenu, openHistory, openSignal, openProfile, openMinutosIA, openMentoria, openRiskManagement, openExplosionIA]);
     
     /* -------------------------------------------
        7 — EFEITO CRÍTICO: Checa a Expiração do Teste
@@ -1902,7 +1869,6 @@ React.useEffect(() => {
                       }
                       
                       // NOVO 2. Regra (Simplificado): Após 3 Roxas/Rosas seguidas -> Buscar 2x nas próximas 3 rodadas
-                      // A lógica de 'aguardar duas azuis' é tratada pelo contador.
                       if (h.length >= 3 && isPurpleOrPink(h[0]) && isPurpleOrPink(h[1]) && isPurpleOrPink(h[2])) {
                           return { active: true, count: 1, target: "BUSCAR 2x (3 Rodadas)" };
                       }
@@ -1972,10 +1938,12 @@ React.useEffect(() => {
                   } else {
                       setIsLiveActive(false);
                       setLiveTitle('Live Ativa!');
+                      setIsLiveMinimized(true); // Se a live cair/desativar, o player é minimizado
                   }
               } else {
                   setIsLiveActive(false);
                   setLiveTitle('Live Ativa!');
+                  setIsLiveMinimized(true);
               }
           }, (error) => console.error("Erro no listener de Live Status:", error));
         unsubscribes.push(unsubscribeLiveStatus);
@@ -2000,6 +1968,22 @@ React.useEffect(() => {
     checkSignal2x27x, 
     checkSignal2x6x
 ]);
+
+    // Funções de controle do Player Flutuante
+    const handleOpenLive = () => {
+        // Se a Live estiver ativa, apenas maximiza (se estiver minimizada)
+        if (isLiveActive) {
+            setIsLiveMinimized(false);
+        } else {
+             // Caso a live não esteja ativa, mas o usuário clique, podemos mostrar o modal de mentoria
+             setOpenMentoria(true);
+        }
+    };
+    
+    const toggleMinimizeLive = () => {
+        setIsLiveMinimized(prev => !prev);
+    };
+
 
 // 🚫 Usuário Expirado no Teste (NOVA CHECAGEM CRÍTICA)
 if (isTrialExpired && isConfigLoaded) { // Só checa a expiração após o Listener 1 carregar
@@ -2080,18 +2064,21 @@ if (!db || !isConfigLoaded) {
     return (
         <div className="min-h-screen flex flex-col bg-[#0a0a0a]">
             
-            {/* NOVO: BANNER DE NOTIFICAÇÃO AO VIVO */}
-            <LiveNotification 
-                isLiveActive={isLiveActive} 
-                liveTitle={liveTitle} 
-                onClick={() => setOpenLive(true)} 
-            />
+            {/* NOVO: BANNER DE NOTIFICAÇÃO AO VIVO (REMOVIDO) */}
             
             <FastAlertIndicator 
                 fastAlert={fastAlert} 
                 signal4Rounds={signal4Rounds}
                 isLiveActive={isLiveActive} /* Passa o status da live para ajustar a posição */
             /> {/* INDICADOR RÁPIDO/ALERTAS */}
+            
+            {/* NOVO: PLAYER FLUTUANTE DE LIVE */}
+            <FloatingLivePlayer
+                isLiveActive={isLiveActive}
+                roomName="LIVEVIP_DIONATAN_100X_PRO"
+                isMinimized={isLiveMinimized}
+                toggleMinimize={toggleMinimizeLive}
+            />
 
             {/* NAVBAR */}
             <NavigationBar
@@ -2124,7 +2111,8 @@ if (!db || !isConfigLoaded) {
                 openExplosionIA={() => setOpenExplosionIA(true)} 
                 nivelAtual={nivelAtual} 
                 sugestaoMinutos={sugestaoMinutos}
-                openLive={() => setOpenLive(true)}
+                openLive={handleOpenLive} /* Abre/Maximiza o player */
+                isLiveActive={isLiveActive}
             />
 
             {/* MODAIS */}
@@ -2202,12 +2190,6 @@ if (!db || !isConfigLoaded) {
                 userData={userData}
                 userConfig={userConfig}
                 onAttemptLogout={handleAttemptLogout} /* PASSANDO A FUNÇÃO DE SAÍDA */
-            />
-            
-            <LiveStreamModal
-                open={openLive}
-                onClose={() => setOpenLive(false)}
-                isVip={userConfig?.vip}
             />
         </div>
     );
