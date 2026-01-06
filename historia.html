@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Módulo 1 Gold | História e Filosofia — Dionatan Wiggers</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --cor-fundo: #050505;
+            --cor-painel: #111111;
+            --cor-painel-secundario: #1a1a1a;
+            --cor-ouro: #f5c542;
+            --cor-ouro-brilho: rgba(245, 197, 66, 0.15);
+            --cor-vermelho: #c1121f;
+            --cor-texto-principal: #f2f2f2;
+            --cor-texto-mutado: #9a9a9a;
+            --cor-sucesso: #28a745;
+            --cor-erro: #dc3545;
+            --transicao-suave: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--cor-fundo);
+            color: var(--cor-texto-principal);
+            line-height: 1.8;
+            overflow-x: hidden;
+        }
+
+        /* Splash Screen */
+        #tela-carregamento {
+            position: fixed;
+            inset: 0;
+            background: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 1s ease, visibility 1s;
+        }
+
+        .conteudo-splash h1 {
+            font-size: 2.5rem;
+            color: var(--cor-ouro);
+            text-transform: uppercase;
+            letter-spacing: 5px;
+            text-align: center;
+        }
+
+        .esconder-splash { opacity: 0; visibility: hidden; }
+
+        /* Layout */
+        .wrapper {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 80px 20px;
+        }
+
+        .cabecalho-modulo {
+            text-align: center;
+            margin-bottom: 100px;
+        }
+
+        .cabecalho-modulo h3 {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 900;
+            color: var(--cor-ouro);
+            margin-bottom: 20px;
+        }
+
+        /* Cards de Conteúdo */
+        .secao-conteudo {
+            background-color: var(--cor-painel);
+            padding: 50px;
+            border-radius: 24px;
+            margin-bottom: 50px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            position: relative;
+        }
+
+        .secao-conteudo h4 {
+            font-size: 1.8rem;
+            color: var(--cor-ouro);
+            margin-bottom: 25px;
+            border-left: 5px solid var(--cor-vermelho);
+            padding-left: 20px;
+        }
+
+        .secao-conteudo p {
+            margin-bottom: 20px;
+            color: #d1d1d1;
+            text-align: justify;
+        }
+
+        /* Linha do Tempo Estilizada */
+        .timeline {
+            margin: 60px 0;
+            border-left: 2px solid var(--cor-ouro-brilho);
+            padding-left: 30px;
+        }
+
+        .timeline-item {
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -37px;
+            top: 5px;
+            width: 12px;
+            height: 12px;
+            background: var(--cor-ouro);
+            border-radius: 50%;
+            box-shadow: 0 0 10px var(--cor-ouro);
+        }
+
+        .timeline-date {
+            font-weight: 800;
+            color: var(--cor-ouro);
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        /* Glossário / Highlights */
+        .highlight-box {
+            background: rgba(245, 197, 66, 0.05);
+            border: 1px dashed var(--cor-ouro);
+            padding: 25px;
+            border-radius: 15px;
+            margin: 30px 0;
+        }
+
+        /* Quiz */
+        .area-quiz {
+            background-color: var(--cor-painel-secundario);
+            padding: 60px;
+            border-radius: 32px;
+            margin-top: 80px;
+        }
+
+        .opcao-rotulo {
+            display: flex;
+            align-items: center;
+            padding: 18px;
+            background-color: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: var(--transicao-suave);
+        }
+
+        .opcao-rotulo:hover { background-color: rgba(255, 255, 255, 0.08); }
+
+        .botao-finalizar {
+            width: 100%;
+            padding: 22px;
+            background-color: var(--cor-vermelho);
+            color: white;
+            border: none;
+            border-radius: 16px;
+            font-weight: 800;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        #resultado-display {
+            display: none;
+            margin-top: 30px;
+            padding: 25px;
+            border-radius: 15px;
+            background: #000;
+            border-left: 6px solid var(--cor-ouro);
+        }
+
+        footer { text-align: center; padding: 60px; color: var(--cor-texto-mutado); }
+        
+        .opcao-correta { border-color: var(--cor-sucesso) !important; color: #81f095; }
+        .opcao-errada { border-color: var(--cor-erro) !important; color: #ff8e98; }
+    </style>
+</head>
+
+<body>
+
+    <div id="tela-carregamento">
+        <div class="conteudo-splash">
+            <h1>Jiu-Jitsu Masterclass</h1>
+        </div>
+    </div>
+
+    <div class="wrapper">
+        <header class="cabecalho-modulo">
+            <span style="color: var(--cor-ouro); font-weight: 700; letter-spacing: 2px;">MÓDULO 01</span>
+            <h3>A Gênese da Arte Suave</h3>
+            <p>Uma imersão profunda na história, do Japão feudal à hegemonia brasileira.</p>
+        </header>
+
+        <div class="secao-conteudo">
+            <h4>1. Origens e a Necessidade de Sobrevivência</h4>
+            <p>
+                A luta corporal acompanha a humanidade desde seus primórdios. Antes da existência de armas sofisticadas, o corpo humano era o principal instrumento de defesa e domínio territorial. No entanto, o embrião do que conhecemos como Jiu-Jitsu não nasceu da força bruta, mas da necessidade de <strong>controle sem letalidade imediata</strong>.
+            </p>
+            <p>
+                Sistemas baseados em alavancas, desequilíbrios e imobilizações permitiam que um guerreiro dominasse o oponente utilizando a própria energia do agressor contra ele mesmo.
+            </p>
+            <div class="highlight-box">
+                <strong>O Conceito JU:</strong> A palavra "Jiu" ou "Ju" (柔) significa suavidade, flexibilidade ou adaptabilidade. A ideia não é resistir à força com força, mas ceder para vencer.
+            </div>
+        </div>
+
+        <div class="secao-conteudo">
+            <h4>2. A Rota do Conhecimento: Índia e China</h4>
+            <p>
+                Embora o Japão seja o berço técnico, as raízes filosóficas e algumas formas de combate corporal surgiram na Índia, ligadas à espiritualidade budista. Monges, que viajavam longas distâncias e não podiam portar armas por preceitos religiosos, desenvolveram métodos de autodefesa baseados no conhecimento da anatomia humana.
+            </p>
+            <p>
+                Esse conhecimento fluiu pela China, absorvendo elementos de sistemas locais, até cruzar o oceano e encontrar no arquipélago japonês o terreno fértil para sua máxima sofisticação militar.
+            </p>
+        </div>
+
+        <div class="secao-conteudo">
+            <h4>3. O Jujutsu no Japão Feudal</h4>
+            <p>
+                No Japão feudal, o <strong>Jujutsu</strong> tornou-se essencial para a casta dos Samurais. Em um campo de batalha, se um guerreiro perdesse sua espada ou se encontrasse em combate corpo a corpo contra um adversário de armadura, socos seriam inúteis.
+            </p>
+            <p>
+                As escolas tradicionais (ryu-ha) floresceram, focando em arremessos, luxações e estrangulamentos — técnicas que ignoravam a proteção das armaduras e focavam nas articulações e vias respiratórias.
+            </p>
+        </div>
+
+        <div class="secao-conteudo">
+            <h4>4. Cronologia da Evolução Moderna</h4>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <span class="timeline-date">1882 — O Renascimento (Judô)</span>
+                    <p><strong>Jigoro Kano</strong> funda a Kodokan. Ele organiza as técnicas perigosas do antigo Jujutsu em um sistema educacional e esportivo focado na eficiência e segurança, criando o Judô.</p>
+                </div>
+                <div class="timeline-item">
+                    <span class="timeline-date">1914 — A Ponte para o Ocidente</span>
+                    <p><strong>Mitsuyo Maeda</strong> (Conde Koma), exímio lutador da Kodokan, chega ao Brasil após percorrer o mundo em desafios de luta real, trazendo a essência do combate pragmático.</p>
+                </div>
+                <div class="timeline-item">
+                    <span class="timeline-date">1925 — A Escola Gracie</span>
+                    <p>Carlos Gracie abre a primeira academia em solo brasileiro após aprender com Maeda. Seu irmão, <strong>Hélio Gracie</strong>, adapta as técnicas para sua estrutura física franzina, priorizando o solo.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="secao-conteudo">
+            <h4>5. O Diferencial Brasileiro (BJJ)</h4>
+            <p>
+                O Jiu-Jitsu Brasileiro (BJJ) refinou o que era secundário no Japão: a <strong>luta de solo (Ne-waza)</strong>. Enquanto o Judô moderno priorizava as quedas, os brasileiros perceberam que no chão a força física é minimizada e a técnica de alavanca é maximizada.
+            </p>
+            <p>
+                O foco passou a ser a guarda, o controle posicional e a finalização, tornando-se o sistema de defesa pessoal mais eficiente do mundo contra agressores maiores e mais fortes.
+            </p>
+        </div>
+
+        <div class="area-quiz">
+            <h4 style="color: var(--cor-ouro); text-align: center; margin-bottom: 30px;">Avaliação de Domínio Histórico</h4>
+
+            <div class="pergunta-bloco">
+                <h5>1. Qual o significado filosófico da palavra "Ju" no Jiu-Jitsu?</h5>
+                <label class="opcao-rotulo"><input type="radio" name="p1" value="1"> Suavidade e adaptabilidade à força do oponente</label>
+                <label class="opcao-rotulo"><input type="radio" name="p2" value="0"> Força absoluta e destruição rápida</label>
+            </div>
+
+            <div class="pergunta-bloco">
+                <h5>2. Por que o Jujutsu era vital para os Samurais no Japão Feudal?</h5>
+                <label class="opcao-rotulo"><input type="radio" name="p2" value="1"> Para lutar contra oponentes de armadura quando desarmados</label>
+                <label class="opcao-rotulo"><input type="radio" name="p2" value="0"> Como uma forma de dança ritualística</label>
+            </div>
+
+            <div class="pergunta-bloco">
+                <h5>3. Qual foi a principal contribuição de Jigoro Kano?</h5>
+                <label class="opcao-rotulo"><input type="radio" name="p3" value="1"> Transformar o Jujutsu em um sistema educativo seguro (Judô)</label>
+                <label class="opcao-rotulo"><input type="radio" name="p3" value="0"> Criar as regras do Vale-Tudo no Brasil</label>
+            </div>
+
+            <div class="pergunta-bloco">
+                <h5>4. O que Mitsuyo Maeda trouxe de diferencial em suas viagens antes do Brasil?</h5>
+                <label class="opcao-rotulo"><input type="radio" name="p4" value="1"> Experiência em combates reais contra diversos estilos (luta real)</label>
+                <label class="opcao-rotulo"><input type="radio" name="p4" value="0"> O uso de armas de fogo integradas à luta</label>
+            </div>
+
+            <div class="pergunta-bloco">
+                <h5>5. Qual a principal característica técnica que define o Jiu-Jitsu Brasileiro (BJJ)?</h5>
+                <label class="opcao-rotulo"><input type="radio" name="p5" value="1"> Ênfase extrema no combate de solo e sistema de alavancas</label>
+                <label class="opcao-rotulo"><input type="radio" name="p5" value="0"> Foco exclusivo em chutes altos e acrobacias</label>
+            </div>
+
+            <button class="botao-finalizar" onclick="corrigir()">Finalizar Avaliação</button>
+            <div id="resultado-display"></div>
+        </div>
+
+        <footer>
+            CURSO COMPLETO DE JIU-JITSU • DIONATAN WIGGERS • 2026
+        </footer>
+    </div>
+
+    <script>
+        window.addEventListener("load", () => {
+            setTimeout(() => document.getElementById("tela-carregamento").classList.add("esconder-splash"), 2000);
+        });
+
+        function corrigir() {
+            let acertos = 0;
+            const total = 5;
+            
+            for(let i=1; i<=total; i++) {
+                const radios = document.getElementsByName("p"+i);
+                radios.forEach(r => {
+                    if(r.checked) {
+                        if(r.value === "1") {
+                            acertos++;
+                            r.parentElement.classList.add('opcao-correta');
+                        } else {
+                            r.parentElement.classList.add('opcao-errada');
+                        }
+                    }
+                });
+            }
+
+            const res = document.getElementById("resultado-display");
+            res.style.display = "block";
+            res.innerHTML = acertos >= 4 
+                ? `<h4 style="color:var(--cor-sucesso)">Aprovado: ${acertos}/${total}</h4><p>Excelente domínio histórico. Você está pronto para os fundamentos técnicos.</p>`
+                : `<h4 style="color:var(--cor-vermelho)">Revisão Necessária: ${acertos}/${total}</h4><p>Estude a linha do tempo e os conceitos de "Ju" antes de prosseguir.</p>`;
+            
+            res.scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
