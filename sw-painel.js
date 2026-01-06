@@ -1,10 +1,15 @@
 const CACHE_NAME = 'wiggers-bjj-v1';
 const assets = [
+  '/',
   '/painel.html',
-  '/wiggers.png',
-  'https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&family=Space+Grotesk:wght@500;700&display=swap'
+  '/historia.html',
+  '/alicerce.html',
+  '/manifest-painel.json',
+  '/wiggers192.png',
+  '/wiggers512.png'
 ];
 
+// Instalação do Cache
 self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(CACHE_NAME).then(cache => {
@@ -13,6 +18,7 @@ self.addEventListener('install', event => {
   );
 });
 
+// Resposta do Cache (Faz o app carregar instantâneo)
 self.addEventListener('fetch', event => {
   event.respondWith(
     caches.match(event.request).then(response => {
