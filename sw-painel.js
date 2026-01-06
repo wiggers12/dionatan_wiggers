@@ -5,8 +5,8 @@ const assets = [
   '/historia.html',
   '/alicerce.html',
   '/manifest-painel.json',
-  '/wiggers192.png',
-  '/wiggers512.png'
+  '/wiggers.192.png',
+  '/wiggers.512.png'
 ];
 
 // Instalação do Cache
