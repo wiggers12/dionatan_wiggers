@@ -255,6 +255,9 @@
 </div>
             </nav>
 
+<div onclick="atualizarApp()" style="margin-top: 15px; color: var(--cor-ouro); cursor: pointer; font-size: 0.75rem; font-weight: 800; text-transform: uppercase; display: flex; align-items: center; gap: 8px;">
+    <span>🔄</span> ATUALIZAR VERSÃO
+</div>
             <div class="logout-btn" style="color: #ff4d4d; cursor: pointer; margin-top: 40px; font-size: 0.8rem; font-weight: 700; text-transform: uppercase;" onclick="logout()">Sair</div>
         </aside>
 
@@ -369,6 +372,31 @@
             localStorage.clear();
             location.reload();
         };
+window.atualizarApp = function() {
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.getRegistrations().then(function(registrations) {
+            for (let registration of registrations) {
+                // Força a atualização do Service Worker
+                registration.update();
+            }
+        });
+    }
+
+    // Limpa o cache do navegador via script
+    if ('caches' in window) {
+        caches.keys().then(function(names) {
+            for (let name of names) caches.delete(name);
+        });
+    }
+
+    // Feedback visual para o aluno
+    alert("Buscando novas atualizações... O app irá reiniciar.");
+    
+    // Força o reload completo ignorando o cache
+    setTimeout(() => {
+        window.location.reload(true);
+    }, 1000);
+};
 
         // CARREGAMENTO DA PÁGINA E SPLASH SCREEN
         window.onload = () => {
