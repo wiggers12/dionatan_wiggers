@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Jiu-Jitsu do Zero à Faixa Azul | Dionatan Wiggers</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --bg:#0a0a0a;
+  --card:#151515;
+  --card2:#1d1d1d;
+  --vermelho:#c1121f;
+  --amarelo:#fbc02d;
+  --azul:#1e88e5;
+  --texto:#f5f5f5;
+  --cinza:#aaa;
+}
+
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Inter',sans-serif}
+
+body{
+  background:var(--bg);
+  color:var(--texto);
+  line-height:1.9;
+}
+
+/* HERO */
+.hero{
+  padding:90px 20px;
+  text-align:center;
+  background:radial-gradient(circle at top,#1a1a1a,#000);
+  border-bottom:4px solid var(--vermelho);
+}
+
+.hero h1{
+  font-size:3rem;
+  font-weight:800;
+  color:var(--amarelo);
+}
+
+.hero p{
+  max-width:950px;
+  margin:25px auto 0;
+  font-size:1.15rem;
+  color:#ddd;
+}
+
+.hero span{
+  display:block;
+  margin-top:20px;
+  color:#bbb;
+  font-size:.95rem;
+}
+
+/* PROGRESS */
+.progress{
+  max-width:1000px;
+  margin:40px auto 0;
+  display:flex;
+  gap:12px;
+}
+
+.step{
+  flex:1;
+  background:var(--card2);
+  padding:16px;
+  border-radius:10px;
+  text-align:center;
+  font-weight:600;
+  border-bottom:4px solid #333;
+}
+
+.step.zero{border-color:#777}
+.step.branca{border-color:var(--amarelo)}
+.step.azul{border-color:var(--azul)}
+
+/* MAIN */
+main{
+  max-width:1100px;
+  margin:auto;
+  padding:60px 20px;
+}
+
+section{
+  background:var(--card);
+  padding:38px;
+  border-radius:18px;
+  margin-bottom:55px;
+  box-shadow:0 0 0 1px #222;
+}
+
+section h2{
+  font-size:2.2rem;
+  margin-bottom:15px;
+  color:var(--amarelo);
+}
+
+section h3{
+  margin-top:28px;
+  font-size:1.35rem;
+}
+
+p{
+  margin-top:10px;
+  color:#ddd;
+}
+
+ul{
+  margin-left:25px;
+  margin-top:10px;
+}
+
+li{margin-bottom:10px}
+
+/* BOXES */
+.box{
+  margin-top:22px;
+  padding:20px;
+  border-radius:12px;
+  background:var(--card2);
+  border-left:5px solid #555;
+}
+
+.alerta{border-color:var(--vermelho)}
+.regra{border-color:var(--amarelo)}
+.faixa-azul{border-color:var(--azul)}
+
+.box strong{color:var(--amarelo)}
+
+footer{
+  text-align:center;
+  padding:45px 20px;
+  background:#000;
+  color:#888;
+  font-size:.95rem;
+}
+
+/* MOBILE */
+@media(max-width:768px){
+  .hero h1{font-size:2.2rem}
+  .progress{flex-direction:column}
+}
+</style>
+</head>
+
+<body>
+
+<div class="hero">
+  <h1>Jiu-Jitsu do Zero à Faixa Azul</h1>
+  <p>
+    Manual técnico completo de Jiu-Jitsu, desenvolvido com visão prática de professor faixa-preta.
+    Aqui você aprende o caminho correto, sem atalhos e sem vícios técnicos.
+  </p>
+  <span>Instrutor responsável: <strong>Dionatan Wiggers</strong></span>
+
+  <div class="progress">
+    <div class="step zero">Nível 0<br>Primeiro Dia</div>
+    <div class="step branca">Faixa Branca<br>Base</div>
+    <div class="step azul">Transição<br>Faixa Azul</div>
+  </div>
+</div>
+
+<main>
+
+<section>
+<h2>NÍVEL 0 — PRIMEIRO DIA NO JIU-JITSU</h2>
+<p>
+O primeiro contato com o Jiu-Jitsu define a relação do aluno com a arte.
+Antes de técnicas, ensinamos postura, respeito e consciência corporal.
+</p>
+
+<h3>O que é Jiu-Jitsu</h3>
+<p>
+Jiu-Jitsu é a arte de controlar o oponente usando alavancas, ângulos e pressão,
+minimizando força e maximizando eficiência.
+</p>
+
+<h3>Etiqueta e comportamento</h3>
+<ul>
+<li>Respeitar colegas e professores</li>
+<li>Manter higiene pessoal e do kimono</li>
+<li>Ouvir atentamente explicações</li>
+</ul>
+
+<div class="box alerta">
+Pressa gera erros técnicos difíceis de corrigir no futuro.
+</div>
+</section>
+
+<section>
+<h2>FAIXA BRANCA — CONSTRUÇÃO DA BASE</h2>
+
+<h3>Postura e Base</h3>
+<p>
+A base é o alicerce do Jiu-Jitsu. Sem ela, nenhuma técnica se sustenta.
+</p>
+<ul>
+<li>Coluna alinhada</li>
+<li>Joelhos flexionados</li>
+<li>Cotovelos fechados</li>
+</ul>
+
+<h3>Movimentações fundamentais</h3>
+<ul>
+<li>Queda técnica</li>
+<li>Ponte</li>
+<li>Reposição de guarda</li>
+</ul>
+
+<div class="box regra">
+Quem se move bem, sobrevive melhor.
+</div>
+</section>
+
+<section>
+<h2>JOGO NO CHÃO — POSIÇÕES ESSENCIAIS</h2>
+
+<h3>Guarda</h3>
+<p>
+A guarda não é defesa passiva. É uma posição ativa de controle e ataque.
+</p>
+<ul>
+<li>Guarda fechada</li>
+<li>Meia-guarda</li>
+<li>Guarda aberta</li>
+</ul>
+
+<h3>Controle por cima</h3>
+<ul>
+<li>Cem quilos</li>
+<li>Montada</li>
+<li>Costas</li>
+</ul>
+
+<div class="box alerta">
+Posição sempre vem antes da finalização.
+</div>
+</section>
+
+<section>
+<h2>FINALIZAÇÕES FUNDAMENTAIS</h2>
+<p>
+As finalizações básicas ensinam alavanca, tempo e controle.
+</p>
+<ul>
+<li>Armlock</li>
+<li>Triângulo</li>
+<li>Americana</li>
+<li>Kimura</li>
+<li>Mata-leão</li>
+</ul>
+
+<div class="box regra">
+Se não encaixa fácil, ajuste a posição.
+</div>
+</section>
+
+<section>
+<h2>TRANSIÇÕES E SEQUÊNCIAS</h2>
+<ul>
+<li>Guarda → Raspagem</li>
+<li>Raspagem → Passagem</li>
+<li>Passagem → Montada</li>
+<li>Montada → Costas</li>
+</ul>
+</section>
+
+<section class="faixa-azul">
+<h2>TRANSIÇÃO PARA FAIXA AZUL</h2>
+<p>
+A faixa azul representa entendimento do básico com consistência.
+</p>
+<ul>
+<li>Menos erros</li>
+<li>Mais controle emocional</li>
+<li>Capacidade de orientar iniciantes</li>
+</ul>
+
+<div class="box faixa-azul">
+Faixa azul não é quem sabe muito. É quem erra menos.
+</div>
+</section>
+
+<section>
+<h2>AQUECIMENTO ESPECÍFICO</h2>
+<ul>
+<li>Mobilidade de pescoço e ombros</li>
+<li>Quadril e core</li>
+<li>Ponte e rastejamento</li>
+</ul>
+</section>
+
+<section>
+<h2>SEGURANÇA E PREVENÇÃO DE LESÕES</h2>
+<ul>
+<li>Bateu, parou</li>
+<li>Não resistir a alavancas</li>
+<li>Respeitar limites do corpo</li>
+</ul>
+</section>
+
+<section>
+<h2>COMO ROLAR (SPARRING)</h2>
+<ul>
+<li>Controle força</li>
+<li>Respire</li>
+<li>Priorize posição</li>
+</ul>
+
+<div class="box alerta">
+Sparring é aprendizado, não guerra.
+</div>
+</section>
+
+<section>
+<h2>NOÇÕES DE PONTUAÇÃO</h2>
+<ul>
+<li>Raspagem: 2 pontos</li>
+<li>Passagem: 3 pontos</li>
+<li>Montada: 4 pontos</li>
+<li>Costas: 4 pontos</li>
+</ul>
+</section>
+
+<section>
+<h2>ERROS COMUNS</h2>
+<ul>
+<li>Usar força excessiva</li>
+<li>Pular etapas</li>
+<li>Ignorar base</li>
+<li>Ego elevado</li>
+</ul>
+</section>
+
+<section>
+<h2>FREQUÊNCIA DE TREINO</h2>
+<ul>
+<li>2x semana: adaptação</li>
+<li>3x semana: evolução</li>
+<li>4x+ semana: alto compromisso</li>
+</ul>
+</section>
+
+<section>
+<h2>JIU-JITSU COMO ESTILO DE VIDA</h2>
+<ul>
+<li>Disciplina</li>
+<li>Respeito</li>
+<li>Humildade</li>
+<li>Autocontrole</li>
+</ul>
+
+<div class="box faixa-azul">
+O Jiu-Jitsu começa no tatame e continua fora dele.
+</div>
+</section>
+
+<section>
+<h2>MENSAGEM FINAL DO INSTRUTOR</h2>
+<div class="box regra">
+Construa base.  
+Respeite o processo.  
+O Jiu-Jitsu recompensa quem permanece.
+</div>
+<p>— <strong>Dionatan Wiggers</strong></p>
+</section>
+
+</main>
+
+<footer>
+Manual Oficial de Jiu-Jitsu • Do Zero à Faixa Azul<br>
+Instrutor: <strong>Dionatan Wiggers</strong>
+</footer>
+
+</body>
+</html>
