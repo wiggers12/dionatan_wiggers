@@ -192,77 +192,92 @@
     </div>
 
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getDatabase, ref, push, set } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+    // 1. REGISTRO DO PWA (O que faltava)
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('sw-painel.js').catch(err => console.log(err));
+        });
+    }
 
-        // Configurações do seu Firebase
-        const firebaseConfig = {
-            apiKey: "AIzaSyBod8YVf5pKWI98m9rRR8axokDkNMlXX-k",
-            authDomain: "aviatordaniel100x.firebaseapp.com",
-            databaseURL: "https://aviatordaniel100x-default-rtdb.firebaseio.com",
-            projectId: "aviatordaniel100x",
-            storageBucket: "aviatordaniel100x.firebasestorage.app",
-            messagingSenderId: "169015417803",
-            appId: "1:169015417803:web:ce4aa4f9b77d5ddb07344e"
-        };
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getDatabase, ref, push, set } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-        const app = initializeApp(firebaseConfig);
-        const db = getDatabase(app);
+    const firebaseConfig = {
+        apiKey: "AIzaSyBod8YVf5pKWI98m9rRR8axokDkNMlXX-k",
+        authDomain: "aviatordaniel100x.firebaseapp.com",
+        databaseURL: "https://aviatordaniel100x-default-rtdb.firebaseio.com",
+        projectId: "aviatordaniel100x",
+        storageBucket: "aviatordaniel100x.firebasestorage.app",
+        messagingSenderId: "169015417803",
+        appId: "1:169015417803:web:ce4aa4f9b77d5ddb07344e"
+    };
 
-        // Preview da imagem antes de enviar
-        window.previewImagem = function(input) {
-            if (input.files && input.files[0]) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    document.getElementById('preview-foto').src = e.target.result;
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    // FUNÇÃO QUE COMPRIME A FOTO (Faz funcionar no Celular)
+    window.previewImagem = function(input) {
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = new Image();
+                img.src = e.target.result;
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+                    const maxW = 300; 
+                    const scale = maxW / img.width;
+                    canvas.width = maxW;
+                    canvas.height = img.height * scale;
+                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                    
+                    const fotoComprimida = canvas.toDataURL('image/jpeg', 0.7);
+                    document.getElementById('preview-foto').src = fotoComprimida;
                     document.getElementById('preview-foto').style.display = 'block';
                     document.getElementById('label-upload').style.display = 'none';
-                };
-                reader.readAsDataURL(input.files[0]);
-            }
-        };
+                }
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    };
 
-        window.finalizarCadastro = function() {
-            const nome = document.getElementById('reg-nome').value;
-            const rank = document.getElementById('reg-graduacao').value;
-            const tel = document.getElementById('reg-telefone').value;
-            const fotoBase64 = document.getElementById('preview-foto').src;
+    window.finalizarCadastro = function() {
+        const nome = document.getElementById('reg-nome').value;
+        const rank = document.getElementById('reg-graduacao').value;
+        const tel = document.getElementById('reg-telefone').value;
+        const fotoBase64 = document.getElementById('preview-foto').src;
 
-            if(!nome || !tel) return alert("Por favor, preencha nome e telefone!");
+        if(!nome || !tel) return alert("Preencha nome e telefone!");
 
-            const novoRef = push(ref(db, 'alunos'));
-            set(novoRef, { 
-                nome, 
-                graduacao: rank, 
-                telefone: tel, 
-                foto: fotoBase64.startsWith('data') ? fotoBase64 : null, // Salva a foto se houver
-                data: new Date().toLocaleString() 
-            })
-            .then(() => {
-                localStorage.setItem('aluno_logado', 'true');
-                localStorage.setItem('aluno_nome', nome);
-                localStorage.setItem('aluno_rank', rank);
-                if(fotoBase64.startsWith('data')) localStorage.setItem('aluno_foto', fotoBase64);
-                location.reload();
-            })
-            .catch(() => alert("Erro ao salvar. Verifique as regras do seu Firebase!"));
-        };
-
-        window.logout = function() {
-            localStorage.clear();
+        const novoRef = push(ref(db, 'alunos'));
+        set(novoRef, { 
+            nome, graduacao: rank, telefone: tel, 
+            foto: fotoBase64.startsWith('data') ? fotoBase64 : null,
+            data: new Date().toLocaleString() 
+        })
+        .then(() => {
+            localStorage.setItem('aluno_logado', 'true');
+            localStorage.setItem('aluno_nome', nome);
+            localStorage.setItem('aluno_rank', rank);
+            if(fotoBase64.startsWith('data')) localStorage.setItem('aluno_foto', fotoBase64);
             location.reload();
-        };
+        });
+    };
 
-        window.onload = () => {
-            if(localStorage.getItem('aluno_logado')) {
-                document.getElementById('modal-cadastro').style.display = 'none';
-                document.getElementById('display-name').innerText = localStorage.getItem('aluno_nome');
-                document.getElementById('display-rank').innerText = localStorage.getItem('aluno_rank');
-                
-                const foto = localStorage.getItem('aluno_foto');
-                if(foto) document.getElementById('user-photo').src = foto;
-            }
-        };
-    </script>
+    window.logout = function() {
+        localStorage.clear();
+        location.reload();
+    };
+
+    window.onload = () => {
+        if(localStorage.getItem('aluno_logado')) {
+            document.getElementById('modal-cadastro').style.display = 'none';
+            document.getElementById('display-name').innerText = localStorage.getItem('aluno_nome');
+            document.getElementById('display-rank').innerText = localStorage.getItem('aluno_rank');
+            const foto = localStorage.getItem('aluno_foto');
+            if(foto) document.getElementById('user-photo').src = foto;
+        }
+    };
+</script>
 </body>
 </html>
