@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vídeo Aulas | Wiggers Academy</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --cor-preto: #030303;
+            --cor-fundo-card: #0c0c0c;
+            --cor-ouro: #f5c542;
+            --cor-texto-claro: #ffffff;
+            --cor-texto-cinza: #a0a0a0;
+            --borda: rgba(255, 255, 255, 0.08);
+        }
+
+        body { background: var(--cor-preto); color: var(--cor-texto-claro); font-family: 'Plus Jakarta Sans', sans-serif; margin: 0; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 40px 20px; }
+
+        header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; }
+        .btn-voltar { text-decoration: none; color: white; background: var(--cor-fundo-card); padding: 10px 20px; border-radius: 12px; border: 1px solid var(--borda); font-family: 'Space Grotesk'; font-size: 0.8rem; transition: 0.3s; }
+        .btn-voltar:hover { background: var(--cor-ouro); color: black; }
+
+        /* PAINEL DE UPLOAD (EXCLUSIVO PROFESSOR) */
+        .upload-panel {
+            background: var(--cor-fundo-card); border: 2px dashed var(--cor-ouro);
+            border-radius: 20px; padding: 30px; text-align: center; margin-bottom: 50px;
+        }
+        .btn-upload { background: var(--cor-ouro); color: black; padding: 12px 25px; border-radius: 10px; font-weight: 800; cursor: pointer; display: inline-block; margin-top: 15px; font-family: 'Space Grotesk'; }
+        
+        /* GRID DE VÍDEOS */
+        .video-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 25px; }
+        .video-card { background: var(--cor-fundo-card); border: 1px solid var(--borda); border-radius: 20px; overflow: hidden; }
+        video { width: 100%; aspect-ratio: 16/9; background: #000; }
+        .video-info { padding: 15px; }
+        .video-title { font-weight: 700; color: var(--cor-ouro); display: block; margin-bottom: 5px; }
+        .video-date { font-size: 0.7rem; color: var(--cor-texto-cinza); }
+
+        #loading-msg { color: var(--cor-ouro); margin-top: 10px; display: none; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1 style="font-family: 'Space Grotesk';">📽️ Vídeo <span style="color: var(--cor-ouro);">Aulas</span></h1>
+        <a href="painel.html" class="btn-voltar">← VOLTAR AO PAINEL</a>
+    </header>
+
+    <div class="upload-panel">
+        <h3 style="font-family: 'Space Grotesk';">Área de Upload</h3>
+        <p style="font-size: 0.9rem; color: var(--cor-texto-cinza);">Selecione o vídeo para salvar no Firebase e liberar para os alunos.</p>
+        <label for="input-video" class="btn-upload">ESCOLHER ARQUIVO</label>
+        <input type="file" id="input-video" accept="video/*" hidden onchange="uploadVideoFirebase(this)">
+        <p id="loading-msg">Processando e enviando vídeo... Aguarde.</p>
+    </div>
+
+    <div class="video-grid" id="video-list">
+        </div>
+</div>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getDatabase, ref, push, set, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+    // USANDO SUAS CONFIGURAÇÕES
+    const firebaseConfig = {
+        apiKey: "AIzaSyBod8YVf5pKWI98m9rRR8axokDkNMlXX-k",
+        authDomain: "aviatordaniel100x.firebaseapp.com",
+        databaseURL: "https://aviatordaniel100x-default-rtdb.firebaseio.com",
+        projectId: "aviatordaniel100x",
+        storageBucket: "aviatordaniel100x.firebasestorage.app",
+        messagingSenderId: "169015417803",
+        appId: "1:169015417803:web:ce4aa4f9b77d5ddb07344e"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    // 1. FUNÇÃO PARA UPLOAD
+    window.uploadVideoFirebase = function(input) {
+        if (input.files && input.files[0]) {
+            const file = input.files[0];
+            const reader = new FileReader();
+            
+            document.getElementById('loading-msg').style.display = 'block';
+
+            reader.onload = function(e) {
+                const videoBase64 = e.target.result;
+                const novoVideoRef = push(ref(db, 'video_aulas'));
+                
+                set(novoVideoRef, {
+                    titulo: file.name,
+                    videoData: videoBase64,
+                    data: new Date().toLocaleDateString()
+                }).then(() => {
+                    document.getElementById('loading-msg').style.display = 'none';
+                    alert("Vídeo publicado com sucesso!");
+                });
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+
+    // 2. FUNÇÃO PARA LISTAR OS VÍDEOS (TEMPO REAL)
+    const videosRef = ref(db, 'video_aulas');
+    onValue(videosRef, (snapshot) => {
+        const videoList = document.getElementById('video-list');
+        videoList.innerHTML = "";
+        
+        snapshot.forEach((childSnapshot) => {
+            const data = childSnapshot.val();
+            const card = `
+                <div class="video-card">
+                    <video controls>
+                        <source src="${data.videoData}" type="video/mp4">
+                    </video>
+                    <div class="video-info">
+                        <span class="video-title">${data.titulo}</span>
+                        <span class="video-date">Publicado em: ${data.data}</span>
+                    </div>
+                </div>
+            `;
+            videoList.innerHTML = card + videoList.innerHTML;
+        });
+    });
+</script>
+
+</body>
+</html>
