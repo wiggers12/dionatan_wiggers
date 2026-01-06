@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MÓDULO 04 | FUNDAMENTOS DE MOVIMENTAÇÃO | WIGGERS ACADEMY</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --cor-preto: #030303;
+            --cor-fundo-card: #0c0c0c;
+            --cor-ouro: #f5c542;
+            --cor-texto-claro: #ffffff;
+            --cor-texto-cinza: #a0a0a0;
+            --borda: rgba(255, 255, 255, 0.1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body { 
+            background-color: var(--cor-preto); 
+            color: var(--cor-texto-claro); 
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            line-height: 1.6;
+            padding-bottom: 50px;
+        }
+
+        .top-bar {
+            position: sticky;
+            top: 0;
+            background: rgba(3, 3, 3, 0.98);
+            padding: 15px 20px;
+            border-bottom: 1px solid var(--cor-ouro);
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .btn-voltar { color: var(--cor-ouro); text-decoration: none; font-weight: 800; font-size: 0.8rem; }
+
+        .container { max-width: 800px; margin: 30px auto; padding: 0 20px; }
+
+        .header-titulo { text-align: center; margin-bottom: 40px; }
+        .header-titulo h1 { font-family: 'Space Grotesk'; font-size: 2.2rem; color: var(--cor-ouro); margin-bottom: 10px; }
+
+        .card-tecnico {
+            background: var(--cor-fundo-card);
+            border: 1px solid var(--borda);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+        }
+
+        .card-tecnico h2 {
+            font-family: 'Space Grotesk';
+            color: var(--cor-ouro);
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .passo-a-passo { list-style: none; }
+        .passo-a-passo li {
+            margin-bottom: 15px;
+            padding-left: 15px;
+            border-left: 2px solid #333;
+        }
+
+        .passo-a-passo b { color: #fff; display: block; margin-bottom: 3px; }
+        .passo-a-passo p { color: var(--cor-texto-cinza); font-size: 0.9rem; }
+
+        .alerta-seguranca {
+            background: rgba(255, 77, 77, 0.1);
+            border: 1px solid #ff4d4d;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+            font-size: 0.85rem;
+        }
+
+        .btn-finalizar {
+            background: var(--cor-ouro);
+            color: #000;
+            border: none;
+            width: 100%;
+            padding: 20px;
+            border-radius: 12px;
+            font-weight: 800;
+            font-family: 'Space Grotesk';
+            cursor: pointer;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="top-bar">
+        <a href="painel.html" class="btn-voltar">← VOLTAR</a>
+        <span style="font-size: 0.7rem; font-weight: 800; letter-spacing: 1px;">MÓDULO 04: BASE ZERO</span>
+    </div>
+
+    <div class="container">
+        <div class="header-titulo">
+            <h1>Sobrevivência no Tatame</h1>
+            <p style="color: var(--cor-texto-cinza);">Aprenda a cair, a levantar e a se mover antes de lutar.</p>
+        </div>
+
+        <div class="card-tecnico">
+            <h2>01. Como Cair (Ukemi)</h2>
+            <p style="margin-bottom: 20px;">O objetivo é proteger sua integridade física ao ser projetado ou perder o equilíbrio.</p>
+            
+            <ul class="passo-a-passo">
+                <li>
+                    <b>Queixo no Peito:</b>
+                    <p>Mantenha o queixo colado ao osso esterno. Isso evita que sua cabeça sofra o efeito "chicote" e bata no tatame.</p>
+                </li>
+                <li>
+                    <b>Batimento de Braços:</b>
+                    <p>As mãos e antebraços devem bater com força no solo em um ângulo de 45°, dissipando o impacto antes que ele chegue à sua coluna.</p>
+                </li>
+                <li>
+                    <b>Pés no Chão:</b>
+                    <p>Ao cair de costas, mantenha os joelhos flexionados. Nunca caia com as pernas esticadas.</p>
+                </li>
+            </ul>
+
+            <div class="alerta-seguranca">
+                ⚠️ <b>ERRO FATAL:</b> Nunca tente apoiar a palma da mão no chão para "parar" a queda. Isso causa lesões graves no pulso e cotovelo.
+            </div>
+        </div>
+
+        <div class="card-tecnico">
+            <h2>02. Levantada Técnica</h2>
+            <p style="margin-bottom: 20px;">A forma correta de ficar em pé mantendo a defesa alta e o equilíbrio.</p>
+            
+            <ul class="passo-a-passo">
+                <li>
+                    <b>Base de Três Pontos:</b>
+                    <p>Sentado, apoie uma mão no chão atrás de você e o pé oposto à frente. A outra mão protege seu rosto.</p>
+                </li>
+                <li>
+                    <b>Elevação do Quadril:</b>
+                    <p>Tire o quadril do chão, sustentando o peso na mão e no pé de apoio.</p>
+                </li>
+                <li>
+                    <b>Recolhimento da Perna:</b>
+                    <p>Passe a perna livre por baixo do seu corpo, posicionando o pé atrás da mão de apoio. Você sairá em base de combate, pronto para se defender.</p>
+                </li>
+            </ul>
+        </div>
+
+        <div class="card-tecnico">
+            <h2>03. Fuga de Quadril (Ebi)</h2>
+            <p style="margin-bottom: 20px;">O movimento mais básico e essencial para quem está por baixo no solo.</p>
+            
+            <ul class="passo-a-passo">
+                <li>
+                    <b>Pressão nos Pés:</b>
+                    <p>Deitado de costas, aproxime os calcanhares do glúteo e vire levemente de lado.</p>
+                </li>
+                <li>
+                    <b>O "Empurrão":</b>
+                    <p>Use os pés como alavanca e jogue seu quadril para fora da linha do seu corpo, esticando as pernas.</p>
+                </li>
+                <li>
+                    <b>Objetivo:</b>
+                    <p>Este movimento cria o espaço necessário para repor a guarda ou escapar de uma imobilização.</p>
+                </li>
+            </ul>
+        </div>
+
+        <div class="card-tecnico">
+            <h2>04. Postura e Posicionamento</h2>
+            <ul class="passo-a-passo">
+                <li>
+                    <b>Como sentar:</b>
+                    <p>No tatame, sente-se sempre de pernas cruzadas (índio) ou sobre os calcanhares (seiza). Nunca fique deitado ou com as pernas esticadas de forma relaxada.</p>
+                </li>
+                <li>
+                    <b>Cumprimento:</b>
+                    <p>Ao entrar e sair da área de treino, faça uma reverência em direção ao centro do tatame em sinal de respeito.</p>
+                </li>
+            </ul>
+        </div>
+
+        <button class="btn-finalizar" onclick="window.location.href='painel.html'">LI E COMPRENDI OS FUNDAMENTOS</button>
+    </div>
+
+</body>
+</html>
