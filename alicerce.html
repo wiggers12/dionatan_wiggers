@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Módulo 2 | O Alicerce da Arte Suave — Dionatan Wiggers</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --fundo-primario: #050505;
+            --fundo-card: #0c0c0c;
+            --fundo-input: #151515;
+            --cor-ouro: #f5c542;
+            --cor-ouro-glow: rgba(245, 197, 66, 0.15);
+            --cor-vermelho: #d90429;
+            --texto-alto-contraste: #ffffff;
+            --texto-baixo-contraste: #888888;
+            --cor-sucesso: #00f5d4;
+            --borda-glass: rgba(255, 255, 255, 0.08);
+            --transicao: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            background-color: var(--fundo-primario);
+            color: var(--texto-alto-contraste);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            line-height: 1.8;
+            overflow-x: hidden;
+        }
+
+        /* --- TELA DE CARREGAMENTO --- */
+        #splash-screen {
+            position: fixed;
+            inset: 0;
+            background: #000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            transition: opacity 1s ease;
+        }
+
+        .loader-text {
+            color: var(--cor-ouro);
+            font-family: 'Space Grotesk';
+            font-size: 1.5rem;
+            letter-spacing: 8px;
+            text-transform: uppercase;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(0.95); }
+        }
+
+        /* --- ESTRUTURA --- */
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 25px;
+        }
+
+        header {
+            padding: 120px 0 80px;
+            text-align: center;
+        }
+
+        .badge-modulo {
+            display: inline-block;
+            padding: 8px 20px;
+            background: rgba(245, 197, 66, 0.1);
+            border: 1px solid var(--cor-ouro);
+            border-radius: 100px;
+            color: var(--cor-ouro);
+            font-size: 0.8rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-bottom: 25px;
+        }
+
+        h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(2.5rem, 8vw, 4.5rem);
+            line-height: 1.1;
+            margin-bottom: 25px;
+        }
+
+        /* --- CARDS DE CONTEÚDO --- */
+        .card-conteudo {
+            background: var(--fundo-card);
+            border: 1px solid var(--borda-glass);
+            border-radius: 40px;
+            padding: 60px;
+            margin-bottom: 50px;
+            transition: var(--transicao);
+        }
+
+        .card-conteudo:hover {
+            border-color: rgba(245, 197, 66, 0.3);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.5);
+        }
+
+        h2 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2.2rem;
+            color: var(--cor-ouro);
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        h2::before {
+            content: "";
+            width: 5px;
+            height: 35px;
+            background: var(--cor-vermelho);
+            border-radius: 10px;
+        }
+
+        p {
+            font-size: 1.15rem;
+            color: var(--texto-baixo-contraste);
+            margin-bottom: 25px;
+            text-align: justify;
+        }
+
+        strong {
+            color: var(--texto-alto-contraste);
+            font-weight: 700;
+        }
+
+        /* --- LISTAS ESTILIZADAS --- */
+        .lista-etiqueta {
+            list-style: none;
+            margin-top: 30px;
+        }
+
+        .lista-etiqueta li {
+            background: var(--fundo-input);
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 15px;
+            border-left: 4px solid var(--cor-ouro);
+            font-size: 1.1rem;
+        }
+
+        /* --- BOX DE CONCEITO DE OURO --- */
+        .box-ouro {
+            background: linear-gradient(145deg, rgba(245, 197, 66, 0.1), transparent);
+            border: 1px solid var(--cor-ouro);
+            padding: 40px;
+            border-radius: 30px;
+            margin: 40px 0;
+            position: relative;
+        }
+
+        .box-ouro::after {
+            content: "✦";
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            color: var(--cor-ouro);
+            font-size: 2rem;
+        }
+
+        /* --- QUIZ DE GRADUAÇÃO --- */
+        .secao-quiz {
+            background: #111;
+            padding: 80px 40px;
+            border-radius: 50px;
+            margin: 100px 0;
+            border: 1px solid var(--cor-ouro-glow);
+        }
+
+        .pergunta {
+            margin-bottom: 45px;
+        }
+
+        .pergunta h3 {
+            font-size: 1.4rem;
+            margin-bottom: 25px;
+        }
+
+        .opcao {
+            background: var(--fundo-input);
+            padding: 22px;
+            border-radius: 20px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            border: 1px solid var(--borda-glass);
+            transition: var(--transicao);
+            display: flex;
+            align-items: center;
+            font-weight: 600;
+        }
+
+        .opcao:hover {
+            background: #202020;
+            border-color: rgba(255,255,255,0.2);
+        }
+
+        .opcao.selecionada {
+            border-color: var(--cor-ouro);
+            background: rgba(245, 197, 66, 0.05);
+            color: var(--cor-ouro);
+        }
+
+        .botao-acao {
+            width: 100%;
+            padding: 25px;
+            background: var(--cor-vermelho);
+            color: #fff;
+            border: none;
+            border-radius: 25px;
+            font-family: 'Space Grotesk';
+            font-weight: 700;
+            font-size: 1.2rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: var(--transicao);
+        }
+
+        .botao-acao:hover {
+            filter: brightness(1.2);
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(217, 4, 41, 0.3);
+        }
+
+        #feedback-final {
+            display: none;
+            margin-top: 40px;
+            text-align: center;
+            padding: 40px;
+            border-radius: 30px;
+            background: rgba(0, 245, 212, 0.05);
+            border: 1px solid var(--cor-sucesso);
+            animation: fadeIn 0.8s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        footer {
+            text-align: center;
+            padding-bottom: 100px;
+            color: var(--texto-baixo-contraste);
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="splash-screen">
+        <div class="loader-text">Nível 2: O Alicerce</div>
+    </div>
+
+    <div class="container">
+        <header>
+            <div class="badge-modulo">Módulo 02</div>
+            <h1>O Código de <span style="color: var(--cor-ouro)">Conduta e a Base</span></h1>
+            <p style="max-width: 700px; margin: 0 auto;">Dominar o Jiu-Jitsu exige mais do que força; exige o entendimento das regras invisíveis e da mecânica do corpo humano.</p>
+        </header>
+
+        <section class="card-conteudo">
+            <h2>1. Etiqueta e o Espírito Marcial</h2>
+            <p>
+                O tatame é um ambiente sagrado de aprendizado. A disciplina e o respeito mútuo são o que permitem que técnicas letais sejam praticadas com segurança. Sem o código de conduta, o Jiu-Jitsu torna-se apenas briga; com ele, torna-se uma arte.
+            </p>
+            <ul class="lista-etiqueta">
+                <li><strong>O Significado do "OSS":</strong> Mais do que um cumprimento, deriva da expressão japonesa "Oshi Shinobu", que significa "perseverar sob pressão". Use-o para demonstrar respeito, entendimento e resiliência.</li>
+                <li><strong>Higiene (Armadura):</strong> Seu Kimono (Gi) deve estar sempre limpo. Unhas curtas são obrigatórias para não ferir seus companheiros. O respeito começa no asseio pessoal.</li>
+                <li><strong>Hierarquia de Faixas:</strong> Respeite os mais graduados. Eles trilharam o caminho que você está iniciando. Em caso de dúvida, o silêncio e a observação são seus melhores mentores.</li>
+            </ul>
+        </section>
+
+        <section class="card-conteudo">
+            <h2>2. O Centro de Gravidade e a Base</h2>
+            <p>
+                No Jiu-Jitsu, <strong>Base</strong> é a sua capacidade de manter o equilíbrio enquanto o oponente tenta desequilibrá-lo. Ter uma base sólida significa que você não gasta energia desnecessária para se manter em pé ou em posição de domínio.
+            </p>
+            <div class="box-ouro">
+                <strong>Conceito de Ouro:</strong> Imagine que seu corpo possui um âncora localizada dois dedos abaixo do umbigo. Quanto mais baixo e distribuído for seu centro de massa, mais "pesado" você se tornará para o seu oponente, independente do seu peso real na balança.
+            </div>
+            <p>
+                <strong>Postura na Guarda:</strong> Ao estar dentro da guarda de alguém, sua coluna deve estar ereta e suas mãos devem controlar o oponente ou estar protegidas. Colocar as mãos no chão é um erro fatal que abre caminho para finalizações como a Kimura ou o Triângulo.
+            </p>
+        </section>
+
+        <section class="card-conteudo">
+            <h2>3. Movimentação Essencial (Ukemi e Hip Escape)</h2>
+            <p>
+                Antes de lutar com alguém, você deve saber lutar com o chão. O solo é seu maior aliado ou seu pior inimigo.
+            </p>
+            <p>
+                <strong>Fuga de Quadril (Hip Escape):</strong> É o movimento mais importante da arte suave. Ele permite criar espaço onde não existe, possibilitando reposições de guarda e defesas de imobilização. Lembre-se: no solo, quem não mexe o quadril está morto.
+            </p>
+            <p>
+                <strong>Levantada Técnica:</strong> A forma mais segura de se levantar de um combate sem se expor a ataques. É a transição perfeita entre a vulnerabilidade do solo e a prontidão da luta em pé, mantendo sempre uma mão protegendo o rosto e a base projetada para trás.
+            </p>
+        </section>
+
+        <section class="secao-quiz">
+            <h2 style="justify-content: center; margin-bottom: 50px;">Exame de Conhecimento</h2>
+
+            <div class="pergunta">
+                <h3>1. Qual é a tradução prática e filosófica do termo "OSS" no tatame?</h3>
+                <div class="opcao" onclick="selecionarOpcao(this, 1)">Apenas um sinal de "olá" ou "tchau" sem maior significado</div>
+                <div class="opcao" onclick="selecionarOpcao(this, 1, true)">Perseverar sob pressão, demonstrando respeito e resiliência</div>
+            </div>
+
+            <div class="pergunta">
+                <h3>2. Qual o erro clássico de postura ao estar dentro da guarda do oponente?</h3>
+                <div class="opcao" onclick="selecionarOpcao(this, 2, true)">Colocar as mãos no solo ou curvar excessivamente a coluna</div>
+                <div class="opcao" onclick="selecionarOpcao(this, 2)">Manter a coluna ereta e os cotovelos fechados</div>
+            </div>
+
+            <div class="pergunta">
+                <h3>3. Por que a "Fuga de Quadril" é considerada o movimento mais vital?</h3>
+                <div class="opcao" onclick="selecionarOpcao(this, 3)">Para cansar o oponente através da movimentação constante</div>
+                <div class="opcao" onclick="selecionarOpcao(this, 3, true)">Para criar espaço e permitir defesas ou reposições de guarda</div>
+            </div>
+
+            <button class="botao-acao" onclick="finalizarModulo()">Validar Conclusão do Módulo 2</button>
+
+            <div id="feedback-final">
+                <h3 style="color: var(--cor-sucesso); margin-bottom: 15px;">Módulo 2 Concluído com Sucesso!</h3>
+                <p>Seu alicerce está sendo construído. Você compreendeu que o Jiu-Jitsu é inteligência aplicada ao movimento. O Módulo 3 — "A Guarda e as Primeiras Finalizações" — será o seu próximo passo.</p>
+            </div>
+        </section>
+
+        <footer>
+            <p>© 2026 Plataforma Masterclass Jiu-Jitsu • Professor Dionatan Wiggers</p>
+        </footer>
+    </div>
+
+    <script>
+        // Splash Loader
+        window.addEventListener("load", () => {
+            setTimeout(() => {
+                document.getElementById('splash-screen').style.opacity = '0';
+                setTimeout(() => document.getElementById('splash-screen').style.display = 'none', 1000);
+            }, 2000);
+
+            // Carregar progresso salvo
+            if(localStorage.getItem('modulo2_completo') === 'true') {
+                document.getElementById('feedback-final').style.display = 'block';
+            }
+        });
+
+        // Lógica de Seleção
+        function selecionarOpcao(elemento, indexPergunta, correta = false) {
+            const container = elemento.parentElement;
+            container.querySelectorAll('.opcao').forEach(opt => opt.classList.remove('selecionada'));
+            elemento.classList.add('selecionada');
+            elemento.dataset.correta = correta;
+        }
+
+        // Validação Final
+        function finalizarModulo() {
+            const selecionados = document.querySelectorAll('.opcao.selecionada');
+            const totalPerguntas = 3;
+
+            if (selecionados.length < totalPerguntas) {
+                alert("Por favor, responda todas as questões do exame para prosseguir.");
+                return;
+            }
+
+            let todasCorretas = true;
+            selecionados.forEach(sel => {
+                if (sel.dataset.correta !== "true") todasCorretas = false;
+            });
+
+            if (todasCorretas) {
+                localStorage.setItem('modulo2_completo', 'true');
+                const feedback = document.getElementById('feedback-final');
+                feedback.style.display = 'block';
+                feedback.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            } else {
+                alert("Algumas respostas estão incorretas. Revise o conteúdo sobre Etiqueta, Base e Movimentação Solo.");
+            }
+        }
+    </script>
+</body>
+</html>
