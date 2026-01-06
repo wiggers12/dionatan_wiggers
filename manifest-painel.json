@@ -1,0 +1,21 @@
+{
+  "name": "Wiggers BJJ Masterclass",
+  "short_name": "Wiggers BJJ",
+  "description": "Painel de Alunos Dionatan Wiggers",
+  "start_url": "/painel.html",
+  "display": "standalone",
+  "background_color": "#030303",
+  "theme_color": "#f5c542",
+  "icons": [
+    {
+      "src": "wiggers.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "wiggers.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
