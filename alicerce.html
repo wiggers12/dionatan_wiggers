@@ -262,9 +262,54 @@
             color: var(--texto-baixo-contraste);
             font-size: 0.9rem;
         }
+/* ESTILO BOTÃO VOLTAR */
+.btn-voltar {
+    position: fixed;
+    top: 30px;
+    left: 30px;
+    z-index: 999;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 20px;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--borda-glass);
+    border-radius: 15px;
+    color: var(--texto-alto-contraste);
+    text-decoration: none;
+    font-family: 'Space Grotesk';
+    font-weight: 700;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: var(--transicao);
+}
+
+.btn-voltar:hover {
+    background: var(--cor-ouro);
+    color: #000;
+    border-color: var(--cor-ouro);
+    transform: translateX(5px);
+}
+
+/* Ajuste mobile para o botão não sumir */
+@media (max-width: 600px) {
+    .btn-voltar {
+        top: 20px;
+        left: 20px;
+        padding: 10px 15px;
+        font-size: 0.8rem;
+    }
+}
     </style>
 </head>
 <body>
+
+<a href="painel.html" class="btn-voltar">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+    Painel
+</a>
 
     <div id="splash-screen">
         <div class="loader-text">Nível 2: O Alicerce</div>
