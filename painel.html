@@ -216,6 +216,51 @@
             .main-content { margin-left: 0; padding: 25px; padding-top: 70px; padding-bottom: 100px; }
             header h1 { font-size: 1.8rem; }
         }
+/* MODAL DE PERFIL DO ALUNO */
+        #modal-perfil {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.95);
+            z-index: 10001;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+        }
+        
+        #modal-perfil .form-container {
+            max-width: 350px;
+            border-color: var(--cor-ouro);
+            position: relative;
+        }
+
+        .fechar-modal {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            color: var(--cor-ouro);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .barra-progresso-bg {
+            width: 100%;
+            height: 10px;
+            background: #222;
+            border-radius: 5px;
+            overflow: hidden;
+            margin-bottom: 5px;
+        }
+
+        #barra-progresso-fill {
+            width: 0%;
+            height: 100%;
+            background: var(--cor-ouro);
+            transition: 0.8s ease;
+        }
     </style>
 </head>
 <body>
@@ -263,6 +308,29 @@
             <button class="btn-enviar" onclick="finalizarCadastro()">ACESSAR PORTAL</button>
         </div>
     </div>
+<div id="modal-perfil">
+        <div class="form-container">
+            <button class="fechar-modal" onclick="fecharPerfil()">&times;</button>
+            
+            <div style="width:100px; height:100px; border-radius:50%; border:3px solid var(--cor-ouro); margin:0 auto 15px; overflow:hidden;">
+                <img id="perfil-foto" src="" style="width:100%; height:100%; object-fit:cover;">
+            </div>
+            
+            <h2 id="perfil-nome" style="font-family:'Space Grotesk'; color:var(--cor-ouro); margin-bottom:5px;">Nome</h2>
+            <p id="perfil-graduacao" style="font-size:0.8rem; color:var(--cor-texto-cinza); text-transform:uppercase; letter-spacing:2px; margin-bottom:20px;">Faixa</p>
+
+            <div style="text-align:left; margin-bottom:20px;">
+                <p style="font-size:0.7rem; color:var(--cor-ouro); font-weight:800; margin-bottom:5px;">PROGRESSO NA ACADEMY</p>
+                <div class="barra-progresso-bg">
+                    <div id="barra-progresso-fill"></div>
+                </div>
+                <p id="status-progresso" style="font-size:0.7rem; color:var(--cor-texto-cinza);">Carregando progresso...</p>
+            </div>
+
+            <button onclick="logout()" style="background:none; border:1px solid #ff4d4d; color:#ff4d4d; width:100%; padding:10px; border-radius:8px; font-size:0.7rem; cursor:pointer;">SAIR DA CONTA</button>
+        </div>
+    </div>
+
 
     <div class="app-container">
         <aside class="sidebar">
@@ -431,7 +499,28 @@
             location.reload();
         };
 
-        // INICIALIZAÇÃO
+        // FUNÇÕES DO PERFIL
+        window.abrirPerfil = function() {
+            const nome = localStorage.getItem('aluno_nome');
+            const rank = localStorage.getItem('aluno_rank');
+            const foto = localStorage.getItem('aluno_foto');
+            
+            document.getElementById('perfil-nome').innerText = nome;
+            document.getElementById('perfil-graduacao').innerText = rank;
+            if(foto) document.getElementById('perfil-foto').src = foto;
+
+            // Simulação de progresso (aqui você pode ligar ao Firebase depois)
+            document.getElementById('barra-progresso-fill').style.width = "25%"; // Ex: 1 de 4 módulos
+            document.getElementById('status-progresso').innerText = "1 de 4 módulos concluídos";
+
+            document.getElementById('modal-perfil').style.display = 'flex';
+        };
+
+        window.fecharPerfil = function() {
+            document.getElementById('modal-perfil').style.display = 'none';
+        };
+
+        // INICIALIZAÇÃO ATUALIZADA
         window.onload = () => {
             if(localStorage.getItem('aluno_logado')) {
                 document.getElementById('modal-cadastro').style.display = 'none';
@@ -446,6 +535,11 @@
                     document.getElementById('user-photo').src = foto;
                     document.getElementById('user-photo-mobile').src = foto;
                 }
+
+                // TORNA AS FOTOS CLICÁVEIS
+                document.getElementById('user-photo').parentElement.style.cursor = "pointer";
+                document.getElementById('user-photo').parentElement.onclick = abrirPerfil;
+                document.querySelector('.mobile-floating-avatar').onclick = abrirPerfil;
             }
 
             setTimeout(() => {
