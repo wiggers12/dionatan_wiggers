@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MÓDULO 05 | MAPA DA LUTA | WIGGERS ACADEMY</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --cor-preto: #030303;
+            --cor-fundo-card: #0c0c0c;
+            --cor-ouro: #f5c542;
+            --cor-texto-claro: #ffffff;
+            --cor-texto-cinza: #a0a0a0;
+            --borda: rgba(255, 255, 255, 0.1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body { 
+            background-color: var(--cor-preto); 
+            color: var(--cor-texto-claro); 
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            line-height: 1.6;
+            padding-bottom: 50px;
+        }
+
+        .top-bar {
+            position: sticky;
+            top: 0;
+            background: rgba(3, 3, 3, 0.98);
+            padding: 15px 20px;
+            border-bottom: 1px solid var(--cor-ouro);
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .btn-voltar { color: var(--cor-ouro); text-decoration: none; font-weight: 800; font-size: 0.8rem; }
+
+        .container { max-width: 800px; margin: 30px auto; padding: 0 20px; }
+
+        .header-titulo { text-align: center; margin-bottom: 40px; }
+        .header-titulo h1 { font-family: 'Space Grotesk'; font-size: 2.2rem; color: var(--cor-ouro); margin-bottom: 10px; }
+
+        .card-tecnico {
+            background: var(--cor-fundo-card);
+            border: 1px solid var(--borda);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+        }
+
+        .card-tecnico h2 {
+            font-family: 'Space Grotesk';
+            color: var(--cor-ouro);
+            font-size: 1.4rem;
+            margin-bottom: 15px;
+            border-bottom: 1px solid rgba(245, 197, 66, 0.2);
+            padding-bottom: 10px;
+        }
+
+        .sub-topico { margin-bottom: 20px; }
+        .sub-topico h3 { color: #fff; font-size: 1.1rem; margin-bottom: 5px; display: flex; align-items: center; gap: 8px; }
+        .sub-topico h3::before { content: '◈'; color: var(--cor-ouro); }
+        .sub-topico p { color: var(--cor-texto-cinza); font-size: 0.9rem; padding-left: 20px; }
+
+        .badge-tecnica {
+            display: inline-block;
+            background: rgba(245, 197, 66, 0.1);
+            color: var(--cor-ouro);
+            padding: 2px 10px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 800;
+            margin-top: 8px;
+            margin-left: 20px;
+        }
+
+        .btn-finalizar {
+            background: var(--cor-ouro);
+            color: #000;
+            border: none;
+            width: 100%;
+            padding: 20px;
+            border-radius: 12px;
+            font-weight: 800;
+            font-family: 'Space Grotesk';
+            cursor: pointer;
+            margin-top: 30px;
+            transition: 0.3s;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="top-bar">
+        <a href="painel.html" class="btn-voltar">← VOLTAR</a>
+        <span style="font-size: 0.7rem; font-weight: 800; letter-spacing: 1px;">MÓDULO 05: MAPA DA LUTA</span>
+    </div>
+
+    <div class="container">
+        <div class="header-titulo">
+            <h1>Estratégia e Transição</h1>
+            <p style="color: var(--cor-texto-cinza);">Entenda as fases da luta, da queda à finalização.</p>
+        </div>
+
+        <div class="card-tecnico">
+            <h2>01. O Início: Quedas (Takedowns)</h2>
+            <div class="sub-topico">
+                <h3>Para que servem?</h3>
+                <p>Levar a luta para o solo sob o seu controle, garantindo a posição de vantagem inicial.</p>
+            </div>
+            <div class="sub-topico">
+                <h3>Principais Quedas</h3>
+                <p><b>Baiana (Double Leg):</b> Ataque às duas pernas com a cabeça na lateral.</p>
+                <p><b>Single Leg:</b> Ataque isolado a uma perna.</p>
+                <p><b>Osoto Gari:</b> A clássica varredura de perna por fora.</p>
+                <span class="badge-tecnica">DEFESA: Manter base baixa e usar o Sprawl</span>
+            </div>
+        </div>
+
+        <div class="card-tecnico">
+            <h2>02. O Coração: Sistema de Guardas</h2>
+            <div class="sub-topico">
+                <h3>O que é ser Guardeiro?</h3>
+                <p>É usar as pernas como escudo e arma enquanto está de costas para o chão.</p>
+            </div>
+            <div class="sub-topico">
+                <h3>Tipos de Guarda</h3>
+                <p><b>Guarda Fechada:</b> Máximo controle do tronco e braços do oponente.</p>
+                <p><b>Meia Guarda:</b> Você prende apenas uma perna do adversário. Excelente para raspagens de força.</p>
+                <p><b>Guarda Aberta:</b> Mobilidade total para ataques de triângulo e armlock.</p>
+                <span class="badge-tecnica">OBJETIVO: Raspar (ir para cima) ou Finalizar</span>
+            </div>
+        </div>
+
+        <div class="card-tecnico">
+            <h2>03. A Transição: Passagem de Guarda</h2>
+            <div class="sub-topico">
+                <h3>Como passar a Guarda?</h3>
+                <p>Vencer a barreira das pernas do oponente para chegar ao controle lateral.</p>
+            </div>
+            <div class="sub-topico">
+                <h3>Técnicas de Passagem</h3>
+                <p><b>Toreando:</b> Desviar as pernas para os lados usando velocidade.</p>
+                <p><b>Passagem de Joelho (Knee Cut):</b> Cortar por cima da perna na meia guarda.</p>
+                <p><b>Pressão (Over-Under):</b> Amassar o oponente para anular o quadril dele.</p>
+                <span class="badge-tecnica">REGRA: Nunca deixe o guardeiro controlar sua cabeça</span>
+            </div>
+        </div>
+
+        <div class="card-tecnico">
+            <h2>04. O Domínio: Meia Guarda</h2>
+            <div class="sub-topico">
+                <h3>O jogo da Meia Guarda</h3>
+                <p>Uma posição de 50/50. Quem domina o "Underhook" (esgrima) geralmente vence a posição.</p>
+            </div>
+            <div class="sub-topico">
+                <h3>Para quem está por cima</h3>
+                <p>Estabilizar o peso, ganhar a esgrima e usar o joelho para livrar a perna presa.</p>
+            </div>
+            <div class="sub-topico">
+                <h3>Para quem está por baixo</h3>
+                <p>Entrar embaixo do centro de gravidade do oponente para raspar ou repor a guarda.</p>
+            </div>
+        </div>
+
+        <button class="btn-finalizar" onclick="window.location.href='painel.html'">CONCLUIR MAPA DA LUTA</button>
+    </div>
+
+</body>
+</html>
