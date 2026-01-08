@@ -39,24 +39,39 @@
         .metrica-item h4 { font-family: 'Space Grotesk'; font-size: 1.5rem; color: #fff; }
         .metrica-item small { color: var(--cor-ouro); font-size: 0.7rem; font-weight: 700; }
 
-        /* SEÇÃO FINANCEIRA DETALHADA */
+        /* FINANCEIRO */
         .card-financeiro { background: var(--cor-fundo-card); border: 1px solid var(--borda); border-radius: 20px; padding: 20px; margin-bottom: 25px; display: flex; align-items: center; justify-content: space-between; }
         .status-pill { padding: 6px 14px; border-radius: 50px; font-size: 0.7rem; font-weight: 800; text-transform: uppercase; }
         .pago { background: rgba(46, 204, 113, 0.1); color: var(--sucesso); border: 1px solid var(--sucesso); }
         .atrasado { background: rgba(255, 77, 77, 0.1); color: var(--erro); border: 1px solid var(--erro); }
 
-        /* HISTÓRICO DE AULAS */
-        .secao-titulo { font-family: 'Space Grotesk'; font-size: 1.1rem; color: var(--cor-ouro); margin: 30px 0 15px; display: flex; justify-content: space-between; align-items: center; }
+        /* TÍTULOS DE SEÇÃO */
+        .secao-titulo { font-family: 'Space Grotesk'; font-size: 1.1rem; color: var(--cor-ouro); margin: 35px 0 15px; display: flex; justify-content: space-between; align-items: center; }
+
+        /* HISTÓRICO */
         .lista-historico { background: var(--cor-fundo-card); border: 1px solid var(--borda); border-radius: 20px; overflow: hidden; }
         .historico-item { padding: 15px 20px; border-bottom: 1px solid var(--borda); display: flex; justify-content: space-between; align-items: center; }
-        .historico-item:last-child { border-bottom: none; }
-        .historico-info h5 { font-size: 0.9rem; color: #fff; }
-        .historico-info p { font-size: 0.7rem; color: var(--cor-texto-cinza); }
         .tag-presenca { background: rgba(52, 152, 219, 0.1); color: var(--azul); font-size: 0.6rem; font-weight: 800; padding: 4px 8px; border-radius: 4px; }
 
-        /* BOTÃO DE AÇÃO */
-        .btn-checkin { background: var(--cor-ouro); color: #000; border: none; width: 100%; padding: 20px; border-radius: 16px; font-weight: 800; font-family: 'Space Grotesk'; cursor: pointer; font-size: 1rem; text-transform: uppercase; letter-spacing: 1px; transition: 0.3s; margin-top: 20px; box-shadow: 0 10px 20px rgba(245, 197, 66, 0.1); }
-        .btn-checkin:hover { transform: translateY(-2px); filter: brightness(1.1); }
+        /* BADGES */
+        .badge-scroll { display: flex; gap: 12px; overflow-x: auto; padding-bottom: 10px; scrollbar-width: none; }
+        .badge-scroll::-webkit-scrollbar { display: none; }
+        .badge-item { min-width: 100px; text-align: center; background: var(--cor-fundo-card); padding: 15px; border-radius: 18px; border: 1px solid var(--borda); transition: 0.3s; }
+        .badge-item.locked { opacity: 0.4; filter: grayscale(1); }
+        .badge-icon { font-size: 1.8rem; margin-bottom: 8px; display: block; }
+        .badge-label { font-size: 0.55rem; font-weight: 800; color: var(--cor-ouro); text-transform: uppercase; }
+
+        /* FEEDBACK */
+        .card-feedback { background: rgba(245, 197, 66, 0.03); border: 1px dashed var(--cor-ouro); padding: 25px; border-radius: 20px; position: relative; }
+        .card-feedback::before { content: '"'; position: absolute; top: 10px; left: 20px; font-size: 3rem; color: var(--cor-ouro); opacity: 0.2; font-family: serif; }
+
+        /* EVENTOS */
+        .event-card { background: linear-gradient(90deg, rgba(245, 197, 66, 0.08), transparent); border: 1px solid var(--borda); padding: 15px; border-radius: 18px; display: flex; align-items: center; gap: 15px; }
+        .event-date { background: var(--cor-ouro); color: #000; padding: 10px; border-radius: 12px; text-align: center; min-width: 60px; font-family: 'Space Grotesk'; }
+
+        /* BOTÃO PRINCIPAL */
+        .btn-checkin { background: var(--cor-ouro); color: #000; border: none; width: 100%; padding: 22px; border-radius: 18px; font-weight: 800; font-family: 'Space Grotesk'; cursor: pointer; font-size: 1rem; text-transform: uppercase; letter-spacing: 1.5px; transition: 0.3s; margin-top: 30px; box-shadow: 0 8px 25px rgba(245, 197, 66, 0.15); }
+        .btn-checkin:hover { transform: translateY(-3px); filter: brightness(1.1); }
 
     </style>
 </head>
@@ -78,7 +93,7 @@
                     <div class="grau"></div>
                     <div class="grau"></div>
                     <div class="grau"></div>
-                    </div>
+                </div>
             </div>
             
             <p style="font-size: 0.7rem; color: var(--cor-texto-cinza);">Última graduação: <b>12/10/2025</b></p>
@@ -86,8 +101,8 @@
 
         <div class="card-financeiro">
             <div>
-                <p style="font-size: 0.65rem; color: var(--cor-texto-cinza); font-weight: 800; text-transform: uppercase; margin-bottom: 5px;">Sua Mensalidade</p>
-                <p style="font-size: 0.9rem; font-weight: 600;">Próximo Vencimento: <span style="color: #fff;">10/02/2026</span></p>
+                <p style="font-size: 0.65rem; color: var(--cor-texto-cinza); font-weight: 800; text-transform: uppercase; margin-bottom: 5px;">Plano Atual</p>
+                <p style="font-size: 0.9rem; font-weight: 600;">Vencimento: <span style="color: #fff;">10/02/2026</span></p>
             </div>
             <div class="status-pill pago">PAGAMENTO EM DIA</div>
         </div>
@@ -96,12 +111,12 @@
             <div class="metrica-item">
                 <span>Total de Aulas</span>
                 <h4>128</h4>
-                <small>+12 este mês</small>
+                <small>Foco constante</small>
             </div>
             <div class="metrica-item">
-                <span>Frequência</span>
-                <h4>85%</h4>
-                <small>Excelente foco</small>
+                <span>Frequência Mês</span>
+                <h4>12</h4>
+                <small>Meta: 16 aulas</small>
             </div>
         </div>
 
@@ -110,54 +125,81 @@
                 <span>Progresso para o 4º Grau</span>
                 <span style="color: var(--cor-ouro);">75%</span>
             </div>
-            <div style="width: 100%; height: 8px; background: rgba(255,255,255,0.05); border-radius: 10px; overflow: hidden;">
-                <div style="width: 75%; height: 100%; background: var(--cor-ouro);"></div>
+            <div style="width: 100%; height: 10px; background: rgba(255,255,255,0.05); border-radius: 10px; overflow: hidden; border: 1px solid var(--borda);">
+                <div style="width: 75%; height: 100%; background: linear-gradient(90deg, var(--cor-ouro), #fff);"></div>
             </div>
-            <p style="font-size: 0.65rem; color: var(--cor-texto-cinza); margin-top: 10px;">Faltam aproximadamente 12 aulas para análise técnica.</p>
         </div>
 
-        <div class="secao-titulo">
-            Histórico de Treinos
-            <a href="#" style="color: var(--cor-ouro); font-size: 0.7rem; text-decoration: none; font-weight: 800;">VER TUDO</a>
+        <div class="secao-titulo">Análise do Professor</div>
+        <div class="card-feedback">
+            <p style="font-size: 0.85rem; color: var(--cor-texto-claro); line-height: 1.6; font-style: italic;">
+                "Sua evolução na guarda fechada está notável. No próximo treino, foque em não deixar o adversário ganhar a esgrima quando você tentar a raspagem de tesoura. Continue consistente!"
+            </p>
         </div>
-        
+
+        <div class="secao-titulo">Minhas Conquistas</div>
+        <div class="badge-scroll">
+            <div class="badge-item">
+                <span class="badge-icon">🔥</span>
+                <span class="badge-label">7 DIAS SEGUIDOS</span>
+            </div>
+            <div class="badge-item">
+                <span class="badge-icon">🥋</span>
+                <span class="badge-label">6 MESES ATIVO</span>
+            </div>
+            <div class="badge-item locked">
+                <span class="badge-icon">🥇</span>
+                <span class="badge-label">1º CAMPEONATO</span>
+            </div>
+            <div class="badge-item locked">
+                <span class="badge-icon">🛡️</span>
+                <span class="badge-label">RESILIENTE</span>
+            </div>
+        </div>
+
+        <div class="secao-titulo">Próximos Eventos</div>
+        <div class="event-card">
+            <div class="event-date">
+                <span style="display: block; font-size: 0.7rem; font-weight: 800; text-transform: uppercase;">Jan</span>
+                <span style="display: block; font-size: 1.2rem; font-weight: 800;">25</span>
+            </div>
+            <div>
+                <h5 style="font-size: 0.9rem; color: #fff;">Seminário de Passagem de Guarda</h5>
+                <p style="font-size: 0.7rem; color: var(--cor-texto-cinza);">Domingo às 09:00 • Wiggers Academy</p>
+            </div>
+        </div>
+
+        <div class="secao-titulo">Histórico Recente</div>
         <div class="lista-historico">
             <div class="historico-item">
-                <div class="historico-info">
-                    <h5>Aula de Jiu-Jitsu (Fundamentos)</h5>
-                    <p>Quinta-feira, 08 de Janeiro • 19:00</p>
+                <div>
+                    <h5 style="font-size: 0.85rem;">Aula Fundamentos</h5>
+                    <p style="font-size: 0.7rem; color: var(--cor-texto-cinza);">08 Jan • 19:00</p>
                 </div>
-                <div class="tag-presenca">PRESENÇA</div>
+                <div class="tag-presenca">CONFIRMADA</div>
             </div>
             <div class="historico-item">
-                <div class="historico-info">
-                    <h5>Aula de Jiu-Jitsu (Avançado)</h5>
-                    <p>Terça-feira, 06 de Janeiro • 19:00</p>
+                <div>
+                    <h5 style="font-size: 0.85rem;">Treino de Competição</h5>
+                    <p style="font-size: 0.7rem; color: var(--cor-texto-cinza);">06 Jan • 20:30</p>
                 </div>
-                <div class="tag-presenca">PRESENÇA</div>
-            </div>
-            <div class="historico-item">
-                <div class="historico-info">
-                    <h5>Treino Livre (Open Mat)</h5>
-                    <p>Sábado, 03 de Janeiro • 10:00</p>
-                </div>
-                <div class="tag-presenca">PRESENÇA</div>
+                <div class="tag-presenca">CONFIRMADA</div>
             </div>
         </div>
 
         <button class="btn-checkin" onclick="fazerCheckin()">
-            BATER PONTO (CHECK-IN)
+            CONFIRMAR PRESENÇA (CHECK-IN)
         </button>
-        <p style="text-align: center; font-size: 0.6rem; color: var(--cor-texto-cinza); margin-top: 15px; text-transform: uppercase; letter-spacing: 1px;">
-            O check-in só é válido dentro da Wiggers Academy.
+        <p style="text-align: center; font-size: 0.65rem; color: var(--cor-texto-cinza); margin-top: 15px; text-transform: uppercase; letter-spacing: 1px;">
+            Ative o GPS para validar sua presença na academia.
         </p>
 
     </div>
 
     <script>
         function fazerCheckin() {
-            // Aqui integraremos com o Firebase e Geolocalização
-            alert("Localizando academia... Presença confirmada! Bom treino, Daniel.");
+            // Lógica futura de integração
+            alert("Validando sua localização... Check-in realizado com sucesso! Bom treino.");
         }
     </script>
 
