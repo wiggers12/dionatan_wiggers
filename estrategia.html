@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MÓDULO 07 | ESTRATÉGIA E INTELIGÊNCIA | WIGGERS ACADEMY</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --cor-preto: #030303;
+            --cor-fundo-card: #0c0c0c;
+            --cor-ouro: #f5c542;
+            --cor-texto-claro: #ffffff;
+            --cor-texto-cinza: #a0a0a0;
+            --borda: rgba(255, 255, 255, 0.1);
+            --erro: #ff4d4d;
+            --info: #3498db;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body { 
+            background-color: var(--cor-preto); 
+            color: var(--cor-texto-claro); 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            line-height: 1.6; 
+            padding-bottom: 50px; 
+        }
+        
+        .top-bar { 
+            position: sticky; 
+            top: 0; 
+            background: rgba(3, 3, 3, 0.98); 
+            padding: 15px 20px; 
+            border-bottom: 1px solid var(--cor-ouro); 
+            z-index: 100; 
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between; 
+            backdrop-filter: blur(10px);
+        }
+
+        .btn-voltar { color: var(--cor-ouro); text-decoration: none; font-weight: 800; font-size: 0.8rem; }
+        
+        .container { max-width: 900px; margin: 30px auto; padding: 0 20px; }
+        
+        .header-main { text-align: center; margin-bottom: 50px; }
+        .header-main h1 { font-family: 'Space Grotesk'; font-size: 2.5rem; margin-bottom: 10px; }
+        .header-main p { color: var(--cor-texto-cinza); font-size: 1.1rem; }
+
+        .section-title { 
+            font-family: 'Space Grotesk'; 
+            color: var(--cor-ouro); 
+            font-size: 1.6rem; 
+            margin: 50px 0 25px; 
+            display: flex; 
+            align-items: center; 
+            gap: 15px; 
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .section-title::after { content: ''; flex: 1; height: 1px; background: var(--borda); }
+
+        .card-tecnico { 
+            background: var(--cor-fundo-card); 
+            border: 1px solid var(--borda); 
+            border-radius: 15px; 
+            padding: 25px; 
+            margin-bottom: 20px; 
+            transition: 0.3s; 
+        }
+        .card-tecnico:hover { border-color: var(--cor-ouro); }
+        .card-tecnico h3 { font-family: 'Space Grotesk'; color: var(--cor-ouro); margin-bottom: 15px; font-size: 1.25rem; display: flex; align-items: center; gap: 10px; }
+        
+        .lista-info { list-style: none; }
+        .lista-info li { margin-bottom: 15px; font-size: 0.95rem; color: var(--cor-texto-cinza); display: flex; align-items: flex-start; gap: 12px; }
+        .lista-info li b { color: #fff; min-width: 130px; display: inline-block; }
+
+        .box-destaque {
+            background: rgba(245, 197, 66, 0.05);
+            border: 1px dashed var(--cor-ouro);
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+        }
+
+        .alerta-mental {
+            background: rgba(52, 152, 219, 0.1);
+            border-left: 4px solid var(--info);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .btn-concluir {
+            background: var(--cor-ouro); 
+            color: #000; 
+            border: none; 
+            width: 100%; 
+            padding: 22px; 
+            border-radius: 14px; 
+            font-weight: 800; 
+            font-family: 'Space Grotesk'; 
+            cursor: pointer; 
+            margin-top: 40px;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: 0.3s;
+        }
+        .btn-concluir:hover { transform: scale(1.02); filter: brightness(1.1); }
+
+    </style>
+</head>
+<body>
+
+    <div class="top-bar">
+        <a href="painel.html" class="btn-voltar">← VOLTAR AO PAINEL</a>
+        <span style="font-size: 0.7rem; font-weight: 800; letter-spacing: 1px;">MÓDULO 07: ESTRATÉGIA</span>
+    </div>
+
+    <div class="container">
+        
+        <header class="header-main">
+            <h1>Inteligência de Combate</h1>
+            <p>Aprenda a pensar a luta, gerir sua energia e antecipar o oponente.</p>
+        </header>
+
+        <h2 class="section-title">1. Gestão e Energia</h2>
+        <div class="card-tecnico">
+            <h3>⚡ Economia de Gás</h3>
+            <ul class="lista-info">
+                <li><b>Isometria vs Movimento:</b> Evite travar posições sem objetivo. Segurar o kimono com força máxima o tempo todo cansa o antebraço e rouba sua explosão.</li>
+                <li><b>Respiração:</b> Use a respiração diafragmática. Expire no momento do esforço. Manter a calma reduz o consumo de oxigênio pelo cérebro.</li>
+                <li><b>O Relógio:</b> Aprenda a jogar com o tempo. Se estiver ganhando por pontos, não se arrisque em posições que permitam a inversão faltando pouco tempo.</li>
+            </ul>
+        </div>
+
+        <h2 class="section-title">2. Conexões e Fluxo (Flow)</h2>
+        <div class="card-tecnico">
+            <h3>🔄 Transições Fluidas</h3>
+            <p style="font-size: 0.9rem; color: var(--cor-texto-cinza); margin-bottom: 15px;">O Jiu-Jitsu não é uma foto, é um filme. Quem para na posição, vira alvo.</p>
+            <ul class="lista-info">
+                <li><b>Encadeamento:</b> Se uma raspagem falhou, conecte imediatamente com uma tentativa de triângulo ou omoplata. Não volte para a estaca zero.</li>
+                <li><b>Antecipação:</b> Leia os "sinais" do adversário. Se ele colocar a mão no seu joelho, ele quer passar. Antecipe o movimento bloqueando o ombro dele.</li>
+                <li><b>Aceitação Tática:</b> Às vezes, lutar desesperadamente contra uma passagem gasta todo o seu gás. Às vezes é melhor ceder o lado para repor a guarda imediatamente.</li>
+            </ul>
+        </div>
+
+        <h2 class="section-title">3. O Sistema de Dilemas</h2>
+        <div class="card-tecnico">
+            <h3>♟️ O Checkmate Tático</h3>
+            <p style="font-size: 0.9rem; color: var(--cor-texto-cinza); margin-bottom: 15px;">Ataque de forma que o oponente tenha que escolher entre duas opções ruins.</p>
+            <div class="box-destaque">
+                <p style="font-size: 0.9rem; font-weight: 700; color: var(--cor-ouro);">Exemplo do Triângulo:</p>
+                <p style="font-size: 0.85rem; color: var(--cor-texto-cinza);">Ao encaixar o triângulo, se o oponente esconder o braço para não ser finalizado, ele expõe o pescoço. Se ele focar em defender o pescoço, ele entrega o Armlock.</p>
+            </div>
+            <ul class="lista-info">
+                <li><b>Ataques Duplos:</b> Nunca ataque apenas uma coisa. Ataque o pescoço para abrir o braço. Ataque a raspagem para abrir a finalização.</li>
+            </ul>
+        </div>
+
+        <h2 class="section-title">4. Gestão de Crise e Resiliência</h2>
+        <div class="card-tecnico">
+            <h3>🛡️ Sobrevivência sob Pressão</h3>
+            <ul class="lista-info">
+                <li><b>Ponto de Calma:</b> Quando estiver por baixo em uma posição desconfortável, encontre um "espaço para respirar". Não exploda em pânico; espere o oponente se mover para atacar o espaço.</li>
+                <li><b>Frame (Moldura):</b> Use seus ossos, não seus músculos. Mantenha os braços alinhados (frames) para criar espaço sem se cansar.</li>
+                <li><b>Anatomia do Controle:</b> Quem controla a cabeça e o quadril, controla a luta. Proteja os seus e ataque os do oponente.</li>
+            </ul>
+        </div>
+
+        <h2 class="section-title">O Fator Psicológico</h2>
+        <div class="alerta-mental">
+            <h3 style="color: var(--info); margin-bottom: 10px;">🧠 O Ego e o Aprendizado</h3>
+            <p style="font-size: 0.9rem; color: var(--cor-texto-claro);">
+                No treino, bater (desistir) não é derrota, é <b>diagnóstico</b>. Se você foi finalizado, sua defesa falhou em algum ponto. O tatame é um laboratório; não tenha medo de testar posições novas e falhar.
+            </p>
+            <p style="font-size: 0.85rem; color: var(--cor-texto-cinza); margin-top: 10px;">
+                "Quem tem medo de bater, nunca aprende a se defender."
+            </p>
+        </div>
+
+        <div class="card-tecnico" style="border-style: dashed;">
+            <h3>Dicas de Combate contra Diferentes Biotipos</h3>
+            <ul class="lista-info">
+                <li><b>Contra mais Pesados:</b> Use distância e velocidade. Nunca aceite o peso morto por cima. Foque em ataques de costas.</li>
+                <li><b>Contra mais Rápidos:</b> Use pressão e fechamento de espaços. Tire a mobilidade do quadril dele.</li>
+            </ul>
+        </div>
+
+        <button class="btn-concluir" onclick="window.location.href='painel.html'">
+            CONCLUIR MÓDULO 07 E EVOLUIR
+        </button>
+    </div>
+
+</body>
+</html>
