@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MÓDULO 06 | REGRAS E FINALIZAÇÃO | WIGGERS ACADEMY</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --cor-preto: #030303;
+            --cor-fundo-card: #0c0c0c;
+            --cor-ouro: #f5c542;
+            --cor-texto-claro: #ffffff;
+            --cor-texto-cinza: #a0a0a0;
+            --borda: rgba(255, 255, 255, 0.1);
+            --erro: #ff4d4d;
+            --sucesso: #2ecc71;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body { 
+            background-color: var(--cor-preto); 
+            color: var(--cor-texto-claro); 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            line-height: 1.6; 
+            padding-bottom: 50px; 
+        }
+        
+        /* Cabeçalho */
+        .top-bar { 
+            position: sticky; 
+            top: 0; 
+            background: rgba(3, 3, 3, 0.98); 
+            padding: 15px 20px; 
+            border-bottom: 1px solid var(--cor-ouro); 
+            z-index: 100; 
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between; 
+            backdrop-filter: blur(10px);
+        }
+
+        .btn-voltar { color: var(--cor-ouro); text-decoration: none; font-weight: 800; font-size: 0.8rem; }
+        
+        .container { max-width: 900px; margin: 30px auto; padding: 0 20px; }
+        
+        /* Títulos */
+        .header-main { text-align: center; margin-bottom: 50px; }
+        .header-main h1 { font-family: 'Space Grotesk'; font-size: 2.5rem; margin-bottom: 10px; }
+        .header-main p { color: var(--cor-texto-cinza); font-size: 1.1rem; }
+
+        .section-title { 
+            font-family: 'Space Grotesk'; 
+            color: var(--cor-ouro); 
+            font-size: 1.6rem; 
+            margin: 50px 0 25px; 
+            display: flex; 
+            align-items: center; 
+            gap: 15px; 
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .section-title::after { content: ''; flex: 1; height: 1px; background: var(--borda); }
+
+        /* Cards e Grid */
+        .grid-pontos { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; margin-bottom: 30px; }
+        
+        .ponto-card { 
+            background: linear-gradient(145deg, #0c0c0c, #151515);
+            border: 1px solid var(--borda); 
+            padding: 25px; 
+            border-radius: 16px; 
+            text-align: center; 
+            transition: 0.3s;
+        }
+        .ponto-card:hover { border-color: var(--cor-ouro); transform: translateY(-5px); }
+        .ponto-card h4 { color: var(--cor-ouro); font-size: 2.5rem; margin-bottom: 5px; font-family: 'Space Grotesk'; }
+        .ponto-card p { font-size: 0.75rem; font-weight: 800; text-transform: uppercase; color: var(--cor-texto-cinza); letter-spacing: 0.5px; }
+
+        .card-tecnico { 
+            background: var(--cor-fundo-card); 
+            border: 1px solid var(--borda); 
+            border-radius: 15px; 
+            padding: 25px; 
+            margin-bottom: 20px; 
+            transition: 0.3s; 
+        }
+        .card-tecnico:hover { border-color: var(--cor-ouro); }
+        .card-tecnico h3 { font-family: 'Space Grotesk'; color: var(--cor-ouro); margin-bottom: 15px; font-size: 1.25rem; display: flex; align-items: center; gap: 10px; }
+        
+        /* Listas */
+        .lista-info { list-style: none; }
+        .lista-info li { margin-bottom: 15px; font-size: 0.95rem; color: var(--cor-texto-cinza); display: flex; align-items: flex-start; gap: 12px; }
+        .lista-info li b { color: #fff; min-width: 110px; display: inline-block; }
+
+        /* Alertas e Especiais */
+        .alerta { 
+            background: rgba(255, 77, 77, 0.08); 
+            border-left: 4px solid var(--erro); 
+            padding: 25px; 
+            border-radius: 12px; 
+            margin: 25px 0; 
+        }
+
+        .hierarquia-vitoria {
+            font-family: 'Space Grotesk'; 
+            font-size: 0.95rem; 
+            display: flex; 
+            flex-direction: column; 
+            gap: 12px;
+            margin-top: 15px;
+        }
+        .item-hierarquia {
+            display: flex; 
+            justify-content: space-between; 
+            border-bottom: 1px solid var(--borda); 
+            padding-bottom: 8px;
+            align-items: center;
+        }
+
+        /* Botão Final */
+        .btn-concluir {
+            background: var(--cor-ouro); 
+            color: #000; 
+            border: none; 
+            width: 100%; 
+            padding: 22px; 
+            border-radius: 14px; 
+            font-weight: 800; 
+            font-family: 'Space Grotesk'; 
+            cursor: pointer; 
+            margin-top: 40px;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: 0.3s;
+        }
+        .btn-concluir:hover { transform: scale(1.02); filter: brightness(1.1); }
+
+    </style>
+</head>
+<body>
+
+    <div class="top-bar">
+        <a href="painel.html" class="btn-voltar">← VOLTAR AO PAINEL</a>
+        <span style="font-size: 0.7rem; font-weight: 800; letter-spacing: 1px;">CURSO DE JIU-JITSU</span>
+    </div>
+
+    <div class="container">
+        
+        <header class="header-main">
+            <h1>Módulo 06: Como Vencer</h1>
+            <p>Domine o sistema de pontuação e a arte da finalização técnica.</p>
+        </header>
+
+        <h2 class="section-title">Sistema de Pontos (IBJJF)</h2>
+        <div class="grid-pontos">
+            <div class="ponto-card"><h4>2</h4><p>Queda, Raspagem ou Joelho na Barriga</p></div>
+            <div class="ponto-card"><h4>3</h4><p>Passagem de Guarda</p></div>
+            <div class="ponto-card"><h4>4</h4><p>Montada ou Pegada de Costas</p></div>
+        </div>
+
+        <h2 class="section-title">Formas de Vitória</h2>
+        <div class="card-tecnico">
+            <h3>⚔️ 1. Finalização (Submissão)</h3>
+            <p style="font-size: 0.9rem; color: var(--cor-texto-cinza);">É a vitória absoluta. Quando o adversário desiste por pressão física ou estrangulamento. Ocorre através do "Tap" (bater com a mão ou pé).</p>
+        </div>
+        
+        <div class="card-tecnico">
+            <h3>🏆 2. Pontos e Vantagens</h3>
+            <p style="font-size: 0.9rem; color: var(--cor-texto-cinza);">Se o tempo acabar, vence quem somar mais pontos. Em caso de empate nos pontos, vencem as <b>Vantagens</b> (quase-finalizações ou quase-pontos) e, por fim, as punições.</p>
+        </div>
+
+        <h2 class="section-title">Arsenal de Finalizações</h2>
+        <div class="card-tecnico">
+            <h3>Estrangulamentos (Tronco e Pescoço)</h3>
+            <ul class="lista-info">
+                <li><b>Mata-Leão:</b> Estrangulamento pelas costas sem uso do kimono.</li>
+                <li><b>Ezequiel:</b> Pressão na traqueia usando a própria manga (com kimono).</li>
+                <li><b>Triângulo:</b> Estrangulamento usando as pernas e o braço do oponente.</li>
+                <li><b>Guilhotina:</b> Ataque frontal ao pescoço, comum em defesas de queda.</li>
+                <li><b>Katagatame:</b> Sufocamento usando o ombro do adversário contra o próprio pescoço dele.</li>
+            </ul>
+        </div>
+
+        <div class="card-tecnico">
+            <h3>Ataques de Articulação</h3>
+            <ul class="lista-info">
+                <li><b>Armlock:</b> Hiperextensão do cotovelo.</li>
+                <li><b>Kimura:</b> Rotação forçada do ombro para trás.</li>
+                <li><b>Americana:</b> Rotação do ombro para frente (comum na montada).</li>
+                <li><b>Omoplata:</b> Chave de ombro usando as pernas.</li>
+                <li><b>Botinha:</b> A chave de pé reta, essencial para defesas de guarda.</li>
+                <li><b>Leglock:</b> Ataques ao joelho e tornozelo (regras variam por faixa).</li>
+                <li><b>Kimura da Guarda:</b> Usar a alavanca de braço para raspar ou finalizar.</li>
+            </ul>
+        </div>
+
+        <h2 class="section-title">Critérios de Desempate</h2>
+        <div class="card-tecnico">
+            <h3>Vantagens: O "Quase" vale a vitória</h3>
+            <p style="font-size: 0.9rem; color: var(--cor-texto-cinza); margin-bottom: 15px;">
+                Quando não há finalização nem diferença de pontos, o árbitro analisa as vantagens:
+            </p>
+            <ul class="lista-info">
+                <li>💡 <b>Finalização:</b> Ataque que ofereceu perigo real de desistência.</li>
+                <li>💡 <b>Posição:</b> Chegar em uma posição de ponto mas não conseguir segurar por 3 segundos.</li>
+            </ul>
+        </div>
+
+        <div class="card-tecnico" style="border-color: #ff9800;">
+            <h3>Punições e Combatividade</h3>
+            <p style="font-size: 0.9rem; color: var(--cor-texto-cinza);">
+                O Jiu-Jitsu premia a ofensividade. O lutador que "trava" a luta (Stalling) recebe punições que se tornam pontos para o adversário em uma escala crescente.
+            </p>
+        </div>
+
+        <h2 class="section-title">Decisões e Casos Especiais</h2>
+        <div class="card-tecnico">
+            <h3>1. Vitória por Decisão dos Juízes</h3>
+            <p style="font-size: 0.9rem; color: var(--cor-texto-cinza);">
+                Em caso de empate total (Pontos, Vantagens e Punições), cabe aos juízes decidir o vencedor.
+            </p>
+            <ul class="lista-info" style="margin-top:10px;">
+                <li>⚖️ <b>Critério:</b> Será escolhido quem foi mais ofensivo e dominou o centro do tatame.</li>
+            </ul>
+        </div>
+
+        <div class="alerta">
+            <h3 style="color: #ff4d4d; margin-bottom: 10px;">2. Excesso de Punições e Desclassificação</h3>
+            <ul class="lista-info" style="color: #fff; margin-top: 10px;">
+                <li>⚠️ <b>4ª Punição:</b> Gera desclassificação imediata (DQ).</li>
+                <li>🚨 <b>Desclassificação Dupla:</b> Se ambos atingirem a 4ª punição simultaneamente, ambos perdem a luta.</li>
+            </ul>
+        </div>
+
+        <div class="card-tecnico" style="background: rgba(245, 197, 66, 0.05);">
+            <h3 style="font-size: 1rem;">Hierarquia Oficial de Resultado</h3>
+            <div class="hierarquia-vitoria">
+                <div class="item-hierarquia"><span>1º FINALIZAÇÃO</span> <span style="color: var(--cor-ouro); font-weight: 800;">VITÓRIA TOTAL</span></div>
+                <div class="item-hierarquia"><span>2º MAIOR PONTUAÇÃO</span> <span>SOMA DE PONTOS</span></div>
+                <div class="item-hierarquia"><span>3º MAIOR VANTAGENS</span> <span>DESEMPATE TÉCNICO</span></div>
+                <div class="item-hierarquia"><span>4º MENOR PUNIÇÕES</span> <span>DISCIPLINA</span></div>
+                <div class="item-hierarquia"><span>5º DECISÃO JUÍZES</span> <span>COMBATIVIDADE</span></div>
+            </div>
+        </div>
+
+        <h2 class="section-title">Infrações Graves</h2>
+        <div class="alerta">
+            <h3 style="color: var(--erro); margin-bottom: 15px;">O que gera Desclassificação (DQ):</h3>
+            <ul class="lista-info" style="color: #fff;">
+                <li>❌ <b>Slam (Bate-estaca):</b> Arremessar o oponente para sair de defesas.</li>
+                <li>❌ <b>Manipulação de Dedos:</b> Agarrar menos de 3 dedos do oponente.</li>
+                <li>❌ <b>Fuga de Área:</b> Sair do tatame para evitar uma finalização encaixada.</li>
+                <li>❌ <b>Indisciplina:</b> Desrespeito ao árbitro ou atitude antidesportiva.</li>
+            </ul>
+        </div>
+
+        <button class="btn-concluir" onclick="window.location.href='painel.html'">
+            CONCLUIR MÓDULO 06 E VOLTAR
+        </button>
+    </div>
+
+</body>
+</html>
