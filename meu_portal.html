@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PORTAL DO ALUNO | WIGGERS ACADEMY</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --cor-preto: #030303;
+            --cor-fundo-card: #0c0c0c;
+            --cor-ouro: #f5c542;
+            --cor-texto-claro: #ffffff;
+            --cor-texto-cinza: #a0a0a0;
+            --borda: rgba(255, 255, 255, 0.1);
+            --sucesso: #2ecc71;
+            --erro: #ff4d4d;
+            --azul: #3498db;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background-color: var(--cor-preto); color: var(--cor-texto-claro); font-family: 'Plus Jakarta Sans', sans-serif; padding-bottom: 50px; }
+
+        .top-bar { position: sticky; top: 0; background: rgba(3, 3, 3, 0.98); padding: 15px 20px; border-bottom: 1px solid var(--cor-ouro); z-index: 100; display: flex; align-items: center; justify-content: space-between; backdrop-filter: blur(10px); }
+        .btn-voltar { color: var(--cor-ouro); text-decoration: none; font-weight: 800; font-size: 0.8rem; }
+        
+        .container { max-width: 800px; margin: 30px auto; padding: 0 20px; }
+
+        /* PERFIL TÉCNICO */
+        .card-perfil { background: linear-gradient(145deg, #0f0f0f, #050505); border: 1px solid var(--borda); border-radius: 24px; padding: 30px; margin-bottom: 25px; text-align: center; }
+        .faixa-visual { width: 100%; height: 40px; background: #fff; border-radius: 4px; margin: 15px 0; position: relative; border-bottom: 4px solid #ddd; display: flex; align-items: center; justify-content: flex-end; padding-right: 60px; }
+        .ponteira-preta { width: 100px; height: 100%; background: #111; position: absolute; right: 40px; display: flex; align-items: center; justify-content: space-around; padding: 0 5px; }
+        .grau { width: 8px; height: 25px; background: #fff; border-radius: 2px; }
+
+        /* GRID DE MÉTRICAS */
+        .grid-metricas { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-bottom: 25px; }
+        .metrica-item { background: var(--cor-fundo-card); border: 1px solid var(--borda); padding: 20px; border-radius: 18px; }
+        .metrica-item span { font-size: 0.65rem; color: var(--cor-texto-cinza); text-transform: uppercase; font-weight: 800; letter-spacing: 1px; display: block; margin-bottom: 8px; }
+        .metrica-item h4 { font-family: 'Space Grotesk'; font-size: 1.5rem; color: #fff; }
+        .metrica-item small { color: var(--cor-ouro); font-size: 0.7rem; font-weight: 700; }
+
+        /* SEÇÃO FINANCEIRA DETALHADA */
+        .card-financeiro { background: var(--cor-fundo-card); border: 1px solid var(--borda); border-radius: 20px; padding: 20px; margin-bottom: 25px; display: flex; align-items: center; justify-content: space-between; }
+        .status-pill { padding: 6px 14px; border-radius: 50px; font-size: 0.7rem; font-weight: 800; text-transform: uppercase; }
+        .pago { background: rgba(46, 204, 113, 0.1); color: var(--sucesso); border: 1px solid var(--sucesso); }
+        .atrasado { background: rgba(255, 77, 77, 0.1); color: var(--erro); border: 1px solid var(--erro); }
+
+        /* HISTÓRICO DE AULAS */
+        .secao-titulo { font-family: 'Space Grotesk'; font-size: 1.1rem; color: var(--cor-ouro); margin: 30px 0 15px; display: flex; justify-content: space-between; align-items: center; }
+        .lista-historico { background: var(--cor-fundo-card); border: 1px solid var(--borda); border-radius: 20px; overflow: hidden; }
+        .historico-item { padding: 15px 20px; border-bottom: 1px solid var(--borda); display: flex; justify-content: space-between; align-items: center; }
+        .historico-item:last-child { border-bottom: none; }
+        .historico-info h5 { font-size: 0.9rem; color: #fff; }
+        .historico-info p { font-size: 0.7rem; color: var(--cor-texto-cinza); }
+        .tag-presenca { background: rgba(52, 152, 219, 0.1); color: var(--azul); font-size: 0.6rem; font-weight: 800; padding: 4px 8px; border-radius: 4px; }
+
+        /* BOTÃO DE AÇÃO */
+        .btn-checkin { background: var(--cor-ouro); color: #000; border: none; width: 100%; padding: 20px; border-radius: 16px; font-weight: 800; font-family: 'Space Grotesk'; cursor: pointer; font-size: 1rem; text-transform: uppercase; letter-spacing: 1px; transition: 0.3s; margin-top: 20px; box-shadow: 0 10px 20px rgba(245, 197, 66, 0.1); }
+        .btn-checkin:hover { transform: translateY(-2px); filter: brightness(1.1); }
+
+    </style>
+</head>
+<body>
+
+    <div class="top-bar">
+        <a href="painel.html" class="btn-voltar">← VOLTAR AO PAINEL</a>
+        <span style="font-size: 0.7rem; font-weight: 800; letter-spacing: 1px;">CENTRAL DO ALUNO</span>
+    </div>
+
+    <div class="container">
+        
+        <div class="card-perfil">
+            <h2 style="font-family: 'Space Grotesk'; margin-bottom: 5px;">Daniel Wiggers</h2>
+            <p style="color: var(--cor-texto-cinza); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 2px;">Faixa Branca</p>
+            
+            <div class="faixa-visual">
+                <div class="ponteira-preta">
+                    <div class="grau"></div>
+                    <div class="grau"></div>
+                    <div class="grau"></div>
+                    </div>
+            </div>
+            
+            <p style="font-size: 0.7rem; color: var(--cor-texto-cinza);">Última graduação: <b>12/10/2025</b></p>
+        </div>
+
+        <div class="card-financeiro">
+            <div>
+                <p style="font-size: 0.65rem; color: var(--cor-texto-cinza); font-weight: 800; text-transform: uppercase; margin-bottom: 5px;">Sua Mensalidade</p>
+                <p style="font-size: 0.9rem; font-weight: 600;">Próximo Vencimento: <span style="color: #fff;">10/02/2026</span></p>
+            </div>
+            <div class="status-pill pago">PAGAMENTO EM DIA</div>
+        </div>
+
+        <div class="grid-metricas">
+            <div class="metrica-item">
+                <span>Total de Aulas</span>
+                <h4>128</h4>
+                <small>+12 este mês</small>
+            </div>
+            <div class="metrica-item">
+                <span>Frequência</span>
+                <h4>85%</h4>
+                <small>Excelente foco</small>
+            </div>
+        </div>
+
+        <div class="metrica-item" style="margin-bottom: 25px;">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                <span>Progresso para o 4º Grau</span>
+                <span style="color: var(--cor-ouro);">75%</span>
+            </div>
+            <div style="width: 100%; height: 8px; background: rgba(255,255,255,0.05); border-radius: 10px; overflow: hidden;">
+                <div style="width: 75%; height: 100%; background: var(--cor-ouro);"></div>
+            </div>
+            <p style="font-size: 0.65rem; color: var(--cor-texto-cinza); margin-top: 10px;">Faltam aproximadamente 12 aulas para análise técnica.</p>
+        </div>
+
+        <div class="secao-titulo">
+            Histórico de Treinos
+            <a href="#" style="color: var(--cor-ouro); font-size: 0.7rem; text-decoration: none; font-weight: 800;">VER TUDO</a>
+        </div>
+        
+        <div class="lista-historico">
+            <div class="historico-item">
+                <div class="historico-info">
+                    <h5>Aula de Jiu-Jitsu (Fundamentos)</h5>
+                    <p>Quinta-feira, 08 de Janeiro • 19:00</p>
+                </div>
+                <div class="tag-presenca">PRESENÇA</div>
+            </div>
+            <div class="historico-item">
+                <div class="historico-info">
+                    <h5>Aula de Jiu-Jitsu (Avançado)</h5>
+                    <p>Terça-feira, 06 de Janeiro • 19:00</p>
+                </div>
+                <div class="tag-presenca">PRESENÇA</div>
+            </div>
+            <div class="historico-item">
+                <div class="historico-info">
+                    <h5>Treino Livre (Open Mat)</h5>
+                    <p>Sábado, 03 de Janeiro • 10:00</p>
+                </div>
+                <div class="tag-presenca">PRESENÇA</div>
+            </div>
+        </div>
+
+        <button class="btn-checkin" onclick="fazerCheckin()">
+            BATER PONTO (CHECK-IN)
+        </button>
+        <p style="text-align: center; font-size: 0.6rem; color: var(--cor-texto-cinza); margin-top: 15px; text-transform: uppercase; letter-spacing: 1px;">
+            O check-in só é válido dentro da Wiggers Academy.
+        </p>
+
+    </div>
+
+    <script>
+        function fazerCheckin() {
+            // Aqui integraremos com o Firebase e Geolocalização
+            alert("Localizando academia... Presença confirmada! Bom treino, Daniel.");
+        }
+    </script>
+
+</body>
+</html>
