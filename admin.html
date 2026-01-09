@@ -19,11 +19,7 @@
             --cor-sucesso: #00ff00;
         }
 
-        * { 
-            margin: 0; 
-            padding: 0; 
-            box-sizing: border-box; 
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body { 
             background-color: var(--cor-preto); 
@@ -47,6 +43,51 @@
             color: var(--cor-ouro);
         }
 
+        /* SEÇÃO GERENCIAR VÍDEO */
+        .video-manager {
+            background: var(--cor-fundo-card);
+            border: 1px solid var(--cor-ouro);
+            padding: 25px;
+            border-radius: 20px;
+            margin-bottom: 30px;
+        }
+
+        .video-manager h3 {
+            color: var(--cor-ouro);
+            margin-bottom: 15px;
+            font-family: 'Space Grotesk';
+            text-transform: uppercase;
+            font-size: 1rem;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        .video-manager input {
+            flex: 1;
+            background: #151515;
+            border: 1px solid var(--borda);
+            padding: 12px;
+            border-radius: 10px;
+            color: white;
+            outline: none;
+        }
+
+        .btn-salvar {
+            background: var(--cor-ouro);
+            color: black;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 10px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .btn-salvar:hover { opacity: 0.9; transform: scale(1.02); }
+
         /* CARDS DE ESTATÍSTICAS */
         .stats-grid {
             display: grid;
@@ -67,16 +108,12 @@
             color: var(--cor-texto-cinza);
             font-size: 0.8rem;
             text-transform: uppercase;
-            letter-spacing: 1px;
             margin-bottom: 10px;
         }
 
-        .stat-card h2 {
-            font-size: 2.5rem;
-            font-family: 'Space Grotesk';
-        }
+        .stat-card h2 { font-size: 2.5rem; font-family: 'Space Grotesk'; }
 
-        /* TABELA DE ALUNOS */
+        /* TABELA */
         .table-container {
             background: var(--cor-fundo-card);
             border: 1px solid var(--borda);
@@ -85,46 +122,13 @@
             width: 100%;
         }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            text-align: left;
-        }
+        table { width: 100%; border-collapse: collapse; text-align: left; }
+        thead { background: #151515; }
+        th { padding: 20px; font-size: 0.75rem; color: var(--cor-ouro); text-transform: uppercase; }
+        td { padding: 15px 20px; border-bottom: 1px solid var(--borda); font-size: 0.9rem; vertical-align: middle; }
 
-        thead {
-            background: #151515;
-        }
-
-        th {
-            padding: 20px;
-            font-size: 0.75rem;
-            color: var(--cor-ouro);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        td {
-            padding: 15px 20px;
-            border-bottom: 1px solid var(--borda);
-            font-size: 0.9rem;
-            vertical-align: middle;
-        }
-
-        .avatar-admin {
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 2px solid var(--cor-ouro);
-        }
-
-        .status-dot {
-            height: 8px;
-            width: 8px;
-            border-radius: 50%;
-            display: inline-block;
-            margin-right: 8px;
-        }
+        .avatar-admin { width: 45px; height: 45px; border-radius: 50%; object-fit: cover; border: 2px solid var(--cor-ouro); }
+        .status-dot { height: 8px; width: 8px; border-radius: 50%; display: inline-block; margin-right: 8px; }
 
         .btn-excluir {
             background: transparent;
@@ -135,51 +139,36 @@
             cursor: pointer;
             font-weight: 700;
             font-size: 0.7rem;
-            transition: 0.3s;
         }
 
-        .btn-excluir:hover {
-            background: var(--cor-erro);
-            color: white;
-        }
+        .btn-excluir:hover { background: var(--cor-erro); color: white; }
 
-        .whatsapp-link {
-            color: var(--cor-ouro);
-            text-decoration: none;
-            font-weight: 700;
-        }
-
-        /* RESPONSIVIDADE */
         @media (max-width: 900px) {
+            .input-group { flex-direction: column; }
             table thead { display: none; }
-            table tr { 
-                display: block; 
-                border-bottom: 1px solid var(--cor-ouro); 
-                padding: 15px 0;
-            }
-            table td { 
-                display: flex; 
-                justify-content: space-between; 
-                align-items: center; 
-                padding: 8px 20px;
-                border: none;
-            }
-            table td::before {
-                content: attr(data-label);
-                font-weight: 800;
-                font-size: 0.7rem;
-                color: var(--cor-ouro);
-                text-transform: uppercase;
-            }
+            table tr { display: block; border-bottom: 1px solid var(--cor-ouro); padding: 15px 0; }
+            table td { display: flex; justify-content: space-between; align-items: center; padding: 8px 20px; border: none; }
+            table td::before { content: attr(data-label); font-weight: 800; font-size: 0.7rem; color: var(--cor-ouro); text-transform: uppercase; }
         }
     </style>
 </head>
 <body>
 
     <header>
-        <h1>Painel de Controle Administrativo</h1>
-        <button onclick="location.reload()" style="background: var(--cor-ouro); border: none; padding: 10px 20px; border-radius: 10px; font-weight: 800; cursor: pointer;">ATUALIZAR LISTA</button>
+        <h1>WIGGERS ACADEMY ADMIN</h1>
+        <button onclick="location.reload()" style="background: var(--cor-ouro); border: none; padding: 10px 20px; border-radius: 10px; font-weight: 800; cursor: pointer;">ATUALIZAR PAINEL</button>
     </header>
+
+    <section class="video-manager">
+        <h3>📹 Gerenciar Vídeo em Destaque (App)</h3>
+        <div class="input-group">
+            <input type="text" id="video-input" placeholder="Cole o Link ou ID do vídeo do YouTube aqui...">
+            <button class="btn-salvar" onclick="atualizarVideoDestaque()">SALVAR VÍDEO</button>
+        </div>
+        <p style="font-size: 0.7rem; color: var(--cor-texto-cinza); margin-top: 10px;">
+            Dica: Você pode colar o link inteiro (ex: https://www.youtube.com/watch?v=...) que o sistema identifica o ID.
+        </p>
+    </section>
 
     <div class="stats-grid">
         <div class="stat-card">
@@ -200,21 +189,19 @@
                     <th>Nome do Aluno</th>
                     <th>Graduação</th>
                     <th>WhatsApp</th>
-                    <th>Visto por Último</th>
+                    <th>Último Acesso</th>
                     <th>Status</th>
                     <th>Gerenciar</th>
                 </tr>
             </thead>
-            <tbody id="lista-alunos">
-                </tbody>
+            <tbody id="lista-alunos"></tbody>
         </table>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getDatabase, ref, onValue, remove } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+        import { getDatabase, ref, onValue, remove, set } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-        // Configurações do seu Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyBod8YVf5pKWI98m9rRR8axokDkNMlXX-k",
             authDomain: "aviatordaniel100x.firebaseapp.com",
@@ -225,13 +212,35 @@
             appId: "1:169015417803:web:ce4aa4f9b77d5ddb07344e"
         };
 
-        // Inicializar Firebase
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
 
-        const listaAlunosUI = document.getElementById('lista-alunos');
+        // FUNÇÃO PARA ATUALIZAR VÍDEO NO FIREBASE
+        window.atualizarVideoDestaque = function() {
+            let input = document.getElementById('video-input').value.trim();
+            let videoId = "";
 
-        // Função para carregar dados em tempo real
+            if(!input) return alert("Por favor, insira um link ou ID!");
+
+            // Lógica para extrair ID do YouTube
+            if(input.includes("v=")) {
+                videoId = input.split("v=")[1].split("&")[0];
+            } else if(input.includes("youtu.be/")) {
+                videoId = input.split("youtu.be/")[1].split("?")[0];
+            } else {
+                videoId = input; // assume que já é o ID
+            }
+
+            set(ref(db, 'configuracoes/video_destaque'), videoId)
+            .then(() => {
+                alert("Vídeo atualizado com sucesso no App de todos os alunos!");
+                document.getElementById('video-input').value = "";
+            })
+            .catch((e) => alert("Erro ao salvar: " + e.message));
+        };
+
+        // CARREGAR ALUNOS
+        const listaAlunosUI = document.getElementById('lista-alunos');
         onValue(ref(db, 'alunos'), (snapshot) => {
             if (snapshot.exists()) {
                 listaAlunosUI.innerHTML = "";
@@ -244,7 +253,6 @@
                     const data = childSnapshot.val();
                     countTotal++;
 
-                    // Verificar se o aluno esteve ativo nos últimos 5 minutos
                     const ultimoTimestamp = data.ultimoAcessoTimestamp || 0;
                     const estaOnline = (agora - ultimoTimestamp) < (5 * 60 * 1000);
                     if(estaOnline) countOnline++;
@@ -256,12 +264,12 @@
                         <td data-label="Foto"><img src="${foto}" class="avatar-admin"></td>
                         <td data-label="Nome"><b>${data.nome}</b></td>
                         <td data-label="Graduação">${data.graduacao}</td>
-                        <td data-label="WhatsApp"><a href="https://wa.me/${data.telefone}" target="_blank" class="whatsapp-link">${data.telefone}</a></td>
+                        <td data-label="WhatsApp"><a href="https://wa.me/${data.telefone}" target="_blank" style="color:var(--cor-ouro); text-decoration:none;">${data.telefone}</a></td>
                         <td data-label="Último Acesso">${data.dataUltimoAcesso || data.data}</td>
                         <td data-label="Status">
                             <span class="status-dot" style="background: ${estaOnline ? 'var(--cor-sucesso)' : '#555'}"></span>
-                            <span style="color: ${estaOnline ? 'var(--cor-sucesso)' : '#aaa'}; font-weight: bold; font-size: 0.7rem;">
-                                ${estaOnline ? 'ATIVO AGORA' : 'OFFLINE'}
+                            <span style="font-size:0.7rem; font-weight:bold; color:${estaOnline ? 'var(--cor-sucesso)' : '#888'}">
+                                ${estaOnline ? 'ATIVO' : 'OFF'}
                             </span>
                         </td>
                         <td data-label="Gerenciar">
@@ -273,23 +281,14 @@
 
                 document.getElementById('total-alunos').innerText = countTotal;
                 document.getElementById('total-online').innerText = countOnline;
-            } else {
-                listaAlunosUI.innerHTML = "<tr><td colspan='7' style='text-align:center; padding: 50px;'>Nenhum aluno cadastrado.</td></tr>";
-                document.getElementById('total-alunos').innerText = "0";
-                document.getElementById('total-online').innerText = "0";
             }
         });
 
-        // Função Global para Deletar Aluno
         window.apagarRegistro = function(id, nome) {
-            if(confirm(`Professor, deseja realmente excluir o aluno ${nome}?\nEsta ação é irreversível.`)) {
-                const alunoRef = ref(db, 'alunos/' + id);
-                remove(alunoRef)
-                .then(() => alert("Aluno removido com sucesso!"))
-                .catch((erro) => alert("Erro ao excluir: " + erro.message));
+            if(confirm(`Excluir o aluno ${nome}?`)) {
+                remove(ref(db, 'alunos/' + id)).then(() => alert("Removido!"));
             }
         };
-
     </script>
 </body>
 </html>
