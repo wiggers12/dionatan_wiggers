@@ -2,6 +2,14 @@
 <html lang="pt-BR">
 
 <head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-VNFTLLKSWR"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-VNFTLLKSWR');
+    </script>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Connect Car | Assistência Veicular 24 Horas</title>
@@ -504,7 +512,6 @@
 
 <body>
 
-    <!-- Cabeçalho -->
     <header>
         <div class="container">
             <nav>
@@ -524,7 +531,6 @@
         </div>
     </header>
 
-    <!-- Seção Hero -->
     <section class="hero" id="inicio">
         <div class="container">
             <div>
@@ -546,10 +552,9 @@
         </div>
     </section>
 
-    <!-- Seção de Serviços -->
     <section id="servicos">
         <div class="container">
-            <h2 class="titulo">Nuestros Serviços</h2>
+            <h2 class="titulo">Nossos Serviços</h2>
             <p class="sub">Tudo o que você precisa em um único aplicativo.</p>
             <div class="grid">
                 <div class="card">
@@ -586,7 +591,6 @@
         </div>
     </section>
 
-    <!-- Seção de Estatísticas -->
     <section class="stats">
         <div class="container">
             <h2 class="titulo" style="color:white;">Números que inspiram confiança</h2>
@@ -612,7 +616,6 @@
         </div>
     </section>
 
-    <!-- Seção Como Funciona -->
     <section id="como">
         <div class="container">
             <h2 class="titulo">Como funciona</h2>
@@ -642,7 +645,6 @@
         </div>
     </section>
 
-    <!-- Seção CTA Intermediária -->
     <section style="background:#0066ff; color:white;">
         <div class="container">
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:60px; align-items:center;" class="hero .container">
@@ -660,7 +662,6 @@
         </div>
     </section>
 
-    <!-- Por que escolher -->
     <section>
         <div class="container">
             <h2 class="titulo">Por que escolher a Connect Car?</h2>
@@ -685,7 +686,6 @@
         </div>
     </section>
 
-    <!-- Depoimentos -->
     <section style="background:#f7f9fc;">
         <div class="container">
             <h2 class="titulo">O que nossos clientes dizem</h2>
@@ -713,7 +713,6 @@
         </div>
     </section>
 
-    <!-- FAQ -->
     <section>
         <div class="container">
             <h2 class="titulo">Perguntas Frequentes</h2>
@@ -737,7 +736,6 @@
         </div>
     </section>
 
-    <!-- Seção de Contato -->
     <section id="contato" style="background:#081120; color:white;">
         <div class="container">
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:60px; align-items:center;" class="hero .container">
@@ -761,7 +759,6 @@
         </div>
     </section>
 
-    <!-- Rodapé -->
     <footer>
         <div class="container">
             <div class="footer-grid">
@@ -797,15 +794,10 @@
         </div>
     </footer>
 
-    <!-- Botões Fixos -->
     <a href="https://wa.me/5551989378751" class="whatsapp" target="_blank">💬</a>
     <button id="topo">↑</button>
 
-    <!-- ==========================================================================
-         SCRIPT JAVASCRIPT
-         ========================================================================== */ -->
     <script>
-        /* MENU AO ROLAR */
         const header = document.querySelector("header");
         window.addEventListener("scroll", () => {
             if (window.scrollY > 60) {
@@ -817,7 +809,6 @@
             }
         });
 
-        /* BOTÃO TOPO */
         const btnTopo = document.getElementById("topo");
         window.addEventListener("scroll", () => {
             if (window.scrollY > 500) {
@@ -828,13 +819,9 @@
         });
 
         btnTopo.onclick = () => {
-            window.scrollTo({
-                top: 0,
-                behavior: "smooth"
-            });
+            window.scrollTo({ top: 0, behavior: "smooth" });
         };
 
-        /* CONTADORES ANIME */
         const numeros = document.querySelectorAll(".numero");
         const observador = new IntersectionObserver((entradas) => {
             entradas.forEach((entrada) => {
@@ -843,7 +830,6 @@
                     const total = +numero.dataset.num;
                     let atual = 0;
                     const incremento = Math.max(1, Math.floor(total / 120));
-
                     const timer = setInterval(() => {
                         atual += incremento;
                         if (atual >= total) {
@@ -859,7 +845,6 @@
         });
         numeros.forEach(n => observador.observe(n));
 
-        /* ANIMAÇÃO DOS CARDS (Scroll Fade-In) */
         const elementos = document.querySelectorAll(".card, .step, .phone, .hero h1, .hero p, .hero-buttons");
         const aparecer = new IntersectionObserver((entries) => {
             entries.forEach((entry) => {
@@ -874,7 +859,6 @@
             aparecer.observe(el);
         });
 
-        /* PARALLAX HERO */
         window.addEventListener("scroll", () => {
             const hero = document.querySelector(".hero");
             hero.style.backgroundPositionY = window.scrollY * 0.45 + "px";
