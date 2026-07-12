@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Marido de Aluguel em Porto Alegre</title>
+
+  <meta
+    name="description"
+    content="Serviços de elétrica, instalações, marcenaria, vidraçaria, gesso, hidráulica e reparos em geral. Atendimento em Porto Alegre e região."
+  >
+
+  <style>
+    :root {
+      --azul: #071a2f;
+      --amarelo: #ffc400;
+      --verde: #25d366;
+      --fundo: #f4f7fb;
+      --texto: #182334;
+      --cinza: #667085;
+      --branco: #ffffff;
+      --sombra: 0 10px 28px rgba(6, 26, 47, 0.10);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--fundo);
+      color: var(--texto);
+      line-height: 1.5;
+      padding-bottom: 88px;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .container {
+      width: min(1100px, 92%);
+      margin: auto;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(7, 26, 47, 0.96);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.12);
+    }
+
+    .topo {
+      min-height: 68px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .logo {
+      color: white;
+      font-size: 1.25rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+
+    .logo span {
+      color: var(--amarelo);
+    }
+
+    .topo-whatsapp {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 11px 16px;
+      border-radius: 10px;
+      background: var(--verde);
+      color: white;
+      font-size: 0.9rem;
+      font-weight: 800;
+    }
+
+    .hero {
+      padding: 76px 0 64px;
+      color: white;
+      background:
+        linear-gradient(
+          90deg,
+          rgba(7, 26, 47, 0.95),
+          rgba(7, 26, 47, 0.76)
+        ),
+        url("banner-marido-aluguel.jpg") center / cover no-repeat;
+    }
+
+    .hero-conteudo {
+      max-width: 680px;
+    }
+
+    .selo {
+      display: inline-block;
+      margin-bottom: 18px;
+      padding: 8px 12px;
+      border: 1px solid rgba(255, 196, 0, 0.5);
+      border-radius: 999px;
+      background: rgba(255, 196, 0, 0.14);
+      color: #ffe56d;
+      font-size: 0.88rem;
+      font-weight: 800;
+    }
+
+    h1 {
+      margin-bottom: 18px;
+      font-size: clamp(2.7rem, 7vw, 5.2rem);
+      line-height: 0.98;
+      text-transform: uppercase;
+    }
+
+    h1 span {
+      color: var(--amarelo);
+    }
+
+    .hero p {
+      max-width: 620px;
+      margin-bottom: 24px;
+      color: #e7edf5;
+      font-size: 1.08rem;
+    }
+
+    .hero-botoes {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      padding: 14px 20px;
+      border-radius: 11px;
+      font-weight: 900;
+      transition: 0.2s;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .btn-verde {
+      background: var(--verde);
+      color: white;
+    }
+
+    .btn-amarelo {
+      background: var(--amarelo);
+      color: var(--azul);
+    }
+
+    section {
+      padding: 58px 0;
+    }
+
+    .cabecalho-secao {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 20px;
+      margin-bottom: 26px;
+    }
+
+    .cabecalho-secao h2 {
+      color: var(--azul);
+      font-size: clamp(2rem, 4vw, 3rem);
+      line-height: 1;
+      text-transform: uppercase;
+    }
+
+    .cabecalho-secao p {
+      margin-top: 8px;
+      color: var(--cinza);
+    }
+
+    .dica {
+      color: #128c4a;
+      font-size: 0.9rem;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .grade-servicos {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+    }
+
+    .card-servico {
+      position: relative;
+      min-height: 144px;
+      padding: 18px 14px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      border: 2px solid transparent;
+      border-radius: 14px;
+      background: var(--branco);
+      box-shadow: var(--sombra);
+      transition: 0.2s ease;
+    }
+
+    .card-servico::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 100%;
+      height: 4px;
+      background: var(--amarelo);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: 0.2s;
+    }
+
+    .card-servico:hover {
+      transform: translateY(-4px);
+      border-color: #ffe16a;
+    }
+
+    .card-servico:hover::after {
+      transform: scaleX(1);
+    }
+
+    .icone {
+      width: 44px;
+      height: 44px;
+      margin-bottom: 12px;
+      display: grid;
+      place-items: center;
+      border-radius: 12px;
+      background: #fff3bd;
+      font-size: 1.5rem;
+    }
+
+    .card-servico h3 {
+      margin-bottom: 5px;
+      color: var(--azul);
+      font-size: 1.08rem;
+    }
+
+    .card-servico p {
+      color: var(--cinza);
+      font-size: 0.84rem;
+      line-height: 1.35;
+    }
+
+    .acao {
+      margin-top: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: #128c4a;
+      font-size: 0.82rem;
+      font-weight: 900;
+    }
+
+    .acao span:last-child {
+      font-size: 1.05rem;
+    }
+
+    .vantagens {
+      background: var(--azul);
+      color: white;
+    }
+
+    .vantagens-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+    }
+
+    .vantagem {
+      padding: 18px 12px;
+      text-align: center;
+      border: 1px solid rgba(255, 255, 255, 0.10);
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    .vantagem div {
+      margin-bottom: 8px;
+      font-size: 1.8rem;
+    }
+
+    .vantagem strong {
+      display: block;
+      margin-bottom: 4px;
+      color: var(--amarelo);
+    }
+
+    .vantagem small {
+      color: #dce5ef;
+    }
+
+    .passos {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    .passo {
+      padding: 22px;
+      border-radius: 14px;
+      background: white;
+      box-shadow: var(--sombra);
+    }
+
+    .passo-numero {
+      margin-bottom: 10px;
+      color: var(--amarelo);
+      font-size: 2.5rem;
+      font-weight: 900;
+      line-height: 1;
+    }
+
+    .passo h3 {
+      margin-bottom: 6px;
+      color: var(--azul);
+    }
+
+    .passo p {
+      color: var(--cinza);
+      font-size: 0.94rem;
+    }
+
+    .cta {
+      text-align: center;
+      background: linear-gradient(135deg, var(--amarelo), #ffdb4d);
+    }
+
+    .cta h2 {
+      margin-bottom: 12px;
+      color: var(--azul);
+      font-size: clamp(2.2rem, 5vw, 3.8rem);
+      line-height: 1;
+      text-transform: uppercase;
+    }
+
+    .cta p {
+      margin-bottom: 22px;
+      color: #4c421d;
+      font-weight: 700;
+    }
+
+    footer {
+      padding: 28px 0;
+      background: #03111f;
+      color: #cbd5e1;
+      text-align: center;
+      font-size: 0.94rem;
+    }
+
+    .barra-mobile {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 60;
+      padding: 10px 14px calc(10px + env(safe-area-inset-bottom));
+      border-top: 1px solid #e4e9ef;
+      background: rgba(255, 255, 255, 0.96);
+      backdrop-filter: blur(12px);
+    }
+
+    .barra-mobile a {
+      width: min(560px, 100%);
+      min-height: 54px;
+      margin: auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      border-radius: 12px;
+      background: var(--verde);
+      color: white;
+      font-weight: 900;
+      box-shadow: 0 8px 24px rgba(37, 211, 102, 0.25);
+    }
+
+    @media (max-width: 900px) {
+      .grade-servicos {
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      .vantagens-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 680px) {
+      .hero {
+        padding: 58px 0 48px;
+        background-position: 67% center;
+      }
+
+      .hero-botoes {
+        flex-direction: column;
+      }
+
+      .btn {
+        width: 100%;
+      }
+
+      .cabecalho-secao {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .dica {
+        white-space: normal;
+      }
+
+      .grade-servicos {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+      }
+
+      .card-servico {
+        min-height: 154px;
+        padding: 15px 12px;
+      }
+
+      .card-servico p {
+        font-size: 0.80rem;
+      }
+
+      .passos {
+        grid-template-columns: 1fr;
+      }
+
+      .topo-whatsapp {
+        padding: 10px 12px;
+        font-size: 0.82rem;
+      }
+    }
+
+    @media (max-width: 420px) {
+      .logo {
+        font-size: 1.05rem;
+      }
+
+      .topo-whatsapp span {
+        display: none;
+      }
+
+      .topo-whatsapp {
+        width: 44px;
+        height: 44px;
+        padding: 0;
+        justify-content: center;
+        border-radius: 50%;
+        font-size: 1.1rem;
+      }
+
+      .grade-servicos {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <div class="container topo">
+
+      <a class="logo" href="#inicio">
+        Marido de <span>Aluguel</span>
+      </a>
+
+      <a
+        class="topo-whatsapp"
+        href="https://wa.me/5551989378751?text=Olá,%20vim%20pelo%20site%20e%20gostaria%20de%20um%20orçamento."
+        target="_blank"
+        rel="noopener"
+      >
+        💬 <span>WhatsApp</span>
+      </a>
+
+    </div>
+  </header>
+
+  <main>
+
+    <section class="hero" id="inicio">
+      <div class="container hero-conteudo">
+
+        <div class="selo">
+          🔧 Atendimento em Porto Alegre e região
+        </div>
+
+        <h1>
+          Um profissional,
+          <span>várias soluções</span>
+        </h1>
+
+        <p>
+          Escolha o serviço que precisa e fale comigo diretamente
+          pelo WhatsApp. Atendimento rápido para residências,
+          comércios e empresas.
+        </p>
+
+        <div class="hero-botoes">
+
+          <a
+            class="btn btn-verde"
+            href="https://wa.me/5551989378751?text=Olá,%20preciso%20de%20um%20orçamento%20para%20um%20serviço."
+            target="_blank"
+            rel="noopener"
+          >
+            💬 Pedir orçamento
+          </a>
+
+          <a class="btn btn-amarelo" href="#servicos">
+            Ver especialidades
+          </a>
+
+        </div>
+      </div>
+    </section>
+
+    <section id="servicos">
+      <div class="container">
+
+        <div class="cabecalho-secao">
+
+          <div>
+            <h2>Escolha o serviço</h2>
+            <p>
+              Toque em uma especialidade para abrir o WhatsApp.
+            </p>
+          </div>
+
+          <div class="dica">
+            ✓ Atendimento direto e sem cadastro
+          </div>
+
+        </div>
+
+        <div class="grade-servicos">
+
+          <a
+            class="card-servico"
+            href="https://wa.me/5551989378751?text=Olá,%20preciso%20de%20um%20serviço%20de%20eletricista.%20Pode%20me%20passar%20um%20orçamento?"
+            target="_blank"
+            rel="noopener"
+          >
+            <div>
+              <div class="icone">⚡</div>
+              <h3>Eletricista</h3>
+              <p>
+                Tomadas, chuveiros, lâmpadas, disjuntores e fiação.
+              </p>
+            </div>
+
+            <div class="acao">
+              <span>Chamar agora</span>
+              <span>›</span>
+            </div>
+          </a>
+
+          <a
+            class="card-servico"
+            href="https://wa.me/5551989378751?text=Olá,%20preciso%20de%20um%20serviço%20de%20azulejista.%20Pode%20me%20passar%20um%20orçamento?"
+            target="_blank"
+            rel="noopener"
+          >
+            <div>
+              <div class="icone">▦</div>
+              <h3>Azulejista</h3>
+              <p>
+                Pisos, azulejos, rejuntes e pequenos acabamentos.
+              </p>
+            </div>
+
+            <div class="acao">
+              <span>Chamar agora</span>
+              <span>›</span>
+            </div>
+          </a>
+
+          <a
+            class="card-servico"
+            href="https://wa.me/5551989378751?text=Olá,%20preciso%20de%20um%20serviço%20de%20instalação.%20Pode%20me%20passar%20um%20orçamento?"
+            target="_blank"
+            rel="noopener"
+          >
+            <div>
+              <div class="icone">🛠️</div>
+              <h3>Instalações</h3>
+              <p>
+                TV, prateleiras, cortinas, varais, quadros e suportes.
+              </p>
+            </div>
+
+            <div class="acao">
+              <span>Chamar agora</span>
+              <span>›</span>
+            </div>
+          </a>
+
+          <a
+            class="card-servico"
+            href="https://wa.me/5551989378751?text=Olá,%20preciso%20de%20montagem%20ou%20reparo%20em%20móveis.%20Pode%20me%20passar%20um%20orçamento?"
+            target="_blank"
+            rel="noopener"
+          >
+            <div>
+              <div class="icone">🪚</div>
+              <h3>Marcenaria</h3>
+              <p>
+                Montagem de móveis, portas, gavetas e dobradiças.
+              </p>
+            </div>
+
+            <div class="acao">
+              <span>Chamar agora</span>
+              <span>›</span>
+            </div>
+          </a>
+
+          <a
+            class="card-servico"
+            href="https://wa.me/5551989378751?text=Olá,%20preciso%20de%20um%20serviço%20de%20vidraçaria.%20Pode%20me%20passar%20um%20orçamento?"
+            target="_blank"
+            rel="noopener"
+          >
+            <div>
+              <div class="icone">🪟</div>
+              <h3>Vidraçaria</h3>
+              <p>
+                Vidros, espelhos, box, janelas e pequenos reparos.
+              </p>
+            </div>
+
+            <div class="acao">
+              <span>Chamar agora</span>
+              <span>›</span>
+            </div>
+          </a>
+
+          <a
+            class="card-servico"
+            href="https://wa.me/5551989378751?text=Olá,%20preciso%20de%20um%20serviço%20de%20gesso%20ou%20drywall.%20Pode%20me%20passar%20um%20orçamento?"
+            target="_blank"
+            rel="noopener"
+          >
+            <div>
+              <div class="icone">🏠</div>
+              <h3>Gesso e Drywall</h3>
+              <p>
+                Reparos, divisórias, fechamentos, sancas e acabamentos.
+              </p>
+            </div>
+
+            <div class="acao">
+              <span>Chamar agora</span>
+              <span>›</span>
+            </div>
+          </a>
+
+          <a
+            class="card-servico"
+            href="https://wa.me/5551989378751?text=Olá,%20preciso%20de%20um%20serviço%20hidráulico.%20Pode%20me%20passar%20um%20orçamento?"
+            target="_blank"
+            rel="noopener"
+          >
+            <div>
+              <div class="icone">🚿</div>
+              <h3>Hidráulica</h3>
+              <p>
+                Torneiras, sifões, registros, vazamentos e instalações.
+              </p>
+            </div>
+
+            <div class="acao">
+              <span>Chamar agora</span>
+              <span>›</span>
+            </div>
+          </a>
+
+          <a
+            class="card-servico"
+            href="https://wa.me/5551989378751?text=Olá,%20preciso%20de%20um%20serviço%20em%20geral.%20Posso%20enviar%20fotos%20para%20avaliação?"
+            target="_blank"
+            rel="noopener"
+          >
+            <div>
+              <div class="icone">🔧</div>
+              <h3>Serviços em geral</h3>
+              <p>
+                Pequenos reparos, ajustes, manutenção e soluções diversas.
+              </p>
+            </div>
+
+            <div class="acao">
+              <span>Chamar agora</span>
+              <span>›</span>
+            </div>
+          </a>
+
+        </div>
+      </div>
+    </section>
+
+    <section class="vantagens">
+      <div class="container vantagens-grid">
+
+        <div class="vantagem">
+          <div>🛡️</div>
+          <strong>Qualidade</strong>
+          <small>Cuidado em cada detalhe</small>
+        </div>
+
+        <div class="vantagem">
+          <div>⏱️</div>
+          <strong>Pontualidade</strong>
+          <small>Compromisso com o horário</small>
+        </div>
+
+        <div class="vantagem">
+          <div>👍</div>
+          <strong>Preço justo</strong>
+          <small>Orçamento transparente</small>
+        </div>
+
+        <div class="vantagem">
+          <div>🏢</div>
+          <strong>Atendimento</strong>
+          <small>Residencial e comercial</small>
+        </div>
+
+      </div>
+    </section>
+
+    <section>
+      <div class="container">
+
+        <div class="cabecalho-secao">
+          <div>
+            <h2>Como funciona</h2>
+            <p>Um processo simples, rápido e direto.</p>
+          </div>
+        </div>
+
+        <div class="passos">
+
+          <div class="passo">
+            <div class="passo-numero">01</div>
+            <h3>Escolha o serviço</h3>
+            <p>
+              Toque no card da especialidade que você precisa.
+            </p>
+          </div>
+
+          <div class="passo">
+            <div class="passo-numero">02</div>
+            <h3>Envie fotos</h3>
+            <p>
+              Mande fotos ou vídeos para facilitar a avaliação.
+            </p>
+          </div>
+
+          <div class="passo">
+            <div class="passo-numero">03</div>
+            <h3>Receba o orçamento</h3>
+            <p>
+              Combinamos valor, dia e horário do atendimento.
+            </p>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <section class="cta">
+      <div class="container">
+
+        <h2>Precisa resolver hoje?</h2>
+
+        <p>
+          Fale comigo agora e envie fotos do serviço.
+        </p>
+
+        <a
+          class="btn btn-verde"
+          href="https://wa.me/5551989378751?text=Olá,%20preciso%20de%20atendimento.%20Posso%20enviar%20fotos%20do%20serviço?"
+          target="_blank"
+          rel="noopener"
+        >
+          💬 Falar no WhatsApp
+        </a>
+
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <div class="container">
+      <p><strong>Marido de Aluguel</strong></p>
+      <p>Porto Alegre e região</p>
+      <p>WhatsApp: (51) 98937-8751</p>
+    </div>
+  </footer>
+
+  <div class="barra-mobile">
+    <a
+      href="https://wa.me/5551989378751?text=Olá,%20vim%20pelo%20site%20e%20gostaria%20de%20um%20orçamento."
+      target="_blank"
+      rel="noopener"
+    >
+      💬 Pedir orçamento no WhatsApp
+    </a>
+  </div>
+
+</body>
+</html>
