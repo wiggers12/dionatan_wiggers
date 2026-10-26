@@ -9,6 +9,20 @@
     gtag('js', new Date());
 
     gtag('config', 'AW-17682061306');
+
+    // Função universal para disparar a conversão e depois abrir o WhatsApp
+    function gtagReportConversion(url) {
+      var callback = function () {
+        if (typeof(url) != 'undefined') {
+          window.location = url;
+        }
+      };
+      gtag('event', 'conversion', {
+        'send_to': 'AW-17682061306/kLLICXIzc0cEPqvu-9B',
+        'event_callback': callback
+      });
+      return false;
+    }
   </script>
 
   <meta charset="UTF-8">
@@ -502,9 +516,7 @@
       <a
         class="topo-whatsapp"
         href="https://wa.me/5551989378751?text=Olá,%20vim%20pelo%20site%20e%20gostaria%20de%20um%20orçamento."
-        target="_blank"
-        rel="noopener"
-        onclick="gtag('event', 'conversion', {'send_to': 'AW-17682061306/kLLICXIzc0cEPqvu-9B'});"
+        onclick="return gtagReportConversion('https://wa.me/5551989378751?text=Olá,%20vim%20pelo%20site%20e%20gostaria%20de%20um%20orçamento.');"
       >
         💬 <span>WhatsApp</span>
       </a>
@@ -537,9 +549,7 @@
           <a
             class="btn btn-verde"
             href="https://wa.me/5551989378751?text=Olá,%20preciso%20de%20um%20orçamento%20para%20um%20serviço."
-            target="_blank"
-            rel="noopener"
-            onclick="gtag('event', 'conversion', {'send_to': 'AW-17682061306/kLLICXIzc0cEPqvu-9B'});"
+            onclick="return gtagReportConversion('https://wa.me/5551989378751?text=Olá,%20preciso%20de%20um%20orçamento%20para%20um%20serviço.');"
           >
             💬 Pedir orçamento
           </a>
@@ -575,9 +585,7 @@
           <a
             class="card-servico"
             href="https://wa.me/5551989378751?text=Olá,%20preciso%20de%20um%20serviço%20de%20eletricista.%20Pode%20me%20passar%20um%20orçamento?"
-            target="_blank"
-            rel="noopener"
-            onclick="gtag('event', 'conversion', {'send_to': 'AW-17682061306/kLLICXIzc0cEPqvu-9B'});"
+            onclick="return gtagReportConversion('https://wa.me/5551989378751?text=Olá,%20preciso%20de%20um%20serviço%20de%20eletricista.%20Pode%20me%20passar%20um%20orçamento?');"
           >
             <div>
               <div class="icone">⚡</div>
@@ -596,9 +604,7 @@
           <a
             class="card-servico"
             href="https://wa.me/5551989378751?text=Olá,%20preciso%20de%20um%20serviço%20de%20azulejista.%20Pode%20me%20passar%20um%20orçamento?"
-            target="_blank"
-            rel="noopener"
-            onclick="gtag('event', 'conversion', {'send_to': 'AW-17682061306/kLLICXIzc0cEPqvu-9B'});"
+            onclick="return gtagReportConversion('https://wa.me/5551989378751?text=Olá,%20preciso%20de%20um%20serviço%20de%20azulejista.%20Pode%20me%20passar%20um%20orçamento?');"
           >
             <div>
               <div class="icone">▦</div>
@@ -617,9 +623,7 @@
           <a
             class="card-servico"
             href="https://wa.me/5551989378751?text=Olá,%20preciso%20de%20um%20serviço%20de%20instalação.%20Pode%20me%20passar%20um%20orçamento?"
-            target="_blank"
-            rel="noopener"
-            onclick="gtag('event', 'conversion', {'send_to': 'AW-17682061306/kLLICXIzc0cEPqvu-9B'});"
+            onclick="return gtagReportConversion('https://wa.me/5551989378751?text=Olá,%20preciso%20de%20um%20serviço%20de%20instalação.%20Pode%20me%20passar%20um%20orçamento?');"
           >
             <div>
               <div class="icone">🛠️</div>
@@ -638,9 +642,7 @@
           <a
             class="card-servico"
             href="https://wa.me/5551989378751?text=Olá,%20preciso%20de%20montagem%20ou%20reparo%20em%20móveis.%20Pode%20me%20passar%20um%20orçamento?"
-            target="_blank"
-            rel="noopener"
-            onclick="gtag('event', 'conversion', {'send_to': 'AW-17682061306/kLLICXIzc0cEPqvu-9B'});"
+            onclick="return gtagReportConversion('https://wa.me/5551989378751?text=Olá,%20preciso%20de%20montagem%20ou%20reparo%20em%20móveis.%20Pode%20me%20passar%20um%20orçamento?');"
           >
             <div>
               <div class="icone">🪚</div>
@@ -659,9 +661,7 @@
           <a
             class="card-servico"
             href="https://wa.me/5551989378751?text=Olá,%20preciso%20de%20um%20serviço%20de%20vidraçaria.%20Pode%20me%20passar%20um%20orçamento?"
-            target="_blank"
-            rel="noopener"
-            onclick="gtag('event', 'conversion', {'send_to': 'AW-17682061306/kLLICXIzc0cEPqvu-9B'});"
+            onclick="return gtagReportConversion('https://wa.me/5551989378751?text=Olá,%20preciso%20de%20um%20serviço%20de%20vidraçaria.%20Pode%20me%20passar%20um%20orçamento?');"
           >
             <div>
               <div class="icone">🪟</div>
@@ -680,9 +680,7 @@
           <a
             class="card-servico"
             href="https://wa.me/5551989378751?text=Olá,%20preciso%20de%20um%20serviço%20de%20gesso%20ou%20drywall.%20Pode%20me%20passar%20um%20orçamento?"
-            target="_blank"
-            rel="noopener"
-            onclick="gtag('event', 'conversion', {'send_to': 'AW-17682061306/kLLICXIzc0cEPqvu-9B'});"
+            onclick="return gtagReportConversion('https://wa.me/5551989378751?text=Olá,%20preciso%20de%20um%20serviço%20de%20gesso%20ou%20drywall.%20Pode%20me%20passar%20um%20orçamento?');"
           >
             <div>
               <div class="icone">🏠</div>
@@ -701,9 +699,7 @@
           <a
             class="card-servico"
             href="https://wa.me/5551989378751?text=Olá,%20preciso%20de%20um%20serviço%20hidráulico.%20Pode%20me%20passar%20um%20orçamento?"
-            target="_blank"
-            rel="noopener"
-            onclick="gtag('event', 'conversion', {'send_to': 'AW-17682061306/kLLICXIzc0cEPqvu-9B'});"
+            onclick="return gtagReportConversion('https://wa.me/5551989378751?text=Olá,%20preciso%20de%20um%20serviço%20hidráulico.%20Pode%20me%20passar%20um%20orçamento?');"
           >
             <div>
               <div class="icone">🚿</div>
@@ -722,9 +718,7 @@
           <a
             class="card-servico"
             href="https://wa.me/5551989378751?text=Olá,%20preciso%20de%20um%20serviço%20em%20geral.%20Posso%20enviar%20fotos%20para%20avaliação?"
-            target="_blank"
-            rel="noopener"
-            onclick="gtag('event', 'conversion', {'send_to': 'AW-17682061306/kLLICXIzc0cEPqvu-9B'});"
+            onclick="return gtagReportConversion('https://wa.me/5551989378751?text=Olá,%20preciso%20de%20um%20serviço%20em%20geral.%20Posso%20enviar%20fotos%20para%20avaliação?');"
           >
             <div>
               <div class="icone">🔧</div>
@@ -826,9 +820,7 @@
         <a
           class="btn btn-verde"
           href="https://wa.me/5551989378751?text=Olá,%20preciso%20de%20atendimento.%20Posso%20enviar%20fotos%20do%20serviço?"
-          target="_blank"
-          rel="noopener"
-          onclick="gtag('event', 'conversion', {'send_to': 'AW-17682061306/kLLICXIzc0cEPqvu-9B'});"
+          onclick="return gtagReportConversion('https://wa.me/5551989378751?text=Olá,%20preciso%20de%20atendimento.%20Posso%20enviar%20fotos%20do%20serviço?');"
         >
           💬 Falar no WhatsApp
         </a>
@@ -849,9 +841,7 @@
   <div class="barra-mobile">
     <a
       href="https://wa.me/5551989378751?text=Olá,%20vim%20pelo%20site%20e%20gostaria%20de%20um%20orçamento."
-      target="_blank"
-      rel="noopener"
-      onclick="gtag('event', 'conversion', {'send_to': 'AW-17682061306/kLLICXIzc0cEPqvu-9B'});"
+      onclick="return gtagReportConversion('https://wa.me/5551989378751?text=Olá,%20vim%20pelo%20site%20e%20gostaria%20de%20um%20orçamento.');"
     >
       💬 Pedir orçamento no WhatsApp
     </a>
