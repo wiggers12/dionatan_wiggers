@@ -40,12 +40,12 @@
 
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <title>Alicerce Soluções em Porto Alegre</title>
   <meta
     name="description"
     content="Serviços de elétrica, instalações, marcenaria, vidraçaria, gesso, pintura, reformas, hidráulica e reparos em geral. Atendimento em Porto Alegre e região."
   >
+
+  <title>Alicerce Soluções em Porto Alegre</title>
 
   <style>
     :root {
@@ -56,7 +56,6 @@
       --laranja-claro: #ffc36e;
       --prata: #b9bec2;
       --branco: #f4f3f0;
-      --texto: #f2f2f0;
       --texto-suave: #b9bec2;
       --borda: #34393d;
       --verde-whatsapp: #159447;
@@ -82,9 +81,8 @@
       margin: 0;
       padding-bottom: 86px;
       background: var(--grafite-escuro);
-      color: var(--texto);
-      font-family:
-        system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+      color: var(--branco);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
         Roboto, Arial, Helvetica, sans-serif;
       line-height: 1.6;
       -webkit-font-smoothing: antialiased;
@@ -105,6 +103,45 @@
       margin-inline: auto;
     }
 
+    .botao {
+      min-height: 48px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      padding: 12px 20px;
+      border: 0;
+      border-radius: 12px;
+      font: inherit;
+      font-weight: 800;
+      text-align: center;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+    }
+
+    .botao:hover {
+      transform: translateY(-2px);
+    }
+
+    .botao-whatsapp {
+      background: var(--verde-whatsapp);
+      color: #fff;
+      box-shadow: 0 8px 20px rgba(21, 148, 71, 0.2);
+    }
+
+    .botao-whatsapp:hover {
+      background: var(--verde-whatsapp-hover);
+    }
+
+    .botao-laranja {
+      background: var(--laranja);
+      color: #17120b;
+      box-shadow: 0 8px 20px rgba(233, 149, 36, 0.2);
+    }
+
+    .botao-laranja:hover {
+      background: #f4a83d;
+    }
+
     /* Cabeçalho */
     .cabecalho {
       position: sticky;
@@ -113,7 +150,6 @@
       border-bottom: 1px solid var(--borda);
       background: rgba(13, 15, 17, 0.96);
       backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
     }
 
     .topo {
@@ -121,7 +157,7 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 24px;
+      gap: 20px;
     }
 
     .logo {
@@ -156,14 +192,14 @@
       color: var(--laranja-claro);
       font-size: 0.72rem;
       font-weight: 700;
-      letter-spacing: 0.01em;
+      letter-spacing: 0;
       text-transform: none;
     }
 
     .navegacao {
       display: flex;
       align-items: center;
-      gap: 24px;
+      gap: 22px;
       color: #d1d3d4;
       font-size: 0.9rem;
       font-weight: 700;
@@ -173,51 +209,28 @@
       color: var(--laranja-claro);
     }
 
-    .botao {
-      min-height: 48px;
+    .link-instagram {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 9px;
-      padding: 12px 20px;
-      border: 0;
-      border-radius: 12px;
-      font: inherit;
+      gap: 8px;
+      color: var(--laranja-claro);
+      font-size: 0.88rem;
       font-weight: 800;
-      text-align: center;
-      transition:
-        transform 0.2s ease,
-        box-shadow 0.2s ease,
-        background 0.2s ease;
     }
 
-    .botao:hover {
-      transform: translateY(-2px);
-    }
-
-    .botao-whatsapp {
-      background: var(--verde-whatsapp);
+    .link-instagram:hover {
       color: #fff;
-      box-shadow: 0 8px 20px rgba(21, 148, 71, 0.2);
     }
 
-    .botao-whatsapp:hover {
-      background: var(--verde-whatsapp-hover);
-      box-shadow: 0 12px 24px rgba(21, 148, 71, 0.25);
+    .instagram-icone {
+      width: 20px;
+      height: 20px;
+      display: inline-block;
+      vertical-align: middle;
     }
 
-    .botao-laranja {
-      background: var(--laranja);
-      color: #17120b;
-      box-shadow: 0 8px 20px rgba(233, 149, 36, 0.2);
-    }
-
-    .botao-laranja:hover {
-      background: #f4a83d;
-      box-shadow: 0 12px 24px rgba(233, 149, 36, 0.28);
-    }
-
-    /* Capa principal */
+    /* Capa */
     .hero {
       position: relative;
       overflow: hidden;
@@ -240,8 +253,7 @@
       height: 540px;
       border: 1px solid rgba(233, 149, 36, 0.2);
       border-radius: 50%;
-      box-shadow:
-        0 0 0 40px rgba(233, 149, 36, 0.04),
+      box-shadow: 0 0 0 40px rgba(233, 149, 36, 0.04),
         0 0 0 80px rgba(233, 149, 36, 0.03);
       content: "";
       pointer-events: none;
@@ -303,7 +315,7 @@
       border: 1px solid rgba(233, 149, 36, 0.32);
       border-radius: 22px;
       background: rgba(23, 26, 29, 0.86);
-      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.3);
+      box-shadow: var(--sombra);
       backdrop-filter: blur(12px);
     }
 
@@ -467,10 +479,7 @@
       border-radius: var(--raio);
       background: var(--grafite-card);
       box-shadow: 0 7px 22px rgba(0, 0, 0, 0.14);
-      transition:
-        transform 0.2s ease,
-        border-color 0.2s ease,
-        box-shadow 0.2s ease;
+      transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
     }
 
     .card-servico:hover {
@@ -585,7 +594,7 @@
       font-size: 0.86rem;
     }
 
-    /* Etapas do orçamento */
+    /* Etapas */
     .passos {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -626,16 +635,57 @@
       font-size: 0.94rem;
     }
 
+    /* Instagram */
+    .instagram {
+      padding-block: 64px;
+      border-block: 1px solid var(--borda);
+      background:
+        radial-gradient(circle at 15% 50%, rgba(233, 149, 36, 0.12), transparent 35%),
+        #171a1d;
+    }
+
+    .instagram-conteudo {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 30px;
+      padding: 30px;
+      border: 1px solid rgba(233, 149, 36, 0.3);
+      border-radius: 22px;
+      background: var(--grafite-card);
+      box-shadow: var(--sombra);
+    }
+
+    .instagram-conteudo h2 {
+      margin: 0 0 8px;
+      color: var(--branco);
+      font-size: clamp(1.6rem, 3vw, 2.3rem);
+      line-height: 1.15;
+    }
+
+    .instagram-conteudo p {
+      max-width: 650px;
+      margin: 0;
+      color: var(--texto-suave);
+    }
+
+    .botao-instagram {
+      flex: 0 0 auto;
+      background: var(--laranja);
+      color: #17120b;
+      box-shadow: 0 8px 20px rgba(233, 149, 36, 0.2);
+    }
+
+    .botao-instagram:hover {
+      background: #f4a83d;
+    }
+
     /* Chamada final */
     .cta {
       padding-block: 68px;
-      border-block: 1px solid var(--borda);
+      border-bottom: 1px solid var(--borda);
       background:
-        radial-gradient(
-          circle at top,
-          rgba(233, 149, 36, 0.16),
-          transparent 65%
-        ),
+        radial-gradient(circle at top, rgba(233, 149, 36, 0.16), transparent 65%),
         #1b1f22;
       text-align: center;
     }
@@ -681,6 +731,19 @@
       font-size: 1rem;
     }
 
+    .rodape-instagram {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      margin-top: 10px;
+      color: var(--laranja-claro);
+      font-weight: 800;
+    }
+
+    .rodape-instagram:hover {
+      color: #fff;
+    }
+
     /* Botão fixo no celular */
     .barra-mobile {
       position: fixed;
@@ -692,7 +755,6 @@
       border-top: 1px solid var(--borda);
       background: rgba(13, 15, 17, 0.96);
       backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
     }
 
     .barra-mobile a {
@@ -803,11 +865,14 @@
         font-size: 1rem;
       }
 
-      .hero-acoes {
+      .hero-acoes,
+      .instagram-conteudo {
         flex-direction: column;
+        align-items: stretch;
       }
 
-      .hero-acoes .botao {
+      .hero-acoes .botao,
+      .instagram-conteudo .botao {
         width: 100%;
       }
 
@@ -874,6 +939,10 @@
         min-height: auto;
       }
 
+      .instagram-conteudo {
+        padding: 22px;
+      }
+
       .cta {
         padding-block: 56px;
       }
@@ -893,7 +962,7 @@
 <body>
   <header class="cabecalho">
     <div class="container topo">
-      <a class="logo" href="#inicio" aria-label="Alicerce — início">
+      <a class="logo" href="#inicio" aria-label="Alicerce Soluções — início">
         <img
           class="logo-imagem"
           src="logo-alicerce.png"
@@ -1190,6 +1259,50 @@
       </div>
     </section>
 
+    <section class="instagram" id="instagram">
+      <div class="container instagram-conteudo">
+        <div>
+          <span class="sobretitulo">Acompanhe a Alicerce</span>
+          <h2>Conheça nosso trabalho no Instagram</h2>
+          <p>
+            Acesse nosso perfil e veja mais sobre a Alicerce Soluções,
+            construção, reforma e manutenção.
+          </p>
+        </div>
+
+        <a
+          class="botao botao-instagram"
+          href="https://www.instagram.com/alicerce_solucoes/"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Abrir Instagram da Alicerce em uma nova aba"
+        >
+          <svg class="instagram-icone" viewBox="0 0 24 24" aria-hidden="true">
+            <rect
+              x="3"
+              y="3"
+              width="18"
+              height="18"
+              rx="5"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            />
+            <circle
+              cx="12"
+              cy="12"
+              r="4"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            />
+            <circle cx="17.5" cy="6.5" r="1.2" fill="currentColor" />
+          </svg>
+          Ver Instagram
+        </a>
+      </div>
+    </section>
+
     <section class="cta" id="emergencia">
       <div class="container" id="urgente">
         <span class="sobretitulo">Atendimento emergencial e urgente</span>
@@ -1217,6 +1330,36 @@
         • Atendimento emergencial e urgente
       </p>
       <p>WhatsApp: (51) 98937-8751</p>
+
+      <a
+        class="rodape-instagram"
+        href="https://www.instagram.com/alicerce_solucoes/"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <svg class="instagram-icone" viewBox="0 0 24 24" aria-hidden="true">
+          <rect
+            x="3"
+            y="3"
+            width="18"
+            height="18"
+            rx="5"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          />
+          <circle
+            cx="12"
+            cy="12"
+            r="4"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          />
+          <circle cx="17.5" cy="6.5" r="1.2" fill="currentColor" />
+        </svg>
+        @alicerce_solucoes
+      </a>
     </div>
   </footer>
 
