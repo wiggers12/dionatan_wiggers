@@ -5,22 +5,35 @@
   <script async src="https://www.googletagmanager.com/gtag/js?id=AW-17682061306"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
 
-    gtag('config', 'AW-17682061306');
+    function gtag() {
+      window.dataLayer.push(arguments);
+    }
 
-    // Função universal para disparar a conversão e depois abrir o WhatsApp
+    gtag("js", new Date());
+    gtag("config", "AW-17682061306");
+
     function gtagReportConversion(url) {
-      var callback = function () {
-        if (typeof(url) != 'undefined') {
-          window.location = url;
-        }
-      };
-      gtag('event', 'conversion', {
-        'send_to': 'AW-17682061306/kLLICXIzc0cEPqvu-9B',
-        'event_callback': callback
-      });
+      let navegou = false;
+
+      function abrirDestino() {
+        if (navegou) return;
+        navegou = true;
+        window.location.assign(url);
+      }
+
+      window.setTimeout(abrirDestino, 800);
+
+      if (typeof gtag === "function") {
+        gtag("event", "conversion", {
+          send_to: "AW-17682061306/kLLICXIzc0cEPqvu-9B",
+          event_callback: abrirDestino,
+          event_timeout: 700
+        });
+      } else {
+        abrirDestino();
+      }
+
       return false;
     }
   </script>
@@ -28,7 +41,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>Marido de Aluguel - Dionatan wiggers em Porto Alegre</title>
+  <title>Alicerce soluçoes em Porto Alegre</title>
   <meta
     name="description"
     content="Serviços de elétrica, instalações, marcenaria, vidraçaria, gesso, pintura, reformas, hidráulica e reparos em geral. Atendimento em Porto Alegre e região."
@@ -36,40 +49,43 @@
 
   <style>
     :root {
-      --azul: #0b192c;
-      --azul-escuro: #050b14;
-      --superficie: #0d1829;
-      --superficie-alta: #122238;
-      --borda: rgba(255, 255, 255, 0.08);
-      --borda-destaque: rgba(255, 196, 0, 0.45);
-      --amarelo: #ffc400;
-      --amarelo-claro: #ffe270;
-      --verde: #25d366;
-      --verde-escuro: #18a94e;
-      --fundo: #050b14;
-      --texto: #f1f5fb;
-      --cinza: #9aa8bc;
+      --marinho: #10253b;
+      --marinho-profundo: #0a1929;
+      --amarelo: #ffc928;
+      --amarelo-escuro: #e9ae00;
+      --verde: #159447;
+      --verde-claro: #e7f7ec;
+      --fundo: #f5f7f4;
       --branco: #ffffff;
-      --sombra: 0 14px 34px rgba(0, 0, 0, 0.42);
-      --sombra-card: 0 12px 28px rgba(0, 0, 0, 0.35);
+      --texto: #172433;
+      --texto-suave: #5f6e7d;
+      --borda: #e1e7e4;
+      --sombra: 0 16px 40px rgba(16, 37, 59, 0.09);
+      --largura: 1160px;
+      --raio: 18px;
     }
 
-    * {
+    *,
+    *::before,
+    *::after {
       box-sizing: border-box;
-      margin: 0;
-      padding: 0;
     }
 
     html {
       scroll-behavior: smooth;
+      scroll-padding-top: 100px;
     }
 
     body {
-      font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, Helvetica, sans-serif;
+      min-width: 320px;
+      margin: 0;
+      padding-bottom: 86px;
       background: var(--fundo);
       color: var(--texto);
-      line-height: 1.55;
-      padding-bottom: 92px;
+      font-family:
+        system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+        Roboto, Arial, Helvetica, sans-serif;
+      line-height: 1.6;
       -webkit-font-smoothing: antialiased;
     }
 
@@ -78,517 +94,646 @@
       text-decoration: none;
     }
 
-    .container {
-      width: min(1140px, 92%);
-      margin: auto;
+    a:focus-visible {
+      outline: 3px solid var(--amarelo-escuro);
+      outline-offset: 4px;
     }
 
-    /* HEADER & NAVEGAÇÃO REFINADOS */
-    header {
+    .container {
+      width: min(var(--largura), calc(100% - 40px));
+      margin-inline: auto;
+    }
+
+    .icone {
+      display: inline-grid;
+      place-items: center;
+      line-height: 1;
+    }
+
+    /* Cabeçalho */
+    .cabecalho {
       position: sticky;
+      z-index: 20;
       top: 0;
-      z-index: 50;
-      background: rgba(5, 11, 20, 0.86);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border-bottom: 1px solid var(--borda);
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+      border-bottom: 1px solid rgba(16, 37, 59, 0.08);
+      background: rgba(255, 255, 255, 0.94);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
     }
 
     .topo {
-      min-height: 66px;
+      min-height: 76px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 16px;
+      gap: 24px;
     }
 
     .logo {
-      color: var(--branco);
-      font-size: 1.28rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--marinho);
+      font-size: 1.05rem;
       font-weight: 900;
+      letter-spacing: 0.03em;
+      line-height: 1.1;
       text-transform: uppercase;
-      letter-spacing: 0.8px;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
     }
 
-    .logo span {
-      color: var(--amarelo);
+    .logo-marca {
+      display: grid;
+      width: 42px;
+      height: 42px;
+      place-items: center;
+      border-radius: 13px;
+      background: var(--amarelo);
+      color: var(--marinho-profundo);
+      font-size: 1.25rem;
     }
 
-    .topo-whatsapp {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 10px 18px;
-      border-radius: 10px;
-      background: linear-gradient(135deg, var(--verde), var(--verde-escuro));
-      color: var(--branco);
-      font-size: 0.88rem;
-      font-weight: 800;
-      box-shadow: 0 6px 18px rgba(37, 211, 102, 0.25);
-      transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+    .logo span:last-child {
+      display: block;
+      color: var(--verde);
     }
 
-    .topo-whatsapp:hover {
-      transform: translateY(-1px);
-      filter: brightness(1.06);
-      box-shadow: 0 10px 24px rgba(37, 211, 102, 0.35);
-    }
-
-    .atalhos-sitelinks {
-      background: rgba(9, 18, 32, 0.92);
-      border-top: 1px solid rgba(255, 255, 255, 0.05);
-      padding: 8px 0;
-      font-size: 0.8rem;
-    }
-
-    .atalhos-lista {
+    .navegacao {
       display: flex;
-      gap: 8px;
       align-items: center;
-      overflow-x: auto;
-      scrollbar-width: none;
+      gap: 24px;
+      color: var(--texto-suave);
+      font-size: 0.9rem;
+      font-weight: 700;
     }
 
-    .atalhos-lista::-webkit-scrollbar {
-      display: none;
+    .navegacao a:hover {
+      color: var(--verde);
     }
 
-    .atalhos-lista a {
-      color: #cbd5e1;
-      font-weight: 600;
-      padding: 5px 12px;
-      border-radius: 999px;
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      white-space: nowrap;
-      transition: all 0.2s ease;
+    .botao {
+      min-height: 48px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      padding: 12px 20px;
+      border: 0;
+      border-radius: 12px;
+      font: inherit;
+      font-weight: 800;
+      text-align: center;
+      transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        background 0.2s ease;
     }
 
-    .atalhos-lista a:hover {
-      background: rgba(255, 196, 0, 0.14);
-      border-color: rgba(255, 196, 0, 0.4);
-      color: var(--amarelo-claro);
+    .botao:hover {
+      transform: translateY(-2px);
     }
 
-    /* HERO / CAPA MAIS PROFISSIONAL */
+    .botao-whatsapp {
+      background: var(--verde);
+      color: var(--branco);
+      box-shadow: 0 8px 20px rgba(21, 148, 71, 0.2);
+    }
+
+    .botao-whatsapp:hover {
+      background: #107c3b;
+      box-shadow: 0 12px 24px rgba(21, 148, 71, 0.25);
+    }
+
+    .botao-amarelo {
+      background: var(--amarelo);
+      color: var(--marinho-profundo);
+      box-shadow: 0 8px 20px rgba(255, 201, 40, 0.22);
+    }
+
+    .botao-amarelo:hover {
+      background: #ffd54f;
+      box-shadow: 0 12px 24px rgba(255, 201, 40, 0.3);
+    }
+
+    /* Capa */
     .hero {
       position: relative;
-      padding: 88px 0 80px;
-      color: var(--branco);
-      border-bottom: 1px solid var(--borda);
       overflow: hidden;
+      padding: 76px 0 84px;
       background:
-        radial-gradient(circle at 82% 28%, rgba(255, 196, 0, 0.14) 0%, transparent 45%),
-        radial-gradient(circle at 18% 80%, rgba(37, 211, 102, 0.08) 0%, transparent 45%),
         linear-gradient(
-          95deg,
-          rgba(5, 11, 20, 0.96) 0%,
-          rgba(7, 17, 32, 0.84) 52%,
-          rgba(7, 17, 32, 0.55) 100%
+          90deg,
+          rgba(10, 25, 41, 0.97) 0%,
+          rgba(10, 25, 41, 0.91) 48%,
+          rgba(10, 25, 41, 0.62) 100%
         ),
-        url("banner-marido-aluguel.jpg") right center / cover no-repeat;
+        url("banner-Alicerce-soluçoes.jpg") center / cover no-repeat;
+      color: var(--branco);
     }
 
-    .hero::before {
-      content: "";
+    .hero::after {
       position: absolute;
-      inset: 0;
-      background-image: radial-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px);
-      background-size: 24px 24px;
+      right: -130px;
+      bottom: -240px;
+      width: 540px;
+      height: 540px;
+      border: 1px solid rgba(255, 201, 40, 0.18);
+      border-radius: 50%;
+      box-shadow:
+        0 0 0 40px rgba(255, 201, 40, 0.04),
+        0 0 0 80px rgba(255, 201, 40, 0.03);
+      content: "";
       pointer-events: none;
     }
 
-    .hero-conteudo {
+    .hero-grade {
       position: relative;
       z-index: 1;
-      max-width: 780px;
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
+      align-items: center;
+      gap: 54px;
     }
 
     .selo {
       display: inline-flex;
       align-items: center;
-      gap: 6px;
+      gap: 8px;
       margin-bottom: 22px;
-      padding: 8px 15px;
-      border: 1px solid var(--borda-destaque);
+      padding: 8px 13px;
+      border: 1px solid rgba(255, 201, 40, 0.4);
       border-radius: 999px;
-      background: rgba(255, 196, 0, 0.10);
-      backdrop-filter: blur(8px);
-      color: var(--amarelo-claro);
+      background: rgba(255, 201, 40, 0.1);
+      color: #ffe28a;
       font-size: 0.86rem;
-      font-weight: 700;
-      letter-spacing: 0.3px;
+      font-weight: 750;
     }
 
     h1 {
-      margin-bottom: 20px;
-      font-size: clamp(2.4rem, 5.2vw, 4.35rem);
+      max-width: 700px;
+      margin: 0 0 20px;
+      font-size: clamp(2.5rem, 5.5vw, 4.65rem);
       font-weight: 900;
-      line-height: 1.04;
-      letter-spacing: -0.025em;
-      text-transform: uppercase;
+      letter-spacing: -0.045em;
+      line-height: 1.02;
     }
 
     h1 span {
       display: block;
       color: var(--amarelo);
-      text-shadow: 0 6px 26px rgba(255, 196, 0, 0.22);
     }
 
-    .hero p {
-      max-width: 580px;
-      margin-bottom: 30px;
-      color: #cbd5e1;
+    .hero-texto {
+      max-width: 590px;
+      margin: 0 0 28px;
+      color: #d7e0e9;
       font-size: 1.12rem;
-      line-height: 1.6;
     }
 
-    .hero-botoes {
+    .hero-acoes {
       display: flex;
       flex-wrap: wrap;
-      gap: 14px;
+      gap: 12px;
     }
 
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      padding: 15px 26px;
-      border-radius: 12px;
-      font-size: 0.98rem;
-      font-weight: 800;
-      letter-spacing: 0.2px;
-      transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+    .hero-painel {
+      padding: 26px;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: 22px;
+      background: rgba(255, 255, 255, 0.1);
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.2);
+      backdrop-filter: blur(12px);
     }
 
-    .btn:hover {
-      transform: translateY(-2px);
-      filter: brightness(1.06);
-    }
-
-    .btn-verde {
-      background: linear-gradient(135deg, var(--verde), var(--verde-escuro));
+    .hero-painel h2 {
+      margin: 0 0 17px;
       color: var(--branco);
-      box-shadow: 0 10px 26px rgba(37, 211, 102, 0.28);
+      font-size: 1.12rem;
     }
 
-    .btn-amarelo {
-      background: rgba(255, 196, 0, 0.12);
-      color: var(--amarelo-claro);
-      border: 1px solid rgba(255, 196, 0, 0.45);
-      backdrop-filter: blur(8px);
+    .lista-painel {
+      display: grid;
+      gap: 12px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
     }
 
-    .btn-amarelo:hover {
-      background: var(--amarelo);
-      color: #07111e;
-      box-shadow: 0 10px 26px rgba(255, 196, 0, 0.25);
+    .lista-painel li {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #e4ebf2;
+      font-size: 0.94rem;
     }
 
-    section {
-      padding: 68px 0;
+    .lista-painel .check {
+      width: 25px;
+      height: 25px;
+      flex: 0 0 auto;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: rgba(255, 201, 40, 0.16);
+      color: var(--amarelo);
+      font-weight: 900;
+    }
+
+    .hero-painel .botao {
+      width: 100%;
+      margin-top: 22px;
+    }
+
+    /* Faixa de informações */
+    .faixa-info {
+      position: relative;
+      z-index: 2;
+      margin-top: -28px;
+    }
+
+    .faixa-info-grade {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      overflow: hidden;
+      border: 1px solid var(--borda);
+      border-radius: var(--raio);
+      background: var(--branco);
+      box-shadow: var(--sombra);
+    }
+
+    .info-item {
+      min-height: 86px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 18px;
+    }
+
+    .info-item + .info-item {
+      border-left: 1px solid var(--borda);
+    }
+
+    .info-icone {
+      width: 42px;
+      height: 42px;
+      flex: 0 0 auto;
+      display: grid;
+      place-items: center;
+      border-radius: 12px;
+      background: var(--verde-claro);
+      font-size: 1.2rem;
+    }
+
+    .info-item strong,
+    .info-item small {
+      display: block;
+    }
+
+    .info-item strong {
+      color: var(--marinho);
+      font-size: 0.9rem;
+    }
+
+    .info-item small {
+      color: var(--texto-suave);
+      font-size: 0.78rem;
+    }
+
+    /* Títulos de seção */
+    .secao {
+      padding-block: 82px;
     }
 
     .cabecalho-secao {
       display: flex;
-      align-items: end;
+      align-items: flex-end;
       justify-content: space-between;
-      gap: 20px;
+      gap: 24px;
       margin-bottom: 30px;
     }
 
-    .cabecalho-secao h2 {
-      color: var(--branco);
-      font-size: clamp(1.9rem, 3.8vw, 2.85rem);
-      line-height: 1.05;
-      letter-spacing: -0.015em;
+    .sobretitulo {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--verde);
+      font-size: 0.78rem;
+      font-weight: 900;
+      letter-spacing: 0.12em;
       text-transform: uppercase;
     }
 
+    .cabecalho-secao h2 {
+      margin: 0;
+      color: var(--marinho);
+      font-size: clamp(1.9rem, 4vw, 2.8rem);
+      letter-spacing: -0.035em;
+      line-height: 1.1;
+    }
+
     .cabecalho-secao p {
-      margin-top: 8px;
-      color: var(--cinza);
+      max-width: 530px;
+      margin: 8px 0 0;
+      color: var(--texto-suave);
     }
 
     .dica {
-      color: var(--verde);
-      font-size: 0.88rem;
-      font-weight: 800;
-      padding: 7px 14px;
+      flex: 0 0 auto;
+      padding: 8px 13px;
+      border: 1px solid #cdebd5;
       border-radius: 999px;
-      background: rgba(37, 211, 102, 0.09);
-      border: 1px solid rgba(37, 211, 102, 0.24);
-      white-space: nowrap;
+      background: var(--verde-claro);
+      color: #13783a;
+      font-size: 0.82rem;
+      font-weight: 800;
     }
 
+    /* Cartões de serviço */
     .grade-servicos {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(4, minmax(0, 1fr));
       gap: 16px;
     }
 
     .card-servico {
-      position: relative;
-      min-height: 156px;
-      padding: 20px 16px;
-      overflow: hidden;
+      min-height: 220px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
+      padding: 22px;
       border: 1px solid var(--borda);
-      border-radius: 16px;
-      background: linear-gradient(180deg, var(--superficie-alta) 0%, var(--superficie) 100%);
-      box-shadow: var(--sombra-card);
-      transition: transform 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease;
-    }
-
-    .card-servico::after {
-      content: "";
-      position: absolute;
-      left: 0;
-      bottom: 0;
-      width: 100%;
-      height: 3px;
-      background: linear-gradient(90deg, var(--amarelo), var(--verde));
-      transform: scaleX(0);
-      transform-origin: left;
-      transition: transform 0.24s ease;
+      border-radius: var(--raio);
+      background: var(--branco);
+      box-shadow: 0 7px 22px rgba(16, 37, 59, 0.045);
+      transition:
+        transform 0.2s ease,
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
     }
 
     .card-servico:hover {
-      transform: translateY(-4px);
-      border-color: var(--borda-destaque);
-      box-shadow: 0 18px 34px rgba(0, 0, 0, 0.52);
+      transform: translateY(-5px);
+      border-color: rgba(21, 148, 71, 0.35);
+      box-shadow: var(--sombra);
     }
 
-    .card-servico:hover::after {
-      transform: scaleX(1);
-    }
-
-    .icone {
-      width: 46px;
-      height: 46px;
-      margin-bottom: 14px;
+    .icone-servico {
+      width: 50px;
+      height: 50px;
       display: grid;
       place-items: center;
-      border-radius: 12px;
-      background: rgba(255, 196, 0, 0.13);
-      border: 1px solid rgba(255, 196, 0, 0.25);
-      font-size: 1.5rem;
+      margin-bottom: 18px;
+      border-radius: 15px;
+      background: #fff5d5;
+      color: var(--marinho);
+      font-size: 1.55rem;
     }
 
     .card-servico h3 {
-      margin-bottom: 6px;
-      color: var(--branco);
-      font-size: 1.08rem;
-      font-weight: 800;
+      margin: 0 0 7px;
+      color: var(--marinho);
+      font-size: 1.05rem;
+      line-height: 1.25;
     }
 
     .card-servico p {
-      color: var(--cinza);
-      font-size: 0.85rem;
-      line-height: 1.4;
+      margin: 0;
+      color: var(--texto-suave);
+      font-size: 0.88rem;
+      line-height: 1.5;
     }
 
-    .acao {
-      margin-top: 14px;
+    .acao-card {
       display: flex;
       align-items: center;
       justify-content: space-between;
+      margin-top: 17px;
+      padding-top: 13px;
+      border-top: 1px solid #edf0ee;
       color: var(--verde);
-      font-size: 0.83rem;
-      font-weight: 900;
+      font-size: 0.84rem;
+      font-weight: 850;
     }
 
-    .acao span:last-child {
-      font-size: 1.1rem;
+    .acao-card span:last-child {
+      font-size: 1.2rem;
       transition: transform 0.2s ease;
     }
 
-    .card-servico:hover .acao span:last-child {
-      transform: translateX(3px);
+    .card-servico:hover .acao-card span:last-child {
+      transform: translateX(4px);
     }
 
+    /* Vantagens */
     .vantagens {
-      background: linear-gradient(180deg, #091322 0%, #07101d 100%);
-      border-top: 1px solid var(--borda);
-      border-bottom: 1px solid var(--borda);
+      padding-block: 58px;
+      background: var(--marinho);
       color: var(--branco);
+    }
+
+    .vantagens-cabecalho {
+      max-width: 660px;
+      margin-bottom: 27px;
+    }
+
+    .vantagens-cabecalho .sobretitulo {
+      color: var(--amarelo);
+    }
+
+    .vantagens-cabecalho h2 {
+      margin: 0;
+      color: var(--branco);
+      font-size: clamp(1.8rem, 3vw, 2.4rem);
+      line-height: 1.15;
     }
 
     .vantagens-grid {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 16px;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
     }
 
     .vantagem {
-      padding: 22px 16px;
-      text-align: center;
-      border: 1px solid var(--borda);
-      border-radius: 16px;
-      background: rgba(19, 35, 58, 0.65);
-      box-shadow: var(--sombra-card);
-      transition: border-color 0.2s ease, transform 0.2s ease;
+      min-height: 150px;
+      padding: 22px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: var(--raio);
+      background: rgba(255, 255, 255, 0.06);
     }
 
-    .vantagem:hover {
-      transform: translateY(-3px);
-      border-color: rgba(255, 196, 0, 0.32);
+    .vantagem-icone {
+      margin-bottom: 14px;
+      font-size: 1.7rem;
     }
 
-    .vantagem div {
-      margin-bottom: 10px;
-      font-size: 1.85rem;
+    .vantagem strong,
+    .vantagem small {
+      display: block;
     }
 
     .vantagem strong {
-      display: block;
       margin-bottom: 4px;
       color: var(--amarelo);
       font-size: 1rem;
     }
 
     .vantagem small {
-      color: var(--cinza);
+      color: #d0d9e3;
       font-size: 0.86rem;
     }
 
+    /* Etapas */
     .passos {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 18px;
     }
 
     .passo {
-      padding: 24px;
-      border-radius: 16px;
+      position: relative;
+      padding: 26px;
       border: 1px solid var(--borda);
-      background: linear-gradient(180deg, var(--superficie-alta) 0%, var(--superficie) 100%);
-      box-shadow: var(--sombra-card);
+      border-radius: var(--raio);
+      background: var(--branco);
+      box-shadow: 0 7px 22px rgba(16, 37, 59, 0.045);
     }
 
     .passo-numero {
-      margin-bottom: 12px;
-      color: var(--amarelo);
-      font-size: 2.5rem;
-      font-weight: 900;
-      line-height: 1;
-      letter-spacing: -0.02em;
+      width: 48px;
+      height: 48px;
+      display: grid;
+      place-items: center;
+      margin-bottom: 18px;
+      border-radius: 14px;
+      background: var(--amarelo);
+      color: var(--marinho);
+      font-size: 1.1rem;
+      font-weight: 950;
     }
 
     .passo h3 {
-      margin-bottom: 8px;
-      color: var(--branco);
+      margin: 0 0 8px;
+      color: var(--marinho);
       font-size: 1.1rem;
     }
 
     .passo p {
-      color: var(--cinza);
+      margin: 0;
+      color: var(--texto-suave);
       font-size: 0.94rem;
     }
 
+    /* Chamada final */
     .cta {
+      padding-block: 68px;
+      background: #fff4cf;
       text-align: center;
-      border-top: 1px solid rgba(255, 196, 0, 0.25);
-      border-bottom: 1px solid var(--borda);
-      background:
-        radial-gradient(circle at top, rgba(255, 196, 0, 0.18), transparent 65%),
-        linear-gradient(180deg, #101d32 0%, #08111e 100%);
+    }
+
+    .cta .sobretitulo {
+      color: #8c6900;
     }
 
     .cta h2 {
-      margin-bottom: 12px;
-      color: var(--branco);
-      font-size: clamp(2.1rem, 4.8vw, 3.6rem);
-      line-height: 1.04;
-      letter-spacing: -0.015em;
-      text-transform: uppercase;
+      margin: 0 0 10px;
+      color: var(--marinho);
+      font-size: clamp(2rem, 4.4vw, 3.3rem);
+      letter-spacing: -0.04em;
+      line-height: 1.08;
     }
 
     .cta p {
-      margin-bottom: 24px;
-      color: #c7d2e2;
+      margin: 0 0 24px;
+      color: #485768;
+      font-size: 1.02rem;
       font-weight: 600;
-      font-size: 1.04rem;
     }
 
-    footer {
-      padding: 34px 0;
-      background: #040911;
-      color: var(--cinza);
+    /* Rodapé */
+    .rodape {
+      padding-block: 34px;
+      background: var(--marinho-profundo);
+      color: #bdc9d4;
+      font-size: 0.9rem;
       text-align: center;
-      font-size: 0.94rem;
-      border-top: 1px solid rgba(255, 255, 255, 0.06);
     }
 
-    footer strong {
+    .rodape p {
+      margin: 0;
+    }
+
+    .rodape p + p {
+      margin-top: 5px;
+    }
+
+    .rodape strong {
       color: var(--branco);
+      font-size: 1rem;
     }
 
-    footer p + p {
-      margin-top: 4px;
-    }
-
+    /* Botão fixo no celular */
     .barra-mobile {
       position: fixed;
-      left: 0;
+      z-index: 30;
       right: 0;
       bottom: 0;
-      z-index: 60;
+      left: 0;
       padding: 10px 14px calc(10px + env(safe-area-inset-bottom));
-      border-top: 1px solid var(--borda);
-      background: rgba(5, 11, 20, 0.94);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
+      border-top: 1px solid rgba(16, 37, 59, 0.08);
+      background: rgba(255, 255, 255, 0.94);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
     }
 
     .barra-mobile a {
       width: min(560px, 100%);
       min-height: 54px;
-      margin: auto;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      border-radius: 12px;
-      background: linear-gradient(135deg, var(--verde), var(--verde-escuro));
-      color: var(--branco);
-      font-weight: 900;
-      box-shadow: 0 8px 24px rgba(37, 211, 102, 0.28);
+      margin-inline: auto;
     }
 
-    @media (max-width: 900px) {
-      .grade-servicos {
-        grid-template-columns: repeat(3, 1fr);
+    @media (max-width: 960px) {
+      .navegacao {
+        gap: 14px;
       }
 
-      .vantagens-grid {
+      .hero-grade {
+        gap: 30px;
+      }
+
+      .grade-servicos {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 760px) {
+      .topo {
+        min-height: 68px;
+      }
+
+      .navegacao {
+        display: none;
+      }
+
+      .hero {
+        padding-block: 60px;
+      }
+
+      .hero-grade {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-painel {
+        max-width: 520px;
+      }
+
+      .faixa-info-grade {
         grid-template-columns: repeat(2, 1fr);
       }
-    }
 
-    @media (max-width: 680px) {
-      .hero {
-        padding: 56px 0 48px;
-        background-position: 67% center;
+      .info-item:nth-child(3) {
+        border-left: 0;
       }
 
-      h1 {
-        font-size: clamp(2.15rem, 8.5vw, 3.1rem);
-      }
-
-      .hero-botoes {
-        flex-direction: column;
-      }
-
-      .btn {
-        width: 100%;
+      .info-item:nth-child(n + 3) {
+        border-top: 1px solid var(--borda);
       }
 
       .cabecalho-secao {
@@ -596,412 +741,476 @@
         flex-direction: column;
       }
 
+      .grade-servicos {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .vantagens-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 520px) {
+      body {
+        padding-bottom: 78px;
+      }
+
+      .container {
+        width: min(var(--largura), calc(100% - 30px));
+      }
+
+      .logo {
+        font-size: 0.9rem;
+      }
+
+      .logo-marca {
+        width: 38px;
+        height: 38px;
+      }
+
+      .topo > .botao {
+        min-height: 43px;
+        padding: 10px 12px;
+        font-size: 0.82rem;
+      }
+
+      .hero {
+        padding-block: 48px;
+        background-position: 62% center;
+      }
+
+      h1 {
+        font-size: clamp(2.35rem, 11vw, 3.5rem);
+      }
+
+      .hero-texto {
+        font-size: 1rem;
+      }
+
+      .hero-acoes {
+        flex-direction: column;
+      }
+
+      .hero-acoes .botao {
+        width: 100%;
+      }
+
+      .hero-painel {
+        padding: 20px;
+      }
+
+      .faixa-info {
+        margin-top: -18px;
+      }
+
+      .info-item {
+        min-height: 78px;
+        gap: 9px;
+        padding: 12px;
+      }
+
+      .info-icone {
+        width: 36px;
+        height: 36px;
+      }
+
+      .info-item strong {
+        font-size: 0.8rem;
+      }
+
+      .info-item small {
+        font-size: 0.72rem;
+      }
+
+      .secao {
+        padding-block: 62px;
+      }
+
       .dica {
         white-space: normal;
       }
 
       .grade-servicos {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 12px;
+        gap: 11px;
       }
 
       .card-servico {
-        min-height: 158px;
-        padding: 16px 13px;
+        min-height: 218px;
+        padding: 16px 14px;
       }
 
       .card-servico p {
-        font-size: 0.81rem;
+        font-size: 0.82rem;
       }
 
+      .icone-servico {
+        width: 44px;
+        height: 44px;
+        margin-bottom: 14px;
+      }
+
+      .vantagens-grid,
       .passos {
         grid-template-columns: 1fr;
       }
 
-      .topo-whatsapp {
-        padding: 10px 13px;
-        font-size: 0.82rem;
+      .vantagem {
+        min-height: auto;
+      }
+
+      .cta {
+        padding-block: 56px;
       }
     }
 
-    @media (max-width: 420px) {
-      .logo {
-        font-size: 1.05rem;
-      }
-
-      .topo-whatsapp span {
-        display: none;
-      }
-
-      .topo-whatsapp {
-        width: 44px;
-        height: 44px;
-        padding: 0;
-        justify-content: center;
-        border-radius: 50%;
-        font-size: 1.1rem;
-      }
-
-      .grade-servicos {
-        grid-template-columns: repeat(2, 1fr);
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
       }
     }
   </style>
 </head>
 
 <body>
-
-  <header>
+  <header class="cabecalho">
     <div class="container topo">
-
-      <a class="logo" href="#inicio">
-        Marido de <span>Aluguel</span>
+      <a class="logo" href="#inicio" aria-label="Alicerce - soluçoes — início">
+        <span class="logo-marca" aria-hidden="true">🔧</span>
+        <span>Alicerce - soluçoes <span>Dionatan wiggers</span></span>
       </a>
+
+      <nav class="navegacao" aria-label="Navegação principal">
+        <a href="#servicos">Serviços</a>
+        <a href="#pagamento">Vantagens</a>
+        <a href="#orcamento">Como funciona</a>
+      </nav>
 
       <a
-        class="topo-whatsapp"
-        href="https://wa.me/5551989378751?text=Olá,%20vim%20pelo%20site%20e%20gostaria%20de%20um%20orçamento."
-        onclick="return gtagReportConversion('https://wa.me/5551989378751?text=Olá,%20vim%20pelo%20site%20e%20gostaria%20de%20um%20orçamento.');"
+        class="botao botao-whatsapp"
+        href="https://wa.me/5551989378751?text=Ol%C3%A1%2C%20vim%20pelo%20site%20e%20gostaria%20de%20um%20or%C3%A7amento."
+        data-conversao
       >
-        💬 <span>WhatsApp</span>
+        <span aria-hidden="true">💬</span>
+        WhatsApp
       </a>
-
     </div>
-
-    <nav class="atalhos-sitelinks" aria-label="Atalhos rápidos">
-      <div class="container atalhos-lista">
-        <a href="#emergencia">Atendimento Emergencial</a>
-        <a href="#orcamento">Orçamento Gratuito</a>
-        <a href="#pintura">Pintura e Reformas</a>
-        <a href="#pagamento">Pague no Cartão</a>
-        <a href="#urgente">Atendimento Urgente</a>
-      </div>
-    </nav>
   </header>
 
   <main>
-
     <section class="hero" id="inicio">
-      <div class="container hero-conteudo">
+      <div class="container hero-grade">
+        <div>
+          <div class="selo">
+            <span aria-hidden="true">📍</span>
+            Atendimento em Porto Alegre e região
+          </div>
 
-        <div class="selo">
-          🔧 Atendimento em Porto Alegre e região
+          <h1>
+            Um profissional,
+            <span>várias soluções</span>
+          </h1>
+
+          <p class="hero-texto">
+            Escolha o serviço que precisa e fale comigo diretamente
+            pelo WhatsApp. Atendimento rápido para residências,
+            comércios e empresas.
+          </p>
+
+          <div class="hero-acoes">
+            <a
+              class="botao botao-whatsapp"
+              href="https://wa.me/5551989378751?text=Ol%C3%A1%2C%20preciso%20de%20um%20or%C3%A7amento%20para%20um%20servi%C3%A7o."
+              data-conversao
+            >
+              <span aria-hidden="true">💬</span>
+              Pedir orçamento
+            </a>
+
+            <a class="botao botao-amarelo" href="#servicos">
+              Ver especialidades
+            </a>
+          </div>
         </div>
 
-        <h1>
-          Um profissional,
-          <span>várias soluções</span>
-        </h1>
+        <aside class="hero-painel" aria-label="Informações de atendimento">
+          <h2>Conte o que você precisa</h2>
 
-        <p>
-          Escolha o serviço que precisa e fale comigo diretamente
-          pelo WhatsApp. Atendimento rápido para residências,
-          comércios e empresas.
-        </p>
-
-        <div class="hero-botoes">
+          <ul class="lista-painel">
+            <li><span class="check" aria-hidden="true">✓</span> Escolha uma especialidade</li>
+            <li><span class="check" aria-hidden="true">✓</span> Envie fotos ou vídeos</li>
+            <li><span class="check" aria-hidden="true">✓</span> Receba um orçamento</li>
+          </ul>
 
           <a
-            class="btn btn-verde"
-            href="https://wa.me/5551989378751?text=Olá,%20preciso%20de%20um%20orçamento%20para%20um%20serviço."
-            onclick="return gtagReportConversion('https://wa.me/5551989378751?text=Olá,%20preciso%20de%20um%20orçamento%20para%20um%20serviço.');"
+            class="botao botao-amarelo"
+            href="https://wa.me/5551989378751?text=Ol%C3%A1%2C%20preciso%20de%20um%20or%C3%A7amento%20para%20um%20servi%C3%A7o."
+            data-conversao
           >
-            💬 Pedir orçamento
+            Solicitar atendimento
           </a>
-
-          <a class="btn btn-amarelo" href="#servicos">
-            Ver especialidades
-          </a>
-
-        </div>
+        </aside>
       </div>
     </section>
 
-    <section id="servicos">
+    <div class="container faixa-info" aria-label="Destaques do atendimento">
+      <div class="faixa-info-grade">
+        <div class="info-item">
+          <span class="info-icone" aria-hidden="true">🏠</span>
+          <span><strong>Residencial</strong><small>Serviços para sua casa</small></span>
+        </div>
+        <div class="info-item">
+          <span class="info-icone" aria-hidden="true">🏢</span>
+          <span><strong>Comercial</strong><small>Atendimento para empresas</small></span>
+        </div>
+        <div class="info-item">
+          <span class="info-icone" aria-hidden="true">📍</span>
+          <span><strong>Porto Alegre</strong><small>e região</small></span>
+        </div>
+        <div class="info-item">
+          <span class="info-icone" aria-hidden="true">💬</span>
+          <span><strong>Orçamento</strong><small>Direto pelo WhatsApp</small></span>
+        </div>
+      </div>
+    </div>
+
+    <section class="secao" id="servicos">
       <div class="container">
-
         <div class="cabecalho-secao">
-
           <div>
+            <span class="sobretitulo">Especialidades</span>
             <h2>Escolha o serviço</h2>
-            <p>
-              Toque em uma especialidade para abrir o WhatsApp.
-            </p>
+            <p>Toque em uma especialidade para abrir o WhatsApp.</p>
           </div>
 
-          <div class="dica">
-            ✓ Atendimento direto e sem cadastro
-          </div>
-
+          <div class="dica">✓ Atendimento direto e sem cadastro</div>
         </div>
 
         <div class="grade-servicos">
-
           <a
             class="card-servico"
-            href="https://wa.me/5551989378751?text=Olá,%20preciso%20de%20um%20serviço%20de%20eletricista.%20Pode%20me%20passar%20um%20orçamento?"
-            onclick="return gtagReportConversion('https://wa.me/5551989378751?text=Olá,%20preciso%20de%20um%20serviço%20de%20eletricista.%20Pode%20me%20passar%20um%20orçamento?');"
+            href="https://wa.me/5551989378751?text=Ol%C3%A1%2C%20preciso%20de%20um%20servi%C3%A7o%20de%20eletricista.%20Pode%20me%20passar%20um%20or%C3%A7amento%3F"
+            data-conversao
           >
             <div>
-              <div class="icone">⚡</div>
+              <div class="icone-servico" aria-hidden="true">⚡</div>
               <h3>Eletricista</h3>
-              <p>
-                Tomadas, chuveiros, lâmpadas, disjuntores e fiação.
-              </p>
+              <p>Tomadas, chuveiros, lâmpadas, disjuntores e fiação.</p>
             </div>
-
-            <div class="acao">
-              <span>Chamar agora</span>
-              <span>›</span>
-            </div>
+            <div class="acao-card"><span>Chamar agora</span><span>›</span></div>
           </a>
 
           <a
             class="card-servico"
-            href="https://wa.me/5551989378751?text=Olá,%20preciso%20de%20um%20serviço%20de%20azulejista.%20Pode%20me%20passar%20um%20orçamento?"
-            onclick="return gtagReportConversion('https://wa.me/5551989378751?text=Olá,%20preciso%20de%20um%20serviço%20de%20azulejista.%20Pode%20me%20passar%20um%20orçamento?');"
+            href="https://wa.me/5551989378751?text=Ol%C3%A1%2C%20preciso%20de%20um%20servi%C3%A7o%20de%20azulejista.%20Pode%20me%20passar%20um%20or%C3%A7amento%3F"
+            data-conversao
           >
             <div>
-              <div class="icone">▦</div>
+              <div class="icone-servico" aria-hidden="true">▦</div>
               <h3>Azulejista</h3>
-              <p>
-                Pisos, azulejos, rejuntes e pequenos acabamentos.
-              </p>
+              <p>Pisos, azulejos, rejuntes e pequenos acabamentos.</p>
             </div>
-
-            <div class="acao">
-              <span>Chamar agora</span>
-              <span>›</span>
-            </div>
+            <div class="acao-card"><span>Chamar agora</span><span>›</span></div>
           </a>
 
           <a
             class="card-servico"
-            href="https://wa.me/5551989378751?text=Olá,%20preciso%20de%20um%20serviço%20de%20instalação.%20Pode%20me%20passar%20um%20orçamento?"
-            onclick="return gtagReportConversion('https://wa.me/5551989378751?text=Olá,%20preciso%20de%20um%20serviço%20de%20instalação.%20Pode%20me%20passar%20um%20orçamento?');"
+            href="https://wa.me/5551989378751?text=Ol%C3%A1%2C%20preciso%20de%20um%20servi%C3%A7o%20de%20instala%C3%A7%C3%A3o.%20Pode%20me%20passar%20um%20or%C3%A7amento%3F"
+            data-conversao
           >
             <div>
-              <div class="icone">🛠️</div>
+              <div class="icone-servico" aria-hidden="true">🛠️</div>
               <h3>Instalações</h3>
-              <p>
-                TV, prateleiras, cortinas, varais, quadros e suportes.
-              </p>
+              <p>TV, prateleiras, cortinas, varais, quadros e suportes.</p>
             </div>
-
-            <div class="acao">
-              <span>Chamar agora</span>
-              <span>›</span>
-            </div>
+            <div class="acao-card"><span>Chamar agora</span><span>›</span></div>
           </a>
 
           <a
             class="card-servico"
-            href="https://wa.me/5551989378751?text=Olá,%20preciso%20de%20montagem%20ou%20reparo%20em%20móveis.%20Pode%20me%20passar%20um%20orçamento?"
-            onclick="return gtagReportConversion('https://wa.me/5551989378751?text=Olá,%20preciso%20de%20montagem%20ou%20reparo%20em%20móveis.%20Pode%20me%20passar%20um%20orçamento?');"
+            href="https://wa.me/5551989378751?text=Ol%C3%A1%2C%20preciso%20de%20montagem%20ou%20reparo%20em%20m%C3%B3veis.%20Pode%20me%20passar%20um%20or%C3%A7amento%3F"
+            data-conversao
           >
             <div>
-              <div class="icone">🪚</div>
+              <div class="icone-servico" aria-hidden="true">🪚</div>
               <h3>Marcenaria</h3>
-              <p>
-                Montagem de móveis, portas, gavetas e dobradiças.
-              </p>
+              <p>Montagem de móveis, portas, gavetas e dobradiças.</p>
             </div>
-
-            <div class="acao">
-              <span>Chamar agora</span>
-              <span>›</span>
-            </div>
+            <div class="acao-card"><span>Chamar agora</span><span>›</span></div>
           </a>
 
           <a
             class="card-servico"
-            href="https://wa.me/5551989378751?text=Olá,%20preciso%20de%20um%20serviço%20de%20vidraçaria.%20Pode%20me%20passar%20um%20orçamento?"
-            onclick="return gtagReportConversion('https://wa.me/5551989378751?text=Olá,%20preciso%20de%20um%20serviço%20de%20vidraçaria.%20Pode%20me%20passar%20um%20orçamento?');"
+            href="https://wa.me/5551989378751?text=Ol%C3%A1%2C%20preciso%20de%20um%20servi%C3%A7o%20de%20vidra%C3%A7aria.%20Pode%20me%20passar%20um%20or%C3%A7amento%3F"
+            data-conversao
           >
             <div>
-              <div class="icone">🪟</div>
+              <div class="icone-servico" aria-hidden="true">🪟</div>
               <h3>Vidraçaria</h3>
-              <p>
-                Vidros, espelhos, box, janelas e pequenos reparos.
-              </p>
+              <p>Vidros, espelhos, box, janelas e pequenos reparos.</p>
             </div>
-
-            <div class="acao">
-              <span>Chamar agora</span>
-              <span>›</span>
-            </div>
+            <div class="acao-card"><span>Chamar agora</span><span>›</span></div>
           </a>
 
           <a
             id="pintura"
             class="card-servico"
-            href="https://wa.me/5551989378751?text=Olá,%20preciso%20de%20um%20serviço%20de%20gesso,%20drywall,%20pintura%20ou%20reforma.%20Pode%20me%20passar%20um%20orçamento?"
-            onclick="return gtagReportConversion('https://wa.me/5551989378751?text=Olá,%20preciso%20de%20um%20serviço%20de%20gesso,%20drywall,%20pintura%20ou%20reforma.%20Pode%20me%20passar%20um%20orçamento?');"
+            href="https://wa.me/5551989378751?text=Ol%C3%A1%2C%20preciso%20de%20um%20servi%C3%A7o%20de%20gesso%2C%20drywall%2C%20pintura%20ou%20reforma.%20Pode%20me%20passar%20um%20or%C3%A7amento%3F"
+            data-conversao
           >
             <div>
-              <div class="icone">🏠</div>
+              <div class="icone-servico" aria-hidden="true">🏠</div>
               <h3>Gesso e Drywall</h3>
-              <p>
-                Reparos, divisórias, fechamentos, sancas, pintura e reformas.
-              </p>
+              <p>Reparos, divisórias, fechamentos, sancas, pintura e reformas.</p>
             </div>
-
-            <div class="acao">
-              <span>Chamar agora</span>
-              <span>›</span>
-            </div>
+            <div class="acao-card"><span>Chamar agora</span><span>›</span></div>
           </a>
 
           <a
             class="card-servico"
-            href="https://wa.me/5551989378751?text=Olá,%20preciso%20de%20um%20serviço%20hidráulico.%20Pode%20me%20passar%20um%20orçamento?"
-            onclick="return gtagReportConversion('https://wa.me/5551989378751?text=Olá,%20preciso%20de%20um%20serviço%20hidráulico.%20Pode%20me%20passar%20um%20orçamento?');"
+            href="https://wa.me/5551989378751?text=Ol%C3%A1%2C%20preciso%20de%20um%20servi%C3%A7o%20hidr%C3%A1ulico.%20Pode%20me%20passar%20um%20or%C3%A7amento%3F"
+            data-conversao
           >
             <div>
-              <div class="icone">🚿</div>
+              <div class="icone-servico" aria-hidden="true">🚿</div>
               <h3>Hidráulica</h3>
-              <p>
-                Torneiras, sifões, registros, vazamentos e instalações.
-              </p>
+              <p>Torneiras, sifões, registros, vazamentos e instalações.</p>
             </div>
-
-            <div class="acao">
-              <span>Chamar agora</span>
-              <span>›</span>
-            </div>
+            <div class="acao-card"><span>Chamar agora</span><span>›</span></div>
           </a>
 
           <a
             class="card-servico"
-            href="https://wa.me/5551989378751?text=Olá,%20preciso%20de%20um%20serviço%20em%20geral.%20Posso%20enviar%20fotos%20para%20avaliação?"
-            onclick="return gtagReportConversion('https://wa.me/5551989378751?text=Olá,%20preciso%20de%20um%20serviço%20em%20geral.%20Posso%20enviar%20fotos%20para%20avaliação?');"
+            href="https://wa.me/5551989378751?text=Ol%C3%A1%2C%20preciso%20de%20um%20servi%C3%A7o%20em%20geral.%20Posso%20enviar%20fotos%20para%20avalia%C3%A7%C3%A3o%3F"
+            data-conversao
           >
             <div>
-              <div class="icone">🔧</div>
+              <div class="icone-servico" aria-hidden="true">🔧</div>
               <h3>Serviços em geral</h3>
-              <p>
-                Pequenos reparos, ajustes, manutenção e soluções diversas.
-              </p>
+              <p>Pequenos reparos, ajustes, manutenção e soluções diversas.</p>
             </div>
-
-            <div class="acao">
-              <span>Chamar agora</span>
-              <span>›</span>
-            </div>
+            <div class="acao-card"><span>Chamar agora</span><span>›</span></div>
           </a>
-
         </div>
       </div>
     </section>
 
     <section class="vantagens" id="pagamento">
-      <div class="container vantagens-grid">
-
-        <div class="vantagem">
-          <div>🛡️</div>
-          <strong>Qualidade</strong>
-          <small>Cuidado em cada detalhe</small>
+      <div class="container">
+        <div class="vantagens-cabecalho">
+          <span class="sobretitulo">Nosso atendimento</span>
+          <h2>Compromisso em cada etapa do serviço</h2>
         </div>
 
-        <div class="vantagem">
-          <div>⏱️</div>
-          <strong>Pontualidade</strong>
-          <small>Compromisso com o horário</small>
-        </div>
+        <div class="vantagens-grid">
+          <div class="vantagem">
+            <div class="vantagem-icone" aria-hidden="true">🛡️</div>
+            <strong>Qualidade</strong>
+            <small>Cuidado em cada detalhe</small>
+          </div>
 
-        <div class="vantagem">
-          <div>👍</div>
-          <strong>Preço justo</strong>
-          <small>Orçamento transparente</small>
-        </div>
+          <div class="vantagem">
+            <div class="vantagem-icone" aria-hidden="true">⏱️</div>
+            <strong>Pontualidade</strong>
+            <small>Compromisso com o horário</small>
+          </div>
 
-        <div class="vantagem">
-          <div>🏢</div>
-          <strong>Atendimento</strong>
-          <small>Residencial e comercial</small>
-        </div>
+          <div class="vantagem">
+            <div class="vantagem-icone" aria-hidden="true">👍</div>
+            <strong>Preço justo</strong>
+            <small>Orçamento transparente</small>
+          </div>
 
+          <div class="vantagem">
+            <div class="vantagem-icone" aria-hidden="true">🏢</div>
+            <strong>Atendimento</strong>
+            <small>Residencial e comercial</small>
+          </div>
+        </div>
       </div>
     </section>
 
-    <section id="orcamento">
+    <section class="secao" id="orcamento">
       <div class="container">
-
         <div class="cabecalho-secao">
           <div>
+            <span class="sobretitulo">Simples e direto</span>
             <h2>Como funciona</h2>
             <p>Um processo simples, rápido e direto.</p>
           </div>
         </div>
 
         <div class="passos">
-
-          <div class="passo">
+          <article class="passo">
             <div class="passo-numero">01</div>
             <h3>Escolha o serviço</h3>
-            <p>
-              Toque no card da especialidade que você precisa.
-            </p>
-          </div>
+            <p>Toque no card da especialidade que você precisa.</p>
+          </article>
 
-          <div class="passo">
+          <article class="passo">
             <div class="passo-numero">02</div>
             <h3>Envie fotos</h3>
-            <p>
-              Mande fotos ou vídeos para facilitar a avaliação.
-            </p>
-          </div>
+            <p>Mande fotos ou vídeos para facilitar a avaliação.</p>
+          </article>
 
-          <div class="passo">
+          <article class="passo">
             <div class="passo-numero">03</div>
             <h3>Receba o orçamento</h3>
-            <p>
-              Combinamos valor, dia e horário do atendimento.
-            </p>
-          </div>
-
+            <p>Combinamos valor, dia e horário do atendimento.</p>
+          </article>
         </div>
       </div>
     </section>
 
     <section class="cta" id="emergencia">
       <div class="container" id="urgente">
-
+        <span class="sobretitulo">Atendimento emergencial e urgente</span>
         <h2>Precisa resolver hoje?</h2>
-
-        <p>
-          Fale comigo agora e envie fotos do serviço.
-        </p>
+        <p>Fale comigo agora e envie fotos do serviço.</p>
 
         <a
-          class="btn btn-verde"
-          href="https://wa.me/5551989378751?text=Olá,%20preciso%20de%20atendimento.%20Posso%20enviar%20fotos%20do%20serviço?"
-          onclick="return gtagReportConversion('https://wa.me/5551989378751?text=Olá,%20preciso%20de%20atendimento.%20Posso%20enviar%20fotos%20do%20serviço?');"
+          class="botao botao-whatsapp"
+          href="https://wa.me/5551989378751?text=Ol%C3%A1%2C%20preciso%20de%20atendimento.%20Posso%20enviar%20fotos%20do%20servi%C3%A7o%3F"
+          data-conversao
         >
-          💬 Falar no WhatsApp
+          <span aria-hidden="true">💬</span>
+          Falar no WhatsApp
         </a>
-
       </div>
     </section>
-
   </main>
 
-  <footer>
+  <footer class="rodape">
     <div class="container">
-      <p><strong>Marido de Aluguel</strong></p>
-      <p>Porto Alegre e região • Orçamento gratuito • Pagamento no cartão ou Pix • Atendimento emergencial e urgente</p>
+      <p><strong>Alicerce - soluçoes</strong></p>
+      <p>
+        Porto Alegre e região • Orçamento gratuito • Pagamento no cartão ou Pix
+        • Atendimento emergencial e urgente
+      </p>
       <p>WhatsApp: (51) 98937-8751</p>
     </div>
   </footer>
 
   <div class="barra-mobile">
     <a
-      href="https://wa.me/5551989378751?text=Olá,%20vim%20pelo%20site%20e%20gostaria%20de%20um%20orçamento."
-      onclick="return gtagReportConversion('https://wa.me/5551989378751?text=Olá,%20vim%20pelo%20site%20e%20gostaria%20de%20um%20orçamento.');"
+      class="botao botao-whatsapp"
+      href="https://wa.me/5551989378751?text=Ol%C3%A1%2C%20vim%20pelo%20site%20e%20gostaria%20de%20um%20or%C3%A7amento."
+      data-conversao
     >
-      💬 Pedir orçamento no WhatsApp
+      <span aria-hidden="true">💬</span>
+      Pedir orçamento no WhatsApp
     </a>
   </div>
 
+  <script>
+    document.querySelectorAll("[data-conversao]").forEach((link) => {
+      link.addEventListener("click", (evento) => {
+        evento.preventDefault();
+        gtagReportConversion(link.href);
+      });
+    });
+  </script>
 </body>
 </html>
