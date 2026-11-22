@@ -150,6 +150,7 @@
       border-bottom: 1px solid var(--borda);
       background: rgba(13, 15, 17, 0.96);
       backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
     }
 
     .topo {
@@ -158,6 +159,13 @@
       align-items: center;
       justify-content: space-between;
       gap: 20px;
+    }
+
+    .identidade-topo {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      min-width: 0;
     }
 
     .logo {
@@ -196,6 +204,29 @@
       text-transform: none;
     }
 
+    .instagram-topo {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      color: var(--laranja-claro);
+      font-size: 0.84rem;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .instagram-topo:hover,
+    .rodape-instagram:hover {
+      color: #fff;
+    }
+
+    .instagram-icone {
+      width: 21px;
+      height: 21px;
+      flex: 0 0 auto;
+      display: inline-block;
+      vertical-align: middle;
+    }
+
     .navegacao {
       display: flex;
       align-items: center;
@@ -207,27 +238,6 @@
 
     .navegacao a:hover {
       color: var(--laranja-claro);
-    }
-
-    .link-instagram {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      color: var(--laranja-claro);
-      font-size: 0.88rem;
-      font-weight: 800;
-    }
-
-    .link-instagram:hover {
-      color: #fff;
-    }
-
-    .instagram-icone {
-      width: 20px;
-      height: 20px;
-      display: inline-block;
-      vertical-align: middle;
     }
 
     /* Capa */
@@ -673,7 +683,6 @@
       flex: 0 0 auto;
       background: var(--laranja);
       color: #17120b;
-      box-shadow: 0 8px 20px rgba(233, 149, 36, 0.2);
     }
 
     .botao-instagram:hover {
@@ -738,10 +747,6 @@
       margin-top: 10px;
       color: var(--laranja-claro);
       font-weight: 800;
-    }
-
-    .rodape-instagram:hover {
-      color: #fff;
     }
 
     /* Botão fixo no celular */
@@ -833,6 +838,14 @@
         width: min(var(--largura), calc(100% - 30px));
       }
 
+      .identidade-topo {
+        gap: 9px;
+      }
+
+      .logo {
+        gap: 8px;
+      }
+
       .logo-imagem {
         width: 46px;
         height: 46px;
@@ -844,6 +857,19 @@
 
       .logo-texto span:last-child {
         font-size: 0.66rem;
+      }
+
+      .instagram-topo {
+        gap: 0;
+      }
+
+      .instagram-topo span {
+        display: none;
+      }
+
+      .instagram-topo svg {
+        width: 20px;
+        height: 20px;
       }
 
       .topo > .botao {
@@ -948,6 +974,38 @@
       }
     }
 
+    @media (max-width: 380px) {
+      .container {
+        width: calc(100% - 24px);
+      }
+
+      .topo {
+        gap: 6px;
+      }
+
+      .identidade-topo {
+        gap: 6px;
+      }
+
+      .logo-imagem {
+        width: 40px;
+        height: 40px;
+      }
+
+      .logo-texto {
+        font-size: 0.68rem;
+      }
+
+      .logo-texto span:last-child {
+        font-size: 0.61rem;
+      }
+
+      .topo > .botao {
+        padding-inline: 9px;
+        font-size: 0.76rem;
+      }
+    }
+
     @media (prefers-reduced-motion: reduce) {
       *,
       *::before,
@@ -962,17 +1020,50 @@
 <body>
   <header class="cabecalho">
     <div class="container topo">
-      <a class="logo" href="#inicio" aria-label="Alicerce Soluções — início">
-        <img
-          class="logo-imagem"
-          src="logo-alicerce.png"
-          alt="Alicerce — Construção, reforma e manutenção"
+      <div class="identidade-topo">
+        <a class="logo" href="#inicio" aria-label="Alicerce Soluções — início">
+          <img
+            class="logo-imagem"
+            src="logo-alicerce.png"
+            alt="Alicerce — Construção, reforma e manutenção"
+          >
+          <span class="logo-texto">
+            <span>Alicerce Soluções</span>
+            <span>Dionatan Wiggers</span>
+          </span>
+        </a>
+
+        <a
+          class="instagram-topo"
+          href="https://www.instagram.com/alicerce_solucoes/"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Visitar o Instagram da Alicerce"
         >
-        <span class="logo-texto">
-          <span>Alicerce Soluções</span>
-          <span>Dionatan Wiggers</span>
-        </span>
-      </a>
+          <svg class="instagram-icone" viewBox="0 0 24 24" aria-hidden="true">
+            <rect
+              x="3"
+              y="3"
+              width="18"
+              height="18"
+              rx="5"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            />
+            <circle
+              cx="12"
+              cy="12"
+              r="4"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            />
+            <circle cx="17.5" cy="6.5" r="1.2" fill="currentColor" />
+          </svg>
+          <span>Instagram</span>
+        </a>
+      </div>
 
       <nav class="navegacao" aria-label="Navegação principal">
         <a href="#servicos">Serviços</a>
@@ -1000,10 +1091,7 @@
             Atendimento em Porto Alegre e região
           </div>
 
-          <h1>
-            Um profissional,
-            <span>várias soluções</span>
-          </h1>
+          <h1>Um profissional,<span>várias soluções</span></h1>
 
           <p class="hero-texto">
             Escolha o serviço que precisa e fale comigo diretamente
@@ -1053,17 +1141,14 @@
           <span class="info-icone" aria-hidden="true">🏠</span>
           <span><strong>Residencial</strong><small>Serviços para sua casa</small></span>
         </div>
-
         <div class="info-item">
           <span class="info-icone" aria-hidden="true">🏢</span>
           <span><strong>Comercial</strong><small>Atendimento para empresas</small></span>
         </div>
-
         <div class="info-item">
           <span class="info-icone" aria-hidden="true">📍</span>
           <span><strong>Porto Alegre</strong><small>e região</small></span>
         </div>
-
         <div class="info-item">
           <span class="info-icone" aria-hidden="true">💬</span>
           <span><strong>Orçamento</strong><small>Direto pelo WhatsApp</small></span>
@@ -1079,113 +1164,47 @@
             <h2>Escolha o serviço</h2>
             <p>Toque em uma especialidade para abrir o WhatsApp.</p>
           </div>
-
           <div class="dica">✓ Atendimento direto e sem cadastro</div>
         </div>
 
         <div class="grade-servicos">
-          <a
-            class="card-servico"
-            href="https://wa.me/5551989378751?text=Ol%C3%A1%2C%20preciso%20de%20um%20servi%C3%A7o%20de%20eletricista.%20Pode%20me%20passar%20um%20or%C3%A7amento%3F"
-            data-conversao
-          >
-            <div>
-              <div class="icone-servico" aria-hidden="true">⚡</div>
-              <h3>Eletricista</h3>
-              <p>Tomadas, chuveiros, lâmpadas, disjuntores e fiação.</p>
-            </div>
+          <a class="card-servico" href="https://wa.me/5551989378751?text=Ol%C3%A1%2C%20preciso%20de%20um%20servi%C3%A7o%20de%20eletricista.%20Pode%20me%20passar%20um%20or%C3%A7amento%3F" data-conversao>
+            <div><div class="icone-servico" aria-hidden="true">⚡</div><h3>Eletricista</h3><p>Tomadas, chuveiros, lâmpadas, disjuntores e fiação.</p></div>
             <div class="acao-card"><span>Chamar agora</span><span>›</span></div>
           </a>
 
-          <a
-            class="card-servico"
-            href="https://wa.me/5551989378751?text=Ol%C3%A1%2C%20preciso%20de%20um%20servi%C3%A7o%20de%20azulejista.%20Pode%20me%20passar%20um%20or%C3%A7amento%3F"
-            data-conversao
-          >
-            <div>
-              <div class="icone-servico" aria-hidden="true">▦</div>
-              <h3>Azulejista</h3>
-              <p>Pisos, azulejos, rejuntes e pequenos acabamentos.</p>
-            </div>
+          <a class="card-servico" href="https://wa.me/5551989378751?text=Ol%C3%A1%2C%20preciso%20de%20um%20servi%C3%A7o%20de%20azulejista.%20Pode%20me%20passar%20um%20or%C3%A7amento%3F" data-conversao>
+            <div><div class="icone-servico" aria-hidden="true">▦</div><h3>Azulejista</h3><p>Pisos, azulejos, rejuntes e pequenos acabamentos.</p></div>
             <div class="acao-card"><span>Chamar agora</span><span>›</span></div>
           </a>
 
-          <a
-            class="card-servico"
-            href="https://wa.me/5551989378751?text=Ol%C3%A1%2C%20preciso%20de%20um%20servi%C3%A7o%20de%20instala%C3%A7%C3%A3o.%20Pode%20me%20passar%20um%20or%C3%A7amento%3F"
-            data-conversao
-          >
-            <div>
-              <div class="icone-servico" aria-hidden="true">🛠️</div>
-              <h3>Instalações</h3>
-              <p>TV, prateleiras, cortinas, varais, quadros e suportes.</p>
-            </div>
+          <a class="card-servico" href="https://wa.me/5551989378751?text=Ol%C3%A1%2C%20preciso%20de%20um%20servi%C3%A7o%20de%20instala%C3%A7%C3%A3o.%20Pode%20me%20passar%20um%20or%C3%A7amento%3F" data-conversao>
+            <div><div class="icone-servico" aria-hidden="true">🛠️</div><h3>Instalações</h3><p>TV, prateleiras, cortinas, varais, quadros e suportes.</p></div>
             <div class="acao-card"><span>Chamar agora</span><span>›</span></div>
           </a>
 
-          <a
-            class="card-servico"
-            href="https://wa.me/5551989378751?text=Ol%C3%A1%2C%20preciso%20de%20montagem%20ou%20reparo%20em%20m%C3%B3veis.%20Pode%20me%20passar%20um%20or%C3%A7amento%3F"
-            data-conversao
-          >
-            <div>
-              <div class="icone-servico" aria-hidden="true">🪚</div>
-              <h3>Marcenaria</h3>
-              <p>Montagem de móveis, portas, gavetas e dobradiças.</p>
-            </div>
+          <a class="card-servico" href="https://wa.me/5551989378751?text=Ol%C3%A1%2C%20preciso%20de%20montagem%20ou%20reparo%20em%20m%C3%B3veis.%20Pode%20me%20passar%20um%20or%C3%A7amento%3F" data-conversao>
+            <div><div class="icone-servico" aria-hidden="true">🪚</div><h3>Marcenaria</h3><p>Montagem de móveis, portas, gavetas e dobradiças.</p></div>
             <div class="acao-card"><span>Chamar agora</span><span>›</span></div>
           </a>
 
-          <a
-            class="card-servico"
-            href="https://wa.me/5551989378751?text=Ol%C3%A1%2C%20preciso%20de%20um%20servi%C3%A7o%20de%20vidra%C3%A7aria.%20Pode%20me%20passar%20um%20or%C3%A7amento%3F"
-            data-conversao
-          >
-            <div>
-              <div class="icone-servico" aria-hidden="true">🪟</div>
-              <h3>Vidraçaria</h3>
-              <p>Vidros, espelhos, box, janelas e pequenos reparos.</p>
-            </div>
+          <a class="card-servico" href="https://wa.me/5551989378751?text=Ol%C3%A1%2C%20preciso%20de%20um%20servi%C3%A7o%20de%20vidra%C3%A7aria.%20Pode%20me%20passar%20um%20or%C3%A7amento%3F" data-conversao>
+            <div><div class="icone-servico" aria-hidden="true">🪟</div><h3>Vidraçaria</h3><p>Vidros, espelhos, box, janelas e pequenos reparos.</p></div>
             <div class="acao-card"><span>Chamar agora</span><span>›</span></div>
           </a>
 
-          <a
-            id="pintura"
-            class="card-servico"
-            href="https://wa.me/5551989378751?text=Ol%C3%A1%2C%20preciso%20de%20um%20servi%C3%A7o%20de%20gesso%2C%20drywall%2C%20pintura%20ou%20reforma.%20Pode%20me%20passar%20um%20or%C3%A7amento%3F"
-            data-conversao
-          >
-            <div>
-              <div class="icone-servico" aria-hidden="true">🏠</div>
-              <h3>Gesso e Drywall</h3>
-              <p>Reparos, divisórias, fechamentos, sancas, pintura e reformas.</p>
-            </div>
+          <a id="pintura" class="card-servico" href="https://wa.me/5551989378751?text=Ol%C3%A1%2C%20preciso%20de%20um%20servi%C3%A7o%20de%20gesso%2C%20drywall%2C%20pintura%20ou%20reforma.%20Pode%20me%20passar%20um%20or%C3%A7amento%3F" data-conversao>
+            <div><div class="icone-servico" aria-hidden="true">🏠</div><h3>Gesso e Drywall</h3><p>Reparos, divisórias, fechamentos, sancas, pintura e reformas.</p></div>
             <div class="acao-card"><span>Chamar agora</span><span>›</span></div>
           </a>
 
-          <a
-            class="card-servico"
-            href="https://wa.me/5551989378751?text=Ol%C3%A1%2C%20preciso%20de%20um%20servi%C3%A7o%20hidr%C3%A1ulico.%20Pode%20me%20passar%20um%20or%C3%A7amento%3F"
-            data-conversao
-          >
-            <div>
-              <div class="icone-servico" aria-hidden="true">🚿</div>
-              <h3>Hidráulica</h3>
-              <p>Torneiras, sifões, registros, vazamentos e instalações.</p>
-            </div>
+          <a class="card-servico" href="https://wa.me/5551989378751?text=Ol%C3%A1%2C%20preciso%20de%20um%20servi%C3%A7o%20hidr%C3%A1ulico.%20Pode%20me%20passar%20um%20or%C3%A7amento%3F" data-conversao>
+            <div><div class="icone-servico" aria-hidden="true">🚿</div><h3>Hidráulica</h3><p>Torneiras, sifões, registros, vazamentos e instalações.</p></div>
             <div class="acao-card"><span>Chamar agora</span><span>›</span></div>
           </a>
 
-          <a
-            class="card-servico"
-            href="https://wa.me/5551989378751?text=Ol%C3%A1%2C%20preciso%20de%20um%20servi%C3%A7o%20em%20geral.%20Posso%20enviar%20fotos%20para%20avalia%C3%A7%C3%A3o%3F"
-            data-conversao
-          >
-            <div>
-              <div class="icone-servico" aria-hidden="true">🔧</div>
-              <h3>Serviços em geral</h3>
-              <p>Pequenos reparos, ajustes, manutenção e soluções diversas.</p>
-            </div>
+          <a class="card-servico" href="https://wa.me/5551989378751?text=Ol%C3%A1%2C%20preciso%20de%20um%20servi%C3%A7o%20em%20geral.%20Posso%20enviar%20fotos%20para%20avalia%C3%A7%C3%A3o%3F" data-conversao>
+            <div><div class="icone-servico" aria-hidden="true">🔧</div><h3>Serviços em geral</h3><p>Pequenos reparos, ajustes, manutenção e soluções diversas.</p></div>
             <div class="acao-card"><span>Chamar agora</span><span>›</span></div>
           </a>
         </div>
@@ -1200,29 +1219,10 @@
         </div>
 
         <div class="vantagens-grid">
-          <div class="vantagem">
-            <div class="vantagem-icone" aria-hidden="true">🛡️</div>
-            <strong>Qualidade</strong>
-            <small>Cuidado em cada detalhe</small>
-          </div>
-
-          <div class="vantagem">
-            <div class="vantagem-icone" aria-hidden="true">⏱️</div>
-            <strong>Pontualidade</strong>
-            <small>Compromisso com o horário</small>
-          </div>
-
-          <div class="vantagem">
-            <div class="vantagem-icone" aria-hidden="true">👍</div>
-            <strong>Preço justo</strong>
-            <small>Orçamento transparente</small>
-          </div>
-
-          <div class="vantagem">
-            <div class="vantagem-icone" aria-hidden="true">🏢</div>
-            <strong>Atendimento</strong>
-            <small>Residencial e comercial</small>
-          </div>
+          <div class="vantagem"><div class="vantagem-icone" aria-hidden="true">🛡️</div><strong>Qualidade</strong><small>Cuidado em cada detalhe</small></div>
+          <div class="vantagem"><div class="vantagem-icone" aria-hidden="true">⏱️</div><strong>Pontualidade</strong><small>Compromisso com o horário</small></div>
+          <div class="vantagem"><div class="vantagem-icone" aria-hidden="true">👍</div><strong>Preço justo</strong><small>Orçamento transparente</small></div>
+          <div class="vantagem"><div class="vantagem-icone" aria-hidden="true">🏢</div><strong>Atendimento</strong><small>Residencial e comercial</small></div>
         </div>
       </div>
     </section>
@@ -1238,23 +1238,9 @@
         </div>
 
         <div class="passos">
-          <article class="passo">
-            <div class="passo-numero">01</div>
-            <h3>Escolha o serviço</h3>
-            <p>Toque no card da especialidade que você precisa.</p>
-          </article>
-
-          <article class="passo">
-            <div class="passo-numero">02</div>
-            <h3>Envie fotos</h3>
-            <p>Mande fotos ou vídeos para facilitar a avaliação.</p>
-          </article>
-
-          <article class="passo">
-            <div class="passo-numero">03</div>
-            <h3>Receba o orçamento</h3>
-            <p>Combinamos valor, dia e horário do atendimento.</p>
-          </article>
+          <article class="passo"><div class="passo-numero">01</div><h3>Escolha o serviço</h3><p>Toque no card da especialidade que você precisa.</p></article>
+          <article class="passo"><div class="passo-numero">02</div><h3>Envie fotos</h3><p>Mande fotos ou vídeos para facilitar a avaliação.</p></article>
+          <article class="passo"><div class="passo-numero">03</div><h3>Receba o orçamento</h3><p>Combinamos valor, dia e horário do atendimento.</p></article>
         </div>
       </div>
     </section>
@@ -1278,25 +1264,9 @@
           aria-label="Abrir Instagram da Alicerce em uma nova aba"
         >
           <svg class="instagram-icone" viewBox="0 0 24 24" aria-hidden="true">
-            <rect
-              x="3"
-              y="3"
-              width="18"
-              height="18"
-              rx="5"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-            />
-            <circle
-              cx="12"
-              cy="12"
-              r="4"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-            />
-            <circle cx="17.5" cy="6.5" r="1.2" fill="currentColor" />
+            <rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="currentColor" stroke-width="2"/>
+            <circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="2"/>
+            <circle cx="17.5" cy="6.5" r="1.2" fill="currentColor"/>
           </svg>
           Ver Instagram
         </a>
@@ -1338,25 +1308,9 @@
         rel="noopener noreferrer"
       >
         <svg class="instagram-icone" viewBox="0 0 24 24" aria-hidden="true">
-          <rect
-            x="3"
-            y="3"
-            width="18"
-            height="18"
-            rx="5"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-          />
-          <circle
-            cx="12"
-            cy="12"
-            r="4"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-          />
-          <circle cx="17.5" cy="6.5" r="1.2" fill="currentColor" />
+          <rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="currentColor" stroke-width="2"/>
+          <circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="2"/>
+          <circle cx="17.5" cy="6.5" r="1.2" fill="currentColor"/>
         </svg>
         @alicerce_solucoes
       </a>
